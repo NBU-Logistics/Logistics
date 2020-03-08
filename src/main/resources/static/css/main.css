@@ -5,6 +5,10 @@ body,
     height: 100%;
 }
 
+#content {
+    padding-top: 56px;
+}
+
 .center-flex-item {
     margin: auto;
 }

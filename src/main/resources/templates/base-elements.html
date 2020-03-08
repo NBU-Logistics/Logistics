@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <li
+            data-th-fragment="navLink(url, text)"
+            class="nav-item"
+            data-th-classappend="${url} == ${#httpServletRequest.requestURI} ? 'active'"
+        >
+            <a class="nav-link" data-th-href="${url}" data-th-text="${text}"></a>
+        </li>
+
+        <li
+            class="nav-item dropdown"
+            data-th-fragment="navDropdown(urls, names, text)"
+            data-th-classappend="${#arrays.contains(urls, #httpServletRequest.requestURI)} ? 'active'"
+        >
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" data-th-text="${text}"></a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a
+                    class="dropdown-item"
+                    data-th-each="url, iterStat : ${urls}"
+                    data-th-href="@{~__${url}__}"
+                    data-th-text="${names[iterStat.index]}"
+                ></a>
+            </div>
+        </li>
+    </body>
+</html>

@@ -19,4 +19,9 @@ public class EmployeesController {
     public String showEmployees() {
         return "employees";
     }
+
+    @RequestMapping("/employees/create")
+    public String showCreateEmployee() {
+        return "create-employee";
+    }
 }

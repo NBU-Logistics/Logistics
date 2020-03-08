@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html
+    data-th-fragment="centered"
+    data-th-replace="~{base::layout(
+        content=~{::#content}, 
+        scripts=${scripts} ?: _, 
+        styles=${styles} ?: _)}"
+>
+    <body>
+        <section id="content" class="d-flex flex-column">
+            <div class="center-flex-item" data-th-include="${data}"></div>
+        </section>
+    </body>
+</html>

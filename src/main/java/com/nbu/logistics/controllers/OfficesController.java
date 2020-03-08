@@ -15,4 +15,9 @@ public class OfficesController {
     public String showOffices() {
         return "offices";
     }
+
+    @RequestMapping("/offices/create")
+    public String showCreateOffice() {
+        return "create-office";
+    }
 }
