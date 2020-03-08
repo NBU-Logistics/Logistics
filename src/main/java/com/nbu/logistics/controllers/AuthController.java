@@ -20,4 +20,9 @@ public class AuthController {
     public String showRegister() {
         return "register";
     }
+
+    @RequestMapping("/profile")
+    public String showProfile() {
+        return "profile";
+    }
 }
