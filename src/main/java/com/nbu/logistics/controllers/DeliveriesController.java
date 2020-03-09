@@ -15,4 +15,9 @@ public class DeliveriesController {
     public String showDeliveries() {
         return "deliveries";
     }
+
+    @RequestMapping("/deliveries/create")
+    public String showCreateDelivery() {
+        return "create-delivery";
+    }
 }
