@@ -1,7 +1,7 @@
 package com.nbu.logistics.entities;
 
-import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.Size;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,15 +12,15 @@ import lombok.Setter;
 @NoArgsConstructor
 @MappedSuperclass
 public class User extends BaseEntity {
-    @Column
+    @Size(min = 3, max = 20)
     private String firstName;
 
-    @Column
+    @Size(min = 3, max = 20)
     private String lastName;
 
-    @Column
+    @Size(min = 3, max = 20)
     private String email;
 
-    @Column
+    @Size(min = 3, max = 20)
     private String password;
 }
