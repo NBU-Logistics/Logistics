@@ -14,7 +14,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class OfficeEmployee extends User {
+public class OfficeEmployee extends BaseEntity {
+    @OneToOne
+    private User user;
+
     @OneToMany
     private List<Delivery> deliveries;
 }

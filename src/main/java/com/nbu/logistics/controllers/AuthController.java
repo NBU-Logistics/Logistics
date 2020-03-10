@@ -27,18 +27,18 @@ public class AuthController {
     }
 
     @RequestMapping("/register")
-    public String showRegister(Client client) {
+    public String showRegister(User user) {
         return "register";
     }
 
     @PostMapping("/register")
-    public String registerClient(Model model, @Valid Client client, BindingResult bindingResult) {
+    public String registerClient(Model model, @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "register";
         }
 
         try {
-            this.authService.registerClient(client);
+            this.authService.registerUser(user);
         } catch (InvalidDataException e) {
             model.addAttribute("error", e.getMessage());
 

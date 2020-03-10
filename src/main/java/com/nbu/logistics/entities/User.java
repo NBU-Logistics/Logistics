@@ -1,6 +1,6 @@
 package com.nbu.logistics.entities;
 
-import javax.persistence.MappedSuperclass;
+import javax.persistence.Entity;
 import javax.validation.constraints.Size;
 
 import lombok.Getter;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@MappedSuperclass
+@Entity
 public class User extends BaseEntity {
     @Size(min = 3, max = 20)
     private String firstName;

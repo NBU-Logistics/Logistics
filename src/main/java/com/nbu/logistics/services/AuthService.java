@@ -1,8 +1,8 @@
 package com.nbu.logistics.services;
 
-import com.nbu.logistics.entities.Client;
+import com.nbu.logistics.entities.User;
 import com.nbu.logistics.exceptions.InvalidDataException;
-import com.nbu.logistics.repositories.ClientsRepository;
+import com.nbu.logistics.repositories.UsersRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
     @Autowired
-    private ClientsRepository clientsRepository;
+    private UsersRepository usersRepository;
 
-    public void registerClient(Client client) throws InvalidDataException {
-        if (this.clientsRepository.existsByEmail(client.getEmail())) {
-            throw new InvalidDataException("Client already exists!");
+    public void registerUser(User user) throws InvalidDataException {
+        if (this.usersRepository.existsByEmail(user.getEmail())) {
+            throw new InvalidDataException("User already exists!");
         }
 
-        this.clientsRepository.save(client);
+        this.usersRepository.save(user);
     }
 }
