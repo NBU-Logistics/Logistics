@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html data-th-replace="~{base-centered::centered(data=~{::body})}">
     <body>
-        <h2 class="pb-4 flex-item">Client registration</h2>
+        <h2 class="pb-4 flex-item text-center">Client registration</h2>
         <form data-th-action="@{~/register}" data-th-object="${user}" method="POST">
             <div
                 data-th-replace="~{form-elements::validatedInput(

@@ -1,8 +1,8 @@
 package com.nbu.logistics.entities;
 
 import javax.persistence.Entity;
-import javax.validation.constraints.Size;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,17 +10,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class User extends BaseEntity {
-    @Size(min = 3, max = 20)
     private String firstName;
 
-    @Size(min = 3, max = 20)
     private String lastName;
 
-    @Size(min = 3, max = 20)
     private String email;
 
-    @Size(min = 3, max = 20)
     private String password;
 }

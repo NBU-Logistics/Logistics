@@ -13,6 +13,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().disable();
 
         http.authorizeRequests().antMatchers("/**").permitAll().anyRequest().authenticated().and().formLogin()
-                .loginPage("/login").permitAll().and().logout().permitAll();
+                .loginPage("/login.html").permitAll().and().logout().permitAll();
     }
 }

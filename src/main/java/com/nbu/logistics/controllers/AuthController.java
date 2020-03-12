@@ -10,23 +10,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @RequestMapping("/login")
-    public ModelAndView showLogin(ModelAndView modelAndView) {
-        modelAndView.setViewName("login");
-
-        return modelAndView;
+    @GetMapping("/login")
+    public String showLogin(User user) {
+        return "login";
     }
 
-    @RequestMapping("/register")
+    @PostMapping("/login")
+    public String loginUser(Model model, User user) {
+        try {
+            this.authService.loginUser(user);
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+
+            return "login";
+        }
+
+        model.addAttribute("success", "Successfully logged in!");
+
+        return "login";
+    }
+
+    @GetMapping("/register")
     public String showRegister(User user) {
         return "register";
     }
@@ -50,7 +62,7 @@ public class AuthController {
         return "register";
     }
 
-    @RequestMapping("/profile")
+    @GetMapping("/profile")
     public String showProfile() {
         return "profile";
     }

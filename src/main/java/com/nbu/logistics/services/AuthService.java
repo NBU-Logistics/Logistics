@@ -19,4 +19,16 @@ public class AuthService {
 
         this.usersRepository.save(user);
     }
+
+    public void loginUser(User user) throws InvalidDataException {
+        User foundUser = this.usersRepository.findByEmail(user.getEmail());
+
+        if (foundUser == null) {
+            throw new InvalidDataException("User does not exist!");
+        }
+
+        if (!foundUser.getPassword().equals(user.getPassword())) {
+            throw new InvalidDataException("Invalid password");
+        }
+    }
 }
