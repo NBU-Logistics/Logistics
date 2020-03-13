@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class AuthController {
@@ -19,21 +20,10 @@ public class AuthController {
     private AuthService authService;
 
     @GetMapping("/login")
-    public String showLogin(User user) {
-        return "login";
-    }
-
-    @PostMapping("/login")
-    public String loginUser(Model model, User user) {
-        try {
-            this.authService.loginUser(user);
-        } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-
-            return "login";
+    public String showLogin(@RequestParam(required = false) String error, Model model, User user) {
+        if (error != null) {
+            model.addAttribute("error", "Wrong login information!");
         }
-
-        model.addAttribute("success", "Successfully logged in!");
 
         return "login";
     }
@@ -56,7 +46,7 @@ public class AuthController {
 
             return "register";
         }
-        
+
         model.addAttribute("success", "Successfully registered!");
 
         return "register";
