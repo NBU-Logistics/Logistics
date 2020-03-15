@@ -1,8 +1,9 @@
 package com.nbu.logistics.entities;
 
-import javax.persistence.CascadeType;
+import java.util.List;
+
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToMany;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +24,6 @@ public class User extends BaseEntity {
 
     private String password;
 
-    @OneToOne
-    private UserRole role;
+    @ManyToMany
+    private List<UserRole> roles;
 }

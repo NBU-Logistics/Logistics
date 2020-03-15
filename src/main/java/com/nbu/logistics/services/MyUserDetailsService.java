@@ -12,8 +12,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class MyUserDetailsService implements UserDetailsService {
     @Autowired
     private UsersRepository usersRepository;
@@ -29,7 +31,7 @@ public class MyUserDetailsService implements UserDetailsService {
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = true;
 
-        String[] userRoles = { user.getRole().getName() };
+        String[] userRoles = user.getRoles().stream().map((role) -> role.getName()).toArray(String[]::new);
         Collection<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(userRoles);
 
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), enabled,

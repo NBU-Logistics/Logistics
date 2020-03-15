@@ -1,5 +1,7 @@
 package com.nbu.logistics.controllers;
 
+import java.util.Arrays;
+
 import javax.validation.Valid;
 
 import com.nbu.logistics.entities.*;
@@ -40,7 +42,7 @@ public class AuthController {
         }
 
         try {
-            this.authService.registerUser(user, "CLIENT");
+            this.authService.registerUser(user, Arrays.asList("CLIENT"));
         } catch (InvalidDataException e) {
             model.addAttribute("error", e.getMessage());
 
