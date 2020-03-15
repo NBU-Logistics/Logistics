@@ -1,14 +1,13 @@
 package com.nbu.logistics.services;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import com.nbu.logistics.entities.User;
 import com.nbu.logistics.repositories.UsersRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,14 +29,10 @@ public class MyUserDetailsService implements UserDetailsService {
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = true;
 
+        String[] userRoles = { user.getRole().getName() };
+        Collection<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(userRoles);
+
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), enabled,
-                accountNonExpired, credentialsNonExpired, accountNonLocked, getAuthorities());
-    }
-
-    private static List<GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("DEFAULT"));
-
-        return authorities;
+                accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
     }
 }

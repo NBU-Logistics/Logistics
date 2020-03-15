@@ -40,7 +40,7 @@ public class AuthController {
         }
 
         try {
-            this.authService.registerUser(user);
+            this.authService.registerUser(user, "CLIENT");
         } catch (InvalidDataException e) {
             model.addAttribute("error", e.getMessage());
 
