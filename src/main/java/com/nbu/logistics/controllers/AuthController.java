@@ -12,6 +12,7 @@ import com.nbu.logistics.services.CouriersService;
 import com.nbu.logistics.services.OfficeEmployeesService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -57,6 +58,7 @@ public class AuthController {
         return template;
     }
 
+    @PreAuthorize("!isAuthenticated()")
     @GetMapping("/login")
     public String showLogin(@RequestParam(required = false) String error, Model model, User user) {
         if (error != null) {
@@ -66,11 +68,13 @@ public class AuthController {
         return "login";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
     public String showProfile() {
         return "profile";
     }
 
+    @PreAuthorize("!isAuthenticated()")
     @GetMapping("/clients/register")
     public String showRegister(User user) {
         return "register";

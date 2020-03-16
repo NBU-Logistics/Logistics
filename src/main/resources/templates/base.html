@@ -37,22 +37,35 @@
                         data-th-replace="base-elements::navDropdown(
                             urls=${ {'/deliveries/create', '/deliveries'} }, 
                             names=${ {'Create delivery', 'View deliveries'} }, 
-                            text='Deliveries')"
+                            text='Deliveries',
+                            condition=${loggedIn})"
                     ></li>
                     <li
                         data-th-replace="base-elements::navDropdown(
                             urls=${ {'/employees/couriers/register', '/employees/office/register', '/employees'} }, 
                             names=${ {'Create courier', 'Create an office employee', 'View employees'} }, 
-                            text='Employees')"
+                            text='Employees',
+                            condition=${loggedIn})"
                     ></li>
                     <li
                         data-th-replace="base-elements::navDropdown(
                             urls=${ {'/offices/create', '/offices'} }, 
                             names=${ {'Create office', 'View offices'} }, 
-                            text='Offices')"
+                            text='Offices',
+                            condition=${loggedIn})"
                     ></li>
-                    <li data-th-replace="base-elements::navLink(@{~/company}, 'Company')"></li>
-                    <li data-th-replace="base-elements::navLink(@{~/clients}, 'Clients')"></li>
+                    <li
+                        data-th-replace="base-elements::navLink(
+                            url=@{~/company}, 
+                            text='Company',
+                            condition=${loggedIn})"
+                    ></li>
+                    <li
+                        data-th-replace="base-elements::navLink(
+                            url=@{~/clients}, 
+                            text='Clients',
+                            condition=${loggedIn})"
+                    ></li>
                     <li data-th-replace="base-elements::navLink(@{~/about}, 'About us')"></li>
                 </ul>
 
