@@ -2,6 +2,7 @@ package com.nbu.logistics.services;
 
 import java.util.Collection;
 
+import com.nbu.logistics.config.MyUserPrincipal;
 import com.nbu.logistics.entities.User;
 import com.nbu.logistics.repositories.UsersRepository;
 
@@ -26,15 +27,6 @@ public class MyUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("No user found with username: " + email);
         }
 
-        boolean enabled = true;
-        boolean accountNonExpired = true;
-        boolean credentialsNonExpired = true;
-        boolean accountNonLocked = true;
-
-        String[] userRoles = user.getRoles().stream().map((role) -> role.getName()).toArray(String[]::new);
-        Collection<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(userRoles);
-
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), enabled,
-                accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+        return new MyUserPrincipal(user);
     }
 }
