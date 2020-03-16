@@ -41,8 +41,8 @@
                     ></li>
                     <li
                         data-th-replace="base-elements::navDropdown(
-                            urls=${ {'/employees/create', '/employees'} }, 
-                            names=${ {'Create employee', 'View employees'} }, 
+                            urls=${ {'/employees/couriers/register', '/employees/office/register', '/employees'} }, 
+                            names=${ {'Create courier', 'Create an office employee', 'View employees'} }, 
                             text='Employees')"
                     ></li>
                     <li
@@ -71,7 +71,9 @@
                 </ul>
                 <ul class="navbar-nav" data-th-unless="${loggedIn}">
                     <li data-th-replace="base-elements::navLink(@{~/login}, 'Log in')"></li>
-                    <li data-th-replace="base-elements::navLink(@{~/register}, 'Register')"></li>
+                    <li
+                        data-th-replace="base-elements::navLink(@{~/clients/register}, 'Register')"
+                    ></li>
                 </ul>
             </div>
         </nav>
