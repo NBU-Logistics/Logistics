@@ -2,6 +2,7 @@
 <html
     lang="en"
     data-th-fragment="layout"
+    data-th-with="loggedIn=${#authorization.expression('isAuthenticated()')}"
 >
     <head>
         <meta charset="utf-8" />
@@ -55,21 +56,48 @@
                     <li data-th-replace="base-elements::navLink(@{~/about}, 'About us')"></li>
                 </ul>
 
-                <ul class="navbar-nav">
+                <ul class="navbar-nav" data-th-if="${loggedIn}">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown">username</a>
+                        <a
+                            class="nav-link dropdown-toggle"
+                            data-toggle="dropdown"
+                            data-th-text="${#authentication.getPrincipal().getUsername()}"
+                        ></a>
                         <div class="dropdown-menu dropdown-menu-right">
                             <a class="dropdown-item" data-th-href="@{~/logout}">Log out</a>
                             <a class="dropdown-item" data-th-href="@{~/profile}">User profile</a>
                         </div>
                     </li>
                 </ul>
-                <ul class="navbar-nav">
+                <ul class="navbar-nav" data-th-unless="${loggedIn}">
                     <li data-th-replace="base-elements::navLink(@{~/login}, 'Log in')"></li>
                     <li data-th-replace="base-elements::navLink(@{~/register}, 'Register')"></li>
                 </ul>
             </div>
         </nav>
+
+        <section id="messages">
+            <div
+                data-th-if="${error != null}"
+                class="alert alert-danger alert-dismissible fade show message"
+                role="alert"
+            >
+                <span data-th-text="${error}"></span>
+                <button type="button" class="close" data-dismiss="alert">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div
+                data-th-if="${success}"
+                class="alert alert-success alert-dismissible fade show message"
+                role="alert"
+            >
+                <span data-th-text="${success}"></span>
+                <button type="button" class="close" data-dismiss="alert">
+                    <span>&times;</span>
+                </button>
+            </div>
+        </section>
 
         <section id="content" data-th-replace="${content}"></section>
 

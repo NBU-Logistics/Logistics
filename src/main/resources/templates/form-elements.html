@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <div
+            class="form-group"
+            data-th-fragment="validatedInput(type, name, label, placeholder)"
+        >
+            <label data-th-for="${name}" data-th-text="${label}"></label>
+            <input
+                data-th-type="${type}"
+                data-th-id="${name}"
+                data-th-placeholder="${placeholder}"
+                data-th-name="${name}"
+                data-th-field="*{__${name}__}"
+                data-th-classappend="not(${isValid} or ${isValid} == null) ? is-invalid"
+                class="form-control"
+            />
+            <div class="invalid-feedback" data-th-text="${invalidMessage}"></div>
+        </div>
+
+        <button
+            type="submit"
+            class="btn btn-primary w-100"
+            data-th-fragment="button(text)"
+            data-th-text="${text}"
+        ></button>
+    </body>
+</html>
