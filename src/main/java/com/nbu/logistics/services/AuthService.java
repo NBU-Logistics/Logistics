@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.nbu.logistics.entities.Client;
 import com.nbu.logistics.entities.User;
 import com.nbu.logistics.entities.UserRole;
 import com.nbu.logistics.exceptions.InvalidDataException;
+import com.nbu.logistics.repositories.ClientsRepository;
 import com.nbu.logistics.repositories.RolesRepository;
 import com.nbu.logistics.repositories.UsersRepository;
 
@@ -22,6 +24,9 @@ public class AuthService {
 
     @Autowired
     private RolesRepository rolesRepository;
+
+    @Autowired
+    private ClientsRepository clientsRepository;
 
     public void registerUser(User user, Collection<String> roles) throws InvalidDataException {
         if (user == null || roles == null) {
@@ -56,7 +61,6 @@ public class AuthService {
         }
 
         User existingUser = this.usersRepository.findByEmail(email);
-
         if (existingUser == null) {
             throw new InvalidDataException("User does not exist!");
         }
@@ -78,5 +82,35 @@ public class AuthService {
         }
 
         this.usersRepository.save(existingUser);
+    }
+
+    public void deleteUser(String email) throws InvalidDataException {
+        if (email == null) {
+            throw new InvalidDataException("Invalid data!");
+        }
+
+        User existingUser = this.usersRepository.findByEmail(email);
+        if (existingUser == null) {
+            throw new InvalidDataException("User does not exist!");
+        }
+
+        existingUser.setDeleted(true);
+        this.usersRepository.save(existingUser);
+    }
+
+    public void deleteClient(String email) throws InvalidDataException {
+        if (email == null) {
+            throw new InvalidDataException("Invalid data!");
+        }
+
+        Client existingClient = this.clientsRepository.findByUserEmail(email);
+        if (existingClient == null) {
+            throw new InvalidDataException("Client does not exist!");
+        }
+
+        existingClient.setDeleted(true);
+        this.clientsRepository.save(existingClient);
+
+        this.deleteUser(email);
     }
 }

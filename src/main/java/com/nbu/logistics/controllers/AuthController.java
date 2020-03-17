@@ -91,9 +91,6 @@ public class AuthController {
     public String changeProfile(Model model, @Valid User user) {
         MyUserPrincipal loggedInUser = this.getLoggedInUser();
         model.addAttribute("loggedInUser", loggedInUser);
-        model.addAttribute("success", "Successfully changed profile data!");
-
-        System.out.println(user.getFirstName());
 
         try {
             this.authService.modifyUser(loggedInUser.getEmail(), user);
@@ -101,7 +98,26 @@ public class AuthController {
             model.addAttribute("error", e.getMessage());
         }
 
+        model.addAttribute("success", "Successfully changed profile data!");
+
         return "profile";
+    }
+
+    @PreAuthorize("isAuthenticated() && hasRole('ROLE_CLIENT')")
+    @PostMapping("/clients/delete")
+    public String deleteClient(Model model, User user) {
+        MyUserPrincipal loggedInUser = this.getLoggedInUser();
+        model.addAttribute("loggedInUser", loggedInUser);
+
+        try {
+            this.authService.deleteClient(loggedInUser.getEmail());
+        } catch (InvalidDataException e) {
+            model.addAttribute("error", e.getMessage());
+
+            return "profile";
+        }
+
+        return "redirect:/logout";
     }
 
     @PreAuthorize("!isAuthenticated()")
