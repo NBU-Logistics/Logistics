@@ -19,6 +19,6 @@ public class BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column
+    @Column(name = "is_deleted")
     private boolean isDeleted;
 }
