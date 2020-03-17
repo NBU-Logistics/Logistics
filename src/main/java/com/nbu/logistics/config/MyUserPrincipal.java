@@ -19,6 +19,18 @@ public class MyUserPrincipal implements UserDetails {
         this.authorities = AuthorityUtils.createAuthorityList(userRoles);
     }
 
+    public String getFirstName() {
+        return this.user.getFirstName();
+    }
+
+    public String getLastName() {
+        return this.user.getLastName();
+    }
+
+    public String getEmail() {
+        return this.user.getEmail();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.authorities;
