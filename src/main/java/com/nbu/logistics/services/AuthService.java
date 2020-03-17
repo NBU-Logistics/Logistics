@@ -49,4 +49,34 @@ public class AuthService {
 
         this.usersRepository.save(user);
     }
+
+    public void modifyUser(String email, User newUser) throws InvalidDataException {
+        if (email == null || newUser == null) {
+            throw new InvalidDataException("Invalid input!");
+        }
+
+        User existingUser = this.usersRepository.findByEmail(email);
+
+        if (existingUser == null) {
+            throw new InvalidDataException("User does not exist!");
+        }
+
+        if (newUser.getEmail() != null && !newUser.getEmail().isBlank()) {
+            existingUser.setEmail(newUser.getEmail());
+        }
+
+        if (newUser.getFirstName() != null && !newUser.getFirstName().isBlank()) {
+            existingUser.setFirstName(newUser.getFirstName());
+        }
+
+        if (newUser.getLastName() != null && !newUser.getLastName().isBlank()) {
+            existingUser.setLastName(newUser.getLastName());
+        }
+
+        if (newUser.getPassword() != null && !newUser.getPassword().isBlank()) {
+            existingUser.setPassword(newUser.getPassword());
+        }
+
+        this.usersRepository.save(existingUser);
+    }
 }

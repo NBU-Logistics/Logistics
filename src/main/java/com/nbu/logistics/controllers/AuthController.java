@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import javax.validation.Valid;
 
+import com.nbu.logistics.config.MyUserPrincipal;
 import com.nbu.logistics.entities.*;
 import com.nbu.logistics.exceptions.InvalidDataException;
 import com.nbu.logistics.services.AuthService;
@@ -13,6 +14,8 @@ import com.nbu.logistics.services.OfficeEmployeesService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -58,6 +61,13 @@ public class AuthController {
         return template;
     }
 
+    private MyUserPrincipal getLoggedInUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        MyUserPrincipal loggedInUser = (MyUserPrincipal) authentication.getPrincipal();
+
+        return loggedInUser;
+    }
+
     @PreAuthorize("!isAuthenticated()")
     @GetMapping("/login")
     public String showLogin(@RequestParam(required = false) String error, Model model, User user) {
@@ -70,7 +80,27 @@ public class AuthController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
-    public String showProfile() {
+    public String showProfile(Model model, User user) {
+        model.addAttribute("loggedInUser", this.getLoggedInUser());
+
+        return "profile";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/profile")
+    public String changeProfile(Model model, @Valid User user) {
+        MyUserPrincipal loggedInUser = this.getLoggedInUser();
+        model.addAttribute("loggedInUser", loggedInUser);
+        model.addAttribute("success", "Successfully changed profile data!");
+
+        System.out.println(user.getFirstName());
+
+        try {
+            this.authService.modifyUser(loggedInUser.getEmail(), user);
+        } catch (InvalidDataException e) {
+            model.addAttribute("error", e.getMessage());
+        }
+
         return "profile";
     }
 

@@ -1,6 +1,46 @@
 <!DOCTYPE html>
 <html data-th-replace="~{base-centered::centered(data=~{::body})}">
     <body>
-        <h2 class="pb-4">Profile</h2>
+        <h2 class="pb-4 flex-item text-center">Change your profile data</h2>
+        <form data-th-action="@{~/profile}" data-th-object="${user}" method="POST">
+            <div
+                data-th-replace="~{form-elements::validatedInput(
+                    type='text', 
+                    placeholder=${loggedInUser.getFirstName()}, 
+                    label='New first name', 
+                    name='firstName',
+                    isValid=${not #fields.hasErrors('firstName')},
+                    invalidMessage='First name is invalid!')}"
+            ></div>
+            <div
+                data-th-replace="~{form-elements::validatedInput(
+                    type='text', 
+                    placeholder=${loggedInUser.getLastName()}, 
+                    label='New last name',
+                    name='lastName',
+                    isValid=${not #fields.hasErrors('lastName')},
+                    invalidMessage='Last name is invalid!')}"
+            ></div>
+            <div
+                data-th-replace="~{form-elements::validatedInput(
+                    type='email', 
+                    placeholder=${loggedInUser.getEmail()}, 
+                    label='New e-mail address', 
+                    name='email',
+                    isValid=${not #fields.hasErrors('email')},
+                    invalidMessage='E-mail is invalid!')}"
+            ></div>
+            <div
+                data-th-replace="~{form-elements::validatedInput(
+                    type='password', 
+                    placeholder='', 
+                    label='New password',
+                    name='password',
+                    isValid=${not #fields.hasErrors('password')},
+                    invalidMessage='Password is invalid!')}"
+            ></div>
+
+            <button data-th-replace="~{form-elements::button('Update')}"></button>
+        </form>
     </body>
 </html>
