@@ -13,6 +13,7 @@ import com.nbu.logistics.repositories.RolesRepository;
 import com.nbu.logistics.repositories.UsersRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,9 @@ public class AuthService {
 
     @Autowired
     private ClientsRepository clientsRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public void registerUser(User user, Collection<String> roles) throws InvalidDataException {
         if (user == null || roles == null) {
@@ -51,7 +55,7 @@ public class AuthService {
         }
 
         user.setRoles(userRoles);
-
+        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
         this.usersRepository.save(user);
     }
 
@@ -78,7 +82,7 @@ public class AuthService {
         }
 
         if (newUser.getPassword() != null && !newUser.getPassword().isBlank()) {
-            existingUser.setPassword(newUser.getPassword());
+            existingUser.setPassword(this.passwordEncoder.encode(newUser.getPassword()));
         }
 
         this.usersRepository.save(existingUser);
