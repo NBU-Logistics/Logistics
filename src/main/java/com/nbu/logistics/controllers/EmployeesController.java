@@ -5,7 +5,7 @@ import com.nbu.logistics.services.OfficeEmployeesService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class EmployeesController {
@@ -15,13 +15,8 @@ public class EmployeesController {
     @Autowired
     private OfficeEmployeesService officeEmployeesService;
 
-    @RequestMapping("/employees")
+    @GetMapping("/employees")
     public String showEmployees() {
         return "employees";
-    }
-
-    @RequestMapping("/employees/create")
-    public String showCreateEmployee() {
-        return "create-employee";
     }
 }

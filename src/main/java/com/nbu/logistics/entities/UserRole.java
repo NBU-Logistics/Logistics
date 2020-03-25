@@ -1,8 +1,8 @@
 package com.nbu.logistics.entities;
 
-import java.util.List;
-
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.annotations.Where;
 
@@ -17,10 +17,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Where(clause = "is_deleted='false'")
-public class Client extends BaseEntity {
-    @OneToOne
-    private User user;
-
-    @OneToMany
-    private List<Delivery> deliveries;
+public class UserRole extends BaseEntity {
+    @Column(nullable = false, unique = true)
+    @NotEmpty
+    private String name;
 }

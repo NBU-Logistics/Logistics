@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Where;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +16,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class OfficeEmployee extends User {
+@Where(clause = "is_deleted='false'")
+public class OfficeEmployee extends BaseEntity {
+    @OneToOne
+    private User user;
+
     @OneToMany
     private List<Delivery> deliveries;
 }

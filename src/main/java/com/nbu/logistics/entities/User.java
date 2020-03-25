@@ -1,8 +1,13 @@
 package com.nbu.logistics.entities;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
+import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+
+import org.hibernate.annotations.Where;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,17 +15,18 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@MappedSuperclass
+@AllArgsConstructor
+@Entity
+@Where(clause = "is_deleted='false'")
 public class User extends BaseEntity {
-    @Column
     private String firstName;
 
-    @Column
     private String lastName;
 
-    @Column
     private String email;
 
-    @Column
     private String password;
+
+    @ManyToMany
+    private List<UserRole> roles;
 }

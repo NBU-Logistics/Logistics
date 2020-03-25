@@ -1,6 +1,87 @@
 <!DOCTYPE html>
 <html data-th-replace="~{base-centered::centered(data=~{::body})}">
     <body>
-        <h2 class="pb-4">Profile</h2>
+        <h2 class="pb-4 flex-item text-center">Change your profile data</h2>
+        <form data-th-action="@{~/profile}" data-th-object="${user}" method="POST">
+            <div
+                data-th-replace="~{form-elements::validatedInput(
+                    type='text', 
+                    placeholder=${loggedInUser.getFirstName()}, 
+                    label='New first name', 
+                    name='firstName',
+                    isValid=${not #fields.hasErrors('firstName')},
+                    invalidMessage='First name is invalid!')}"
+            ></div>
+            <div
+                data-th-replace="~{form-elements::validatedInput(
+                    type='text', 
+                    placeholder=${loggedInUser.getLastName()}, 
+                    label='New last name',
+                    name='lastName',
+                    isValid=${not #fields.hasErrors('lastName')},
+                    invalidMessage='Last name is invalid!')}"
+            ></div>
+            <div
+                data-th-replace="~{form-elements::validatedInput(
+                    type='email', 
+                    placeholder=${loggedInUser.getEmail()}, 
+                    label='New e-mail address', 
+                    name='email',
+                    isValid=${not #fields.hasErrors('email')},
+                    invalidMessage='E-mail is invalid!')}"
+            ></div>
+            <div
+                data-th-replace="~{form-elements::validatedInput(
+                    type='password', 
+                    placeholder='', 
+                    label='New password',
+                    name='password',
+                    isValid=${not #fields.hasErrors('password')},
+                    invalidMessage='Password is invalid!')}"
+            ></div>
+
+            <button data-th-replace="~{form-elements::button('Update')}"></button>
+        </form>
+
+        <button
+            data-th-if="${#authorization.expression('hasRole(''ROLE_CLIENT'')')}"
+            type="button"
+            class="btn btn-danger w-100 mt-3"
+            data-toggle="modal"
+            data-target="#deleteModal"
+        >
+            Delete
+        </button>
+
+        <div
+            data-th-replace="~{base-elements::modal(
+                title=~{::#deleteModalTitle},
+                body=~{::#deleteModalBody},
+                footer=~{::#deleteForm},
+                id='deleteModal')}"
+        >
+            <div id="deleteModalTitle">
+                Are you sure you want to delete your profile?
+            </div>
+            <div id="deleteModalBody">
+                You will not be able to recover your profile after this operation!
+            </div>
+            <div id="deleteForm">
+                <form
+                    data-th-if="${#authorization.expression('hasRole(''ROLE_CLIENT'')')}"
+                    data-th-action="@{~/clients/delete}"
+                    method="POST"
+                    class="mt-3"
+                >
+                    <input
+                        data-th-type="text"
+                        data-th-name="email"
+                        data-th-value="${loggedInUser.getEmail()}"
+                        class="d-none"
+                    />
+                    <button type="submit" class="btn btn-danger w-100" data-th-text="Yes"></button>
+                </form>
+            </div>
+        </div>
     </body>
 </html>
