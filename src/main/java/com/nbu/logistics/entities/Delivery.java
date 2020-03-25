@@ -27,7 +27,7 @@ public class Delivery extends BaseEntity {
     private Client sender;
 
     @ManyToOne
-    private Client recepient;
+    private Client recipient;
 
     @Column
     private String address;

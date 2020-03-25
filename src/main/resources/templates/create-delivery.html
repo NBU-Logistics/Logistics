@@ -1,6 +1,22 @@
 <!DOCTYPE html>
-<html data-th-replace="~{base-centered::centered(data=~{::body})}">
-    <body>
-        <h2 class="pb-4">Create a delivery</h2>
-    </body>
+
+<html data-th-replace="~{base-centered::centered(data=~{::body})}" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset=utf-8>
+</head>
+
+
+<body>
+<h2 class="pb-4">Създайте пратка</h2>
+
+
+ <form  th:action="@{/create}" th:object="${delivery}" method="post">
+
+    <input type = "text" th:field="*{name}" />
+
+ </form>
+
+</body>
+
 </html>
