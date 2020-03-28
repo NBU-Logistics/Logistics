@@ -16,7 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Where(clause = "is_deleted='false'")
-public class Office extends Company {
+public class Office extends BaseEntity {
     @Column
     private String name;
 }
