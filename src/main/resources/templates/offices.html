@@ -47,18 +47,70 @@
                             <!--                        Delete-->
                             <!--                        </a>-->
 
+                            <div
+                                class="modal fade"
+                                tabindex="-1"
+                                role="dialog"
+                                data-th-id="'office' + ${office.id}"
+                            >
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5
+                                                class="modal-title"
+                                                data-th-text="'Edit' + ${office.getName()}"
+                                            ></h5>
+                                            <button
+                                                type="button"
+                                                class="close"
+                                                data-dismiss="modal"
+                                            >
+                                                <span>&times;</span>
+                                            </button>
+                                        </div>
+                                        <form
+                                            data-th-action="@{~/offices/update}"
+                                            data-th-object="${office}"
+                                            method="POST"
+                                        >
+                                            <div class="modal-body">
+                                                <input
+                                                    type="hidden"
+                                                    name="id"
+                                                    data-th-value="${office.getId()}"
+                                                />
+
+                                                <label
+                                                    data-th-for="'#officeName' + ${office.getId()}"
+                                                    >New office name</label
+                                                >
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    data-th-id="'officeName' + ${office.getId()}"
+                                                    data-th-field="*{name}"
+                                                />
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-danger w-100"
+                                                    data-th-text="Yes"
+                                                ></button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-small">
-                                    <form data-th-action="@{/offices/update}" method="POST">
-                                        <input
-                                            type="hidden"
-                                            name="id"
-                                            data-th-value="${office.id}"
-                                        />
-                                        <button type="submit" class="btn btn-info btn-sm">
-                                            Edit
-                                        </button>
-                                    </form>
+                                    <button
+                                        data-toggle="modal"
+                                        data-th-data-target="'#office' + ${office.id}"
+                                        class="btn btn-info btn-sm"
+                                    >
+                                        Edit
+                                    </button>
                                 </div>
 
                                 <div class="col-small">

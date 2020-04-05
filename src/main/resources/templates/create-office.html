@@ -1,59 +1,32 @@
 <!DOCTYPE html>
 <html data-th-replace="~{base-centered::centered(data=~{::body})}">
-data-th-fragment="register(action, title)"
-data-th-replace="~{base-centered::centered(data=~{::body})}"
     <body>
-<!--        <h2 class="pb-4">Create office</h2>-->
-    <div class="container">
+        <!--        <h2 class="pb-4">Create office</h2>-->
+        <div class="container">
+            <h2>Offices Directory</h2>
+            <hr />
 
-        <h2>Offices Directory</h2>
-        <hr>
+            <p class="h4 mb-4">Create Employee</p>
 
-        <p class="h4 mb-4">Create Employee</p>
+            <form data-th-action="@{/offices/create}" data-th-object="${office}" method="POST">
+                <!--            add a hidden form to handle update-->
+                <input type="hidden" data-th-field="*{id}" />
 
-        <form data-th-action="@{/offices/create}"
-              data-th-object="${office}" method="POST">
-<!--            add a hidden form to handle update-->
-            <input type="hidden" data-th-field="*{id}" />
+                <input
+                    type="text"
+                    data-th-field="*{name}"
+                    class=""
+                    form-control
+                    mb-4
+                    col-4
+                    placeholder="Name"
+                />
 
-
-            <input type="text" data-th-field="*{name}"
-                    class=""form-control mb-4 col-4 placeholder="Name">
-
-            <button type="submit" class="btn btn-info col-2">Save Office</button>
-        </form>
-            <hr>
+                <button type="submit" class="btn btn-info col-2">Save Office</button>
+            </form>
+            <hr />
             <a data-th-href="@{/offices}">Back to the Offices</a>
-    </div>
-<!--        <button data-th-replace="~{form-elements::button('Create Office')}"></button>-->
+        </div>
+        <!--        <button data-th-replace="~{form-elements::button('Create Office')}"></button>-->
     </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -19,21 +19,13 @@ public class OfficesController {
     @Autowired
     private OfficesService officesService;
 
-    public OfficesController(OfficesService theOfficeService) {
-        officesService = theOfficeService;
-    }
-
-    @RequestMapping("/offices")
+    @GetMapping("/offices")
     public String showOffices(Office office, Model model) {
         // get offices from db
         List<Office> theOffices = officesService.getAllOffices();
         model.addAttribute("offices", theOffices);
-        return "offices";
-    }
 
-    @RequestMapping("/offices/{id}")
-    public Office getOffice(@PathVariable("id") long id) {
-        return officesService.getOffice(id);
+        return "offices";
     }
 
     // @GetMapping("/offices/create")
@@ -69,6 +61,7 @@ public class OfficesController {
         }
 
         officesService.save(office);
+
         return "redirect:/offices";
     }
 
@@ -82,7 +75,7 @@ public class OfficesController {
     // return "/offices";
     // }
 
-    @GetMapping("/offices/update")
+    @PostMapping("/offices/update")
     public String update(Model model, Office office) {
         try {
             this.officesService.modifyOffice(office);
@@ -93,8 +86,9 @@ public class OfficesController {
         }
 
         model.addAttribute("success", "Office edited successfully!");
+        model.addAttribute("offices", this.officesService.getAllOffices());
 
-        return "redirect:/offices";
+        return "offices";
     }
 
     // @PostMapping("/edit/{id}")
