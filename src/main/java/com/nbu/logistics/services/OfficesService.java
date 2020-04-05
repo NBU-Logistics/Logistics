@@ -1,6 +1,7 @@
 package com.nbu.logistics.services;
 
 import com.nbu.logistics.entities.Office;
+import com.nbu.logistics.exceptions.InvalidDataException;
 import com.nbu.logistics.repositories.OfficesRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,17 +18,10 @@ public class OfficesService {
     @Autowired
     private OfficesRepository officesRepository;
 
-    public OfficesService(OfficesRepository officesRepository) {
-        officesRepository = officesRepository;
-    }
-
-    //methods
-
     public List<Office> getAllOffices() {
-//        return  officesRepository.findAll();
-          return officesRepository.findAllByOrderByName();
+        // return officesRepository.findAll();
+        return officesRepository.findAllByOrderByName();
     }
-
 
     public Office getOffice(long id) {
         Office office = officesRepository.findById(id)
@@ -38,12 +32,11 @@ public class OfficesService {
     public Office getByIdOffice(long id) {
         Optional<Office> result = officesRepository.findById(id);
 
-
         Office theOffice = null;
 
-        if(result.isPresent()) {
-//            office.getName();
-            theOffice=result.get();
+        if (result.isPresent()) {
+            // office.getName();
+            theOffice = result.get();
         } else {
             throw new RuntimeException("Didn't find any office id - " + id);
         }
@@ -54,12 +47,31 @@ public class OfficesService {
         officesRepository.save(newOffice);
     }
 
-//    public void deleteOffice(long id) {
-//        officesRepository.deleteById(id);
-//    }
     public void deleteOffice(long id) {
-//    Office office = officesRepository.findById(id)
-//            .orElseThrow(() -> new IllegalArgumentException("Invalid office Id:" + id));
-        officesRepository.deleteById(id);
+        Optional<Office> office = this.officesRepository.findById(id);
+
+        if (office.isPresent()) {
+            office.get().setDeleted(true);
+            this.officesRepository.save(office.get());
+        }
+    }
+
+    public void modifyOffice(Office changedOffice) throws InvalidDataException {
+        if (changedOffice == null) {
+            throw new InvalidDataException("Missing office!");
+        }
+
+        Office office = this.officesRepository.getOne(changedOffice.getId());
+
+        if (office == null) {
+            throw new InvalidDataException("Office does not exist!");
+        }
+
+        if (changedOffice.getName().length() == 0) {
+            throw new InvalidDataException("Office name can not be empty!");
+        }
+
+        office.setName(changedOffice.getName());
+        this.officesRepository.save(office);
     }
 }

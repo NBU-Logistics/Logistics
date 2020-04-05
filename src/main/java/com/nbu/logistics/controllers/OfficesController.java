@@ -1,6 +1,7 @@
 package com.nbu.logistics.controllers;
 
 import com.nbu.logistics.entities.Office;
+import com.nbu.logistics.exceptions.InvalidDataException;
 import com.nbu.logistics.services.OfficesService;
 
 import org.dom4j.rule.Mode;
@@ -24,7 +25,7 @@ public class OfficesController {
 
     @RequestMapping("/offices")
     public String showOffices(Office office, Model model) {
-        //get offices from db
+        // get offices from db
         List<Office> theOffices = officesService.getAllOffices();
         model.addAttribute("offices", theOffices);
         return "offices";
@@ -35,21 +36,23 @@ public class OfficesController {
         return officesService.getOffice(id);
     }
 
-//    @GetMapping("/offices/create")
-//    public String getCreate(Office office, Model model) {
-//        Office theOffice = new Office();
-//
-//        model.addAttribute("office", theOffice);
-//
-//        return "create-office";
-//    }
-//    @PostMapping("/offices/create")
-//    public String createOffice(@RequestParam("id") int id, Model model, Office office, BindingResult bindingResult) {  //dali e minalo bez problem mapvaneto na dannite samo kydeto imam html forma
-//        Office theOffice = OfficesService.getOffice(id);
-//
-//        model.addAttribute("office", theOffice);
-//        return "create-office";
-//    }
+    // @GetMapping("/offices/create")
+    // public String getCreate(Office office, Model model) {
+    // Office theOffice = new Office();
+    //
+    // model.addAttribute("office", theOffice);
+    //
+    // return "create-office";
+    // }
+    // @PostMapping("/offices/create")
+    // public String createOffice(@RequestParam("id") int id, Model model, Office
+    // office, BindingResult bindingResult) { //dali e minalo bez problem mapvaneto
+    // na dannite samo kydeto imam html forma
+    // Office theOffice = OfficesService.getOffice(id);
+    //
+    // model.addAttribute("office", theOffice);
+    // return "create-office";
+    // }
 
     @GetMapping("/offices/create")
     public String getCreateOffice(Model model) {
@@ -59,9 +62,9 @@ public class OfficesController {
         return "create-office";
     }
 
-    @RequestMapping("offices/create")
-    public String saveOffice(@ModelAttribute("office") Office office, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
+    @PostMapping("/offices/create")
+    public String saveOffice(Office office, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             return "offices";
         }
 
@@ -69,55 +72,60 @@ public class OfficesController {
         return "redirect:/offices";
     }
 
-//    @GetMapping("/offices/editOffice")
-//    public String edit(@RequestParam("officeId") long id, Model model) {
-//        //get office from service
-//        Office office = officesService.getOffice(id);
-//        //set office as a model att
-//        model.addAttribute("office", office);
-//        //send over to form
-//        return "/offices";
-//    }
+    // @GetMapping("/offices/editOffice")
+    // public String edit(@RequestParam("officeId") long id, Model model) {
+    // //get office from service
+    // Office office = officesService.getOffice(id);
+    // //set office as a model att
+    // model.addAttribute("office", office);
+    // //send over to form
+    // return "/offices";
+    // }
 
-        @GetMapping("/editOffice")
-    public String update(@RequestParam("officeId") long id, Model model) {
-        //get office from service
-        Office office = officesService.getByIdOffice(id);
-        //set office as a model att
-        model.addAttribute("office", office);
-        //send over to form
-        return "create-office";
+    @GetMapping("/offices/update")
+    public String update(Model model, Office office) {
+        try {
+            this.officesService.modifyOffice(office);
+        } catch (InvalidDataException e) {
+            model.addAttribute("error", e.getMessage());
+
+            return "create-office";
+        }
+
+        model.addAttribute("success", "Office edited successfully!");
+
+        return "redirect:/offices";
     }
 
-//    @PostMapping("/edit/{id}")
-//    public String edit(@PathVariable("id") long id, Model model) {
-//
-//        Office theOffice = officesService.getOffice(id);
-//        model.addAttribute("office", theOffice);
-//
-//        return "edit-office";
-//    }
+    // @PostMapping("/edit/{id}")
+    // public String edit(@PathVariable("id") long id, Model model) {
+    //
+    // Office theOffice = officesService.getOffice(id);
+    // model.addAttribute("office", theOffice);
+    //
+    // return "edit-office";
+    // }
 
-//    @RequestMapping("/offices/edit/{id}")
-//    public ModelAndView editOffice(@PathVariable("id") long id)  {
-//        ModelAndView edit = new ModelAndView("office");
-//
-//        Office office = officesService.getOffice(id);
-//        edit.addObject("office", office);
-//
-//        return edit;
-//    }
+    // @RequestMapping("/offices/edit/{id}")
+    // public ModelAndView editOffice(@PathVariable("id") long id) {
+    // ModelAndView edit = new ModelAndView("office");
+    //
+    // Office office = officesService.getOffice(id);
+    // edit.addObject("office", office);
+    //
+    // return edit;
+    // }
 
-//    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
-//    public String delete(@PathVariable long id) {
-//        officesService.deleteOffice(id);
-//        return "redirect:/offices";
-//    }
-
+    // @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+    // public String delete(@PathVariable long id) {
+    // officesService.deleteOffice(id);
+    // return "redirect:/offices";
+    // }
 
     @PostMapping("/offices/delete")
-    public String delete(Office office, BindingResult bindingResult) {
-        officesService.deleteOffice(office.getId());
+    public String delete(@RequestParam("officeId") String officeId) {
+        officesService.deleteOffice(Long.parseLong(officeId));
+
         return "redirect:/offices";
     }
 }
