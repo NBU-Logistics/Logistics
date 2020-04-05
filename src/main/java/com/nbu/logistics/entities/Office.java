@@ -1,8 +1,6 @@
 package com.nbu.logistics.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import org.hibernate.annotations.Where;
 
@@ -18,7 +16,6 @@ import lombok.Setter;
 @Entity
 @Where(clause = "is_deleted='false'")
 public class Office extends BaseEntity {
-    @Column
     @Id
     private long id;
     private String name;

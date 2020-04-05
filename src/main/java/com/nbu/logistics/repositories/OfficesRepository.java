@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface OfficesRepository extends JpaRepository<Office, Long> {
 
-//    public List<Office> findByName(String name);
+    public List<Office> findAllByOrderByName();
 
 }
