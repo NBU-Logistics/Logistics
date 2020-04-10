@@ -1,138 +1,168 @@
 <!DOCTYPE html>
 <html
-    lang="en"
-    data-th-fragment="layout"
-    data-th-with="loggedIn=${#authorization.expression('isAuthenticated()')}"
+
+        lang="en"
+        data-th-fragment="layout"
+        data-th-with="loggedIn=${#authorization.expression('isAuthenticated()')}"
 >
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <link
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link
             rel="stylesheet"
             href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
             integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
             crossorigin="anonymous"
-        />
-        <link rel="stylesheet" data-th-href="@{/css/main.css}" />
+    />
+    <link rel="stylesheet" data-th-href="@{/css/main.css}" />
 
-        <div data-th-replace="${styles} ?: _"></div>
+    <div data-th-replace="${styles} ?: _"></div>
 
-        <title>Logistics company</title>
-    </head>
-    <body>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-            <button
-                class="navbar-toggler"
-                type="button"
-                data-toggle="collapse"
-                data-target="#navbar"
-            >
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <a class="navbar-brand" data-th-href="@{~/}">Logistics</a>
+    <title>Logistics company</title>
+</head>
+<body>
+<section id = "style">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Saira:wght@300;400&display=swap" rel="stylesheet">
+</section>
 
-            <div class="collapse navbar-collapse" id="navbar">
-                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                    <li
-                        data-th-replace="base-elements::navDropdown(
-                            urls=${ {'/deliveries/create', '/deliveries'} }, 
-                            names=${ {'Create delivery', 'View deliveries'} }, 
+
+<a class="navbar-brand" data-th-href="@{~/}">
+    <img class = "logo" src="/css/logo.png">
+</a>
+
+<nav class="navbar navbar-light bg-light fixed-top">
+    <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbar"
+    >
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <img class = "profile-pic" src = "/css/profile-logo.png">
+    <ul class="navbar-nav movable" data-th-if="${loggedIn}">
+
+        <li class="nav-item dropdown">
+           <a
+                class="nav-link dropdown-toggle"
+                data-toggle="dropdown"
+                data-th-text="U"
+                style="color: transparent"
+           >
+           </a>
+           <div class="dropdown-menu dropdown-menu-right menu-top" style="position: absolute; margin-right: -36px">
+            <a class="dropdown-item" data-th-href="@{~/logout}">Log out</a>
+            <a class="dropdown-item" data-th-href="@{~/profile}">User profile</a>
+        </div>
+        </li>
+    </ul>
+
+    <!-- POPIATI SASHO TVA OKEY LI EEEEEEEEEEE-->
+
+    <ul class="navbar-nav movable" data-th-unless="${loggedIn}">
+        <li class="nav-item dropdown">
+           <a
+                class="nav-link dropdown-toggle"
+                data-toggle="dropdown"
+                data-th-text="U"
+                style=" color: transparent"
+           >
+           </a>
+           <div class=" dropdown-menu dropdown-menu-right" style="position: absolute; margin-right: -36px">
+               <a class="dropdown-item" data-th-href="@{/clients/register}">Register</a>
+               <a class="dropdown-item" data-th-href="@{/login}">Log in</a>
+        </div>
+        </li>
+    </ul>
+</nav>
+
+<div class = "navbar">
+    <div class="collapse navbar-collapse navbar-light" id="navbar">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <li
+                data-th-replace="base-elements::navDropdown(
+                            urls=${ {'/deliveries/create', '/deliveries'} },
+                            names=${ {'Create a delivery', 'View deliveries'} },
                             text='Deliveries',
                             condition=${loggedIn})"
-                    ></li>
-                    <li
-                        data-th-replace="base-elements::navDropdown(
-                            urls=${ {'/employees/couriers/register', '/employees/office/register', '/employees'} }, 
-                            names=${ {'Create courier', 'Create an office employee', 'View employees'} }, 
+        ></li>
+        <li
+                data-th-replace="base-elements::navDropdown(
+                            urls=${ {'/employees/couriers/register', '/employees/office/register', '/employees'} },
+                            names=${ {'Create a courier', 'Create an office employee', 'View employees'} },
                             text='Employees',
                             condition=${loggedIn})"
-                    ></li>
-                    <li
-                        data-th-replace="base-elements::navDropdown(
-                            urls=${ {'/offices/create', '/offices'} }, 
-                            names=${ {'Create office', 'View offices'} }, 
+        ></li>
+        <li
+                data-th-replace="base-elements::navDropdown(
+                            urls=${ {'/offices/create', '/offices'} },
+                            names=${ {'Create an office', 'View offices'} },
                             text='Offices',
                             condition=${loggedIn})"
-                    ></li>
-                    <li
-                        data-th-replace="base-elements::navLink(
-                            url=@{~/company}, 
+        ></li>
+        <li
+                data-th-replace="base-elements::navLink(
+                            url=@{~/company},
                             text='Company',
                             condition=${loggedIn})"
-                    ></li>
-                    <li
-                        data-th-replace="base-elements::navLink(
-                            url=@{~/clients}, 
+        ></li>
+        <li
+                data-th-replace="base-elements::navLink(
+                            url=@{~/clients},
                             text='Clients',
                             condition=${loggedIn})"
-                    ></li>
-                    <li data-th-replace="base-elements::navLink(@{~/about}, 'About us')"></li>
-                </ul>
+        ></li>
+        <li data-th-replace="base-elements::navLink(@{~/about}, 'About us')"></li>
+    </ul>
+    </div>
+</div>
 
-                <ul class="navbar-nav" data-th-if="${loggedIn}">
-                    <li class="nav-item dropdown">
-                        <a
-                            class="nav-link dropdown-toggle"
-                            data-toggle="dropdown"
-                            data-th-text="${#authentication.getPrincipal().getUsername()}"
-                        ></a>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" data-th-href="@{~/logout}">Log out</a>
-                            <a class="dropdown-item" data-th-href="@{~/profile}">User profile</a>
-                        </div>
-                    </li>
-                </ul>
-                <ul class="navbar-nav" data-th-unless="${loggedIn}">
-                    <li data-th-replace="base-elements::navLink(@{~/login}, 'Log in')"></li>
-                    <li
-                        data-th-replace="base-elements::navLink(@{~/clients/register}, 'Register')"
-                    ></li>
-                </ul>
-            </div>
-        </nav>
+<section id="messages">
+    <div
+            data-th-if="${error != null}"
+            class="alert alert-danger alert-dismissible fade show message"
+            role="alert"
+    >
+        <span data-th-text="${error}"></span>
+        <button type="button" class="close" data-dismiss="alert">
+            <span>&times;</span>
+        </button>
+    </div>
+    <div
+            data-th-if="${success}"
+            class="alert alert-success alert-dismissible fade show message"
+            role="alert"
+    >
+        <span data-th-text="${success}"></span>
+        <button type="button" class="close" data-dismiss="alert">
+            <span>&times;</span>
+        </button>
+    </div>
+</section>
 
-        <section id="messages">
-            <div
-                data-th-if="${error != null}"
-                class="alert alert-danger alert-dismissible fade show message"
-                role="alert"
-            >
-                <span data-th-text="${error}"></span>
-                <button type="button" class="close" data-dismiss="alert">
-                    <span>&times;</span>
-                </button>
-            </div>
-            <div
-                data-th-if="${success}"
-                class="alert alert-success alert-dismissible fade show message"
-                role="alert"
-            >
-                <span data-th-text="${success}"></span>
-                <button type="button" class="close" data-dismiss="alert">
-                    <span>&times;</span>
-                </button>
-            </div>
-        </section>
+<section id="content" data-th-replace="${content}"></section>
 
-        <section id="content" data-th-replace="${content}"></section>
+<script
+        src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"
+></script>
+<script
+        src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"
+></script>
+<script
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"
+></script>
+<script data-th-src="@{/scripts/main.js}"></script>
 
-        <script
-            src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-            crossorigin="anonymous"
-        ></script>
-        <script
-            src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-            crossorigin="anonymous"
-        ></script>
-        <script
-            src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-            crossorigin="anonymous"
-        ></script>
-        <script data-th-src="@{/scripts/main.js}"></script>
+</body>
 
-        <div data-th-replace="${scripts} ?: _"></div>
-    </body>
 </html>
+
+

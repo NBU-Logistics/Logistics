@@ -1,6 +1,155 @@
 <!DOCTYPE html>
-<html data-th-replace="~{base-centered::centered(data=~{::body})}">
-    <body>
-        <h2 class="pb-4">Deliveries</h2>
-    </body>
+<html lang="EN" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      data-th-replace="~{base-centered::centered(data=~{::body}, styles=~{::#style})}">
+
+<body>
+
+<section id = "style">
+    <link href="../static/css/deliveries.css" th:href="@{/css/deliveries.css}" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Saira:wght@300;400&display=swap" rel="stylesheet">
+</section>
+
+<h2 class="pb-4 flex-item text-center">All deliveries</h2>
+<br>
+    <div th:if="${not #lists.isEmpty(allDeliveries)}">
+            <div class="scrollbar">
+                <table class="table table-borderless">
+                    <tr>
+                        <th>Sender email</th>
+                        <th>Recipient email</th>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Weight</th>
+                        <th>Delivery sent to office?</th>
+                        <th></th>
+                     </tr>
+                    <tr th:each="delivery: ${allDeliveries}">
+                        <td th:text="${delivery.sender?.user.email}"></td>
+                        <td th:text="${delivery.recipient?.user.email}"></td>
+                        <td th:text="${delivery.name}"></td>
+                        <td th:text="${delivery.address}"></td>
+                        <td th:text="${delivery.weight}"></td>
+                        <td th:text="${delivery.isOfficeDelivery()} ? 'Yes' : 'No'"></td>
+                        <td><button class="btn btn-style">Edit</button></td>
+                        <td>
+                            <a class = "btn btn-style" href=# th:href="@{/delete/} + ${delivery.name}">Delete</a>
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>
+             </div>
+    </div>
+
+
+<h2 class="pb-4 flex-item text-center">Sent by me</h2>
+<br>
+<div th:if="${not #lists.isEmpty(clientSentDeliveries)}">
+        <div class="scrollbar" >
+            <table class="table table-borderless">
+                <tr>
+                    <th>Sender email</th>
+                    <th>Recipient email</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Weight</th>
+                    <th>Delivery sent to office?</th>
+                    <th></th>
+                </tr>
+                <tr th:each="delivery : ${clientSentDeliveries}">
+                    <td th:text="${delivery.sender?.user.email}"></td>
+                    <td th:text="${delivery.recipient?.user.email}"></td>
+                    <td th:text="${delivery.name}"></td>
+                    <td th:text="${delivery.address}"></td>
+                    <td th:text="${delivery.weight}"></td>
+                    <td th:text="${delivery.isOfficeDelivery()} ? 'Yes' : 'No'"></td>
+                </tr>
+            </table>
+        </div>
+</div>
+
+<h2 class="pb-4 flex-item text-center">Sent by me (awaiting approval)</h2>
+<br>
+<div th:if="${not #lists.isEmpty(clientAwaitByDeliveries)}">
+        <div class="scrollbar">
+            <table class="table table-borderless">
+                <tr>
+                    <th>Sender email</th>
+                    <th>Recipient email</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Weight</th>
+                    <th>Delivery sent to office?</th>
+                    <th></th>
+                </tr>
+                <tr th:each="delivery : ${clientAwaitByDeliveries}">
+                    <td th:text="${delivery.sender?.user.email}"></td>
+                    <td th:text="${delivery.recipient?.user.email}"></td>
+                    <td th:text="${delivery.name}"></td>
+                    <td th:text="${delivery.address}"></td>
+                    <td th:text="${delivery.weight}"></td>
+                    <td th:text="${delivery.isOfficeDelivery()} ? 'Yes' : 'No'"></td>
+                </tr>
+            </table>
+        </div>
+</div>
+
+<h2 class="pb-4 flex-item text-center">Sent to me</h2>
+<div th:if="${not #lists.isEmpty(clientDeliveredDeliveries)}">
+    <div class="scrollbar scrollbar-lady-lips">
+        <div class="force-overflow">
+            <table class="table table-borderless">
+                <tr>
+                    <th>Sender email</th>
+                    <th>Recipient email</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Weight</th>
+                    <th>Delivery sent to office?</th>
+                    <th></th>
+                </tr>
+                <tr th:each="delivery : ${clientDeliveredDeliveries}">
+                    <td th:text="${delivery.sender?.user.email}"></td>
+                    <td th:text="${delivery.recipient?.user.email}"></td>
+                    <td th:text="${delivery.name}"></td>
+                    <td th:text="${delivery.address}"></td>
+                    <td th:text="${delivery.weight}"></td>
+                    <td th:text="${delivery.isOfficeDelivery()} ? 'Yes' : 'No'"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<h2 class="pb-4 flex-item text-center">Sent to me (awaiting approval)</h2>
+<div th:if="${not #lists.isEmpty(clientAwaitToDeliveries)}">
+    <div class="scrollbar scrollbar-lady-lips">
+        <div class="force-overflow" >
+            <table class="table table-borderless">
+                <tr>
+                    <th>Sender email</th>
+                    <th>Recipient email</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Weight</th>
+                    <th>Delivery sent to office?</th>
+                    <th></th>
+                </tr>
+                <tr th:each="delivery : ${clientAwaitToDeliveries}">
+                    <td th:text="${delivery.sender?.user.email}"></td>
+                    <td th:text="${delivery.recipient?.user.email}"></td>
+                    <td th:text="${delivery.name}"></td>
+                    <td th:text="${delivery.address}"></td>
+                    <td th:text="${delivery.weight}"></td>
+                    <td th:text="${delivery.isOfficeDelivery()} ? 'Yes' : 'No'"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+</body>
 </html>

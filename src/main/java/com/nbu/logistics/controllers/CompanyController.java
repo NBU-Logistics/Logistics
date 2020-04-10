@@ -17,5 +17,3 @@ public class CompanyController {
     }
 }
 
-//  <input type=hidden placeholder="Име изпращач. . ." class="form-control" name="name" th:field="*{name}" />
-// <input th:type="hidden" name="id" th:field="${program.id}" />

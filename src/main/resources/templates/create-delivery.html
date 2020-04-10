@@ -1,22 +1,69 @@
-<!DOCTYPE html>
 
-<html data-th-replace="~{base-centered::centered(data=~{::body})}" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE HTML>
+<html lang="EN" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      data-th-replace="~{base-centered::centered(data=~{::body}, styles=~{::#style})}">
 
 <head>
-    <meta charset=utf-8>
+    <title>Getting Started: Handling Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 
-
 <body>
-<h2 class="pb-4">Създайте пратка</h2>
+
+<section id = "style">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Saira:wght@300;400&display=swap" rel="stylesheet">
+</section>
+
+<h2 class="pb-4 flex-item text-center">Create a delivery</h2>
+<br>
+<form action="#" th:action="@{/create}" th:object="${delivery}" method="post">
+
+    <div class = "form-group">
+        <p>Delivery sender's email</p>
+        <input type = "text" th:field="*{sender.user.email}" class="form-control" />
+    </div>
+
+    <div class = "form-group">
+        <p>Delivery recipient's email</p>
+        <input type = "text" th:field="*{recipient.user.email}" class="form-control" />
+    </div>
+
+    <div class = "form-group">
+        <p>Delivery name</p>
+        <input type = "text" th:field="*{name}" class="form-control" />
+    </div>
+
+    <div class = "form-group">
+        <p>Delivery address</p>
+        <input type = "text" th:field="*{address}" class="form-control" />
+    </div>
+
+    <div class = "form-group">
+        <p>Delivery weight</p>
+        <input type = "number" th:field="*{weight}" class="form-control"/>
+    </div>
+
+    <div class = "form-group">
+        <div class="custom-control custom-checkbox checkbox-lg">
+            <input type="checkbox" name="officeDelivery" th:field="${delivery.officeDelivery}" class="custom-control-input" id="checkbox-2" checked="">
+            <label class="custom-control-label" for="checkbox-2">Delivery sent to office?</label>
+        </div>
+    </div>
+    <p>
+       <button class="btn btn-style w-75" type="submit">
+           Submit
+       </button>
+    </p>
+</form>
 
 
- <form  th:action="@{/create}" th:object="${delivery}" method="post">
-
-    <input type = "text" th:field="*{name}" />
-
- </form>
 
 </body>
-
 </html>
+
+<!--  <div class="custom-control custom-checkbox checkbox-lg">
+    <input type="checkbox" th:value="${isOfficeDelivery}" class="custom-control-input" id="checkbox-2" checked="">
+    <label class="custom-control-label" for="checkbox-2">Delivery sent to office?</label>
+</div>-->
+
