@@ -118,13 +118,18 @@ a:hover {
 }
 
 .mr-auto, .mx-auto {
-    padding-top: 150px;
+    margin-top: 0;
     margin-left: auto !important;
 }
 
+.mt-2, .my-2 {
+    margin-top: 14% !important;
+    margin-bottom: 10%;
+}
+
 .navbar-toggler-icon {
-    width: 1.5em;
-    height: 1.9em;
+    width: 1.6em;
+    height: 2em;
 }
 
 .logo {
@@ -249,6 +254,12 @@ p {
     color: #235883;
 }
 
+button:focus {
+    outline: none;
+}
+
+
+
 .btn-style,
 .btn-primary,
 .btn-primary:hover,
@@ -256,7 +267,8 @@ p {
 .btn-primary:not(:disabled):not(.disabled):active {
     font-size: 21px;
     border-radius: 0;
-    border: solid medium #235883;
+    border-color: transparent;
+    border-bottom: solid medium #235883;
     color: #235883;
     background-color: transparent;
 }
@@ -276,7 +288,8 @@ p {
 .btn-danger:not(:disabled):not(.disabled):active {
     font-size: 21px;
     border-radius: 0;
-    border: solid medium #a60b19;
+    border-color: transparent;
+    border-bottom: solid medium #a60b19;
     color: #a60b19;
     background-color: transparent;
 }
@@ -335,13 +348,26 @@ label[for = "lastName"] {
 }
 
 .navbar {
-    justify-content: end;
+    justify-content: flex-end;
     padding-bottom: 8px;
 }
 
+.navbar .collapsing {
+  display: block;
+}
+
 .navbar-collapse {
-    display: -webkit-box;
+    top: 0;
+    left: 0;
+    margin-right: 0;
+    position: fixed;
+    display: flex;
+    width: 100%;
     text-align: center;
+    transition: all 1.73s;
+    background-color: #e4f0f2;
+    border-bottom: solid medium rgb(176, 208, 201);
+
 }
 
 .navbar-nav .dropdown-menu {
@@ -361,12 +387,14 @@ label[for = "lastName"] {
     margin-top: 10px;
     border-radius: 0;
     color: #5a8675;
-    border-color: #5a8675;
+    border: solid medium #5a8675;
+    border-color: transparent;
 }
 
 .menu-top a {
     padding-right: 10px;
 }
+
 
 @media (max-width: 576px) {
 
@@ -384,6 +412,7 @@ label[for = "lastName"] {
 
     .navbar-collapse {
         display: unset;
+        transition: all 1.60s;
         border-bottom: solid 1px #5a8675;
     }
 
@@ -398,8 +427,7 @@ label[for = "lastName"] {
     }
 
     .navbar-toggler-icon {
-        width: 1.0em;
-        height: 1.8em;
+        height: 1.7em;
     }
 
     .logo {
@@ -408,12 +436,17 @@ label[for = "lastName"] {
     }
 
     .profile-pic {
-        width: 50px;
-        height: 55px;
+        width: 55px;
+        height: 60px;
     }
 
     .navbar-nav .dropdown-menu .dropdown-menu-right {
         position: absolute;
+    }
+
+    .mt-2, .my-2 {
+        margin-top: 33% !important;
+        margin-bottom: 30% !important;
     }
 
     .dropdown-menu {
@@ -446,7 +479,7 @@ label[for = "lastName"] {
 
     .dropdown-item:last-child {
          padding-top: 25px;
-         padding-bottom: 15px;
+         padding-bottom: 35px;
     }
 
     .dropdown-item:focus, .dropdown-item:hover {
@@ -464,7 +497,7 @@ label[for = "lastName"] {
 
     .menu-top a {
         text-align: right;
-        padding-right: 23px;
+        padding-right: 25px;
     }
 
     .center-flex-item {
