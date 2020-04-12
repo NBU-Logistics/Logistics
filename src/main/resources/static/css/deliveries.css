@@ -1,0 +1,53 @@
+
+
+.btn {
+  margin-top: 0;
+}
+
+.btn-style {
+  border-bottom: solid medium #1e4769;
+  color: #1a3f5d;
+  border-radius: 0;
+  font-size: 21px;
+
+}
+
+a:hover {
+  color: #1a3f5d;
+  font-weight: normal;
+}
+
+h2 {
+  margin-top: 50px;
+}
+
+.form-control {
+  background-color: #C8D4DB;
+  border: solid thin #1e4769;
+  border-radius: 0;
+  height: 45px;
+  color: #264f72;
+}
+
+.form-control:hover {
+  border: solid medium #264f72;
+}
+
+.form-control:focus {
+  box-shadow: none;
+  border: solid medium #264f72;
+  background-color: transparent;
+  color: #1a3f5d;
+
+}
+
+.table th{
+  color: #1d4464 ;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+
+
+
+

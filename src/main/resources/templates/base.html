@@ -13,6 +13,14 @@
             integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
             crossorigin="anonymous"
         />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Saira:wght@300;400&display=swap"
+            rel="stylesheet"
+        />
         <link rel="stylesheet" data-th-href="@{/css/main.css}" />
 
         <div data-th-replace="${styles} ?: _"></div>
@@ -20,7 +28,11 @@
         <title>Logistics company</title>
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <a class="navbar-brand" data-th-href="@{~/}">
+            <img class="logo" src="/css/logo.png" />
+        </a>
+
+        <nav class="navbar navbar-light bg-light fixed-top">
             <button
                 class="navbar-toggler"
                 type="button"
@@ -29,67 +41,87 @@
             >
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <a class="navbar-brand" data-th-href="@{~/}">Logistics</a>
+            <img class="profile-pic" src="/css/profile-logo.png" />
 
-            <div class="collapse navbar-collapse" id="navbar">
+            <ul class="navbar-nav movable" data-th-if="${loggedIn}">
+                <li class="nav-item dropdown">
+                    <a
+                        class="nav-link dropdown-toggle"
+                        data-toggle="dropdown"
+                        style="color: transparent;"
+                    >
+                        U
+                    </a>
+                    <div
+                        class="dropdown-menu dropdown-menu-right menu-top"
+                        style="position: absolute; margin-right: -36px;"
+                    >
+                        <a class="dropdown-item" data-th-href="@{~/logout}">Log out</a>
+                        <a class="dropdown-item" data-th-href="@{~/profile}">User profile</a>
+                    </div>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav movable" data-th-unless="${loggedIn}">
+                <li class="nav-item dropdown">
+                    <a
+                        class="nav-link dropdown-toggle"
+                        data-toggle="dropdown"
+                        style="color: transparent;"
+                    >
+                        U
+                    </a>
+                    <div
+                        class="dropdown-menu dropdown-menu-right"
+                        style="position: absolute; margin-right: -36px;"
+                    >
+                        <a class="dropdown-item" data-th-href="@{/clients/register}">Register</a>
+                        <a class="dropdown-item" data-th-href="@{/login}">Log in</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="navbar">
+            <div class="collapse navbar-collapse navbar-light" id="navbar">
                 <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                     <li
                         data-th-replace="base-elements::navDropdown(
-                            urls=${ {'/deliveries/create', '/deliveries'} }, 
-                            names=${ {'Create delivery', 'View deliveries'} }, 
+                            urls=${ {'/deliveries/create', '/deliveries'} },
+                            names=${ {'Create a delivery', 'View deliveries'} },
                             text='Deliveries',
                             condition=${loggedIn})"
                     ></li>
                     <li
                         data-th-replace="base-elements::navDropdown(
-                            urls=${ {'/employees/couriers/register', '/employees/office/register', '/employees'} }, 
-                            names=${ {'Create courier', 'Create an office employee', 'View employees'} }, 
+                            urls=${ {'/employees/couriers/register', '/employees/office/register', '/employees'} },
+                            names=${ {'Create a courier', 'Create an office employee', 'View employees'} },
                             text='Employees',
                             condition=${loggedIn})"
                     ></li>
                     <li
                         data-th-replace="base-elements::navDropdown(
-                            urls=${ {'/offices/create', '/offices'} }, 
-                            names=${ {'Create office', 'View offices'} }, 
+                            urls=${ {'/offices/create', '/offices'} },
+                            names=${ {'Create an office', 'View offices'} },
                             text='Offices',
                             condition=${loggedIn})"
                     ></li>
                     <li
                         data-th-replace="base-elements::navLink(
-                            url=@{~/company}, 
+                            url=@{~/company},
                             text='Company',
                             condition=${loggedIn})"
                     ></li>
                     <li
                         data-th-replace="base-elements::navLink(
-                            url=@{~/clients}, 
+                            url=@{~/clients},
                             text='Clients',
                             condition=${loggedIn})"
                     ></li>
                     <li data-th-replace="base-elements::navLink(@{~/about}, 'About us')"></li>
                 </ul>
-
-                <ul class="navbar-nav" data-th-if="${loggedIn}">
-                    <li class="nav-item dropdown">
-                        <a
-                            class="nav-link dropdown-toggle"
-                            data-toggle="dropdown"
-                            data-th-text="${#authentication.getPrincipal().getUsername()}"
-                        ></a>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" data-th-href="@{~/logout}">Log out</a>
-                            <a class="dropdown-item" data-th-href="@{~/profile}">User profile</a>
-                        </div>
-                    </li>
-                </ul>
-                <ul class="navbar-nav" data-th-unless="${loggedIn}">
-                    <li data-th-replace="base-elements::navLink(@{~/login}, 'Log in')"></li>
-                    <li
-                        data-th-replace="base-elements::navLink(@{~/clients/register}, 'Register')"
-                    ></li>
-                </ul>
             </div>
-        </nav>
+        </div>
 
         <section id="messages">
             <div
@@ -132,7 +164,5 @@
             crossorigin="anonymous"
         ></script>
         <script data-th-src="@{/scripts/main.js}"></script>
-
-        <div data-th-replace="${scripts} ?: _"></div>
     </body>
 </html>

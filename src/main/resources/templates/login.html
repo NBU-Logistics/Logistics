@@ -1,25 +1,30 @@
 <!DOCTYPE html>
-<html data-th-replace="~{base-centered::centered(data=~{::body})}">
+<html
+    lang="EN"
+    xmlns="http://www.w3.org/1999/xhtml"
+    data-th-replace="~{base-centered::centered(data=~{::body})}"
+>
     <body>
         <h2 class="pb-4 flex-item text-center">Log in</h2>
         <form data-th-action="@{/login}" data-th-object="${user}" method="POST">
             <div
                 data-th-replace="~{form-elements::validatedInput(
-                    type='email', 
-                    placeholder='email@example.com', 
-                    label='Email address', 
+                    type='email',
+                    placeholder='email@example.com',
+                    label='Email address',
                     name='email')}"
             ></div>
             <div
                 data-th-replace="~{form-elements::validatedInput(
-                    type='password', 
-                    placeholder='', 
+                    type='password',
+                    placeholder='',
                     label='Password',
                     name='password')}"
             ></div>
 
-            <button data-th-replace="~{form-elements::button('Log in')}"></button>
+            <p>
+                <button type="submit" class="btn btn-style w-75">Log in</button>
+            </p>
         </form>
-
     </body>
 </html>
