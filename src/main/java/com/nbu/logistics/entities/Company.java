@@ -3,12 +3,11 @@ package com.nbu.logistics.entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
-import org.hibernate.annotations.Where;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 @Getter
 @Setter
@@ -17,6 +16,9 @@ import lombok.Setter;
 @Entity
 @Where(clause = "is_deleted='false'")
 public class Company extends BaseEntity {
+    @Column
+    private String dtype;
+
     @Column
     private String name;
 

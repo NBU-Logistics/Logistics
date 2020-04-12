@@ -1,6 +1,20 @@
 <!DOCTYPE html>
 <html data-th-replace="~{base-centered::centered(data=~{::body})}">
-    <body>
-        <h2 class="pb-4">Company</h2>
-    </body>
+<body>
+<div data-th-if="${company != null}">
+    <h2 class="pb-4" data-th-text="${company.getName()}">Company Name</h2>
+    <h2 class="pb-4" data-th-text="${company.getEmail()}">Email</h2>
+    <h2 class="pb-4" data-th-text="${company.getAddress()}">Address</h2>
+    <h2 class="pb-4" data-th-text="${company.getOwnerName()}">Owner Name</h2>
+    <h2 class="pb-4" data-th-text="${company.getPhoneNumber()}">Phone Number</h2>
+    <form data-th-action="@{~/company/delete}" method="POST">
+        <button class="btn btn-primary" type="submit">Delete Company</button>
+    </form>
+</div>
+
+<div data-th-if="${company == null}">
+    <h2 class="pb-4">No Company Exists!</h2>
+</div>
+
+</body>
 </html>
