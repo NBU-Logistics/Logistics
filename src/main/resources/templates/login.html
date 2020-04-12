@@ -1,14 +1,10 @@
 <!DOCTYPE html>
-<html lang="EN"  xmlns="http://www.w3.org/1999/xhtml"
-      data-th-replace="~{base-centered::centered(data=~{::body}, styles=~{::#style})}">
-
+<html
+    lang="EN"
+    xmlns="http://www.w3.org/1999/xhtml"
+    data-th-replace="~{base-centered::centered(data=~{::body})}"
+>
     <body>
-
-    <section id = "style">
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Saira:wght@300;400&display=swap" rel="stylesheet">
-    </section>
-
         <h2 class="pb-4 flex-item text-center">Log in</h2>
         <form data-th-action="@{/login}" data-th-object="${user}" method="POST">
             <div
@@ -27,10 +23,8 @@
             ></div>
 
             <p>
-            <button type="submit" class="btn btn-style w-75">Log in</button>
-        <!--    <button data-th-replace="~{form-elements::button('Log in')}" ></button> -->
+                <button type="submit" class="btn btn-style w-75">Log in</button>
             </p>
         </form>
-
     </body>
 </html>

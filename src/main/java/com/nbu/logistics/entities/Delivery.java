@@ -17,7 +17,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Where(clause = "is_deleted='false'")
-
 public class Delivery extends BaseEntity {
 
     @Column

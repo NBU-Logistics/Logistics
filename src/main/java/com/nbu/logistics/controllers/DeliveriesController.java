@@ -2,6 +2,8 @@ package com.nbu.logistics.controllers;
 
 import com.nbu.logistics.config.MyUserPrincipal;
 import com.nbu.logistics.entities.Delivery;
+import com.nbu.logistics.exceptions.InvalidDataException;
+import com.nbu.logistics.services.AuthService;
 import com.nbu.logistics.services.DeliveriesService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -19,58 +20,56 @@ public class DeliveriesController {
     @Autowired
     private DeliveriesService deliveriesService;
 
-    @GetMapping("deliveries/create")
-    public String createDelivery(Model model) {
-        model.addAttribute("delivery", new Delivery());
-        return "create-delivery";
-    }
+    @Autowired
+    private AuthService authService;
 
-    @PostMapping("/create")
-    public String addDelivery(@ModelAttribute @Valid Delivery delivery, Model model, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            return "index";
-        }
-        deliveriesService.addDelivery(delivery);
-        return "message-added-delivery";
-    }
-
-    @RequestMapping("delete/{id}")
-    public String deleteDelivery(@PathVariable String id, Model model) {
-
-        deliveriesService.deleteDelivery(id);
-       // model.addAttribute("success", "Successfully deleted delivery!");
-        return "redirect:/message-added-delivery";
-    }
-
-    @RequestMapping("/message-added-delivery")
-    public String del( Model model) {
-
-
-        // model.addAttribute("success", "Successfully deleted delivery!");
-        return "message-added-delivery";
-    }
-
-    @RequestMapping("/deliveries")
-    public String showAllDeliveries(Model model, Delivery delivery) {
-        MyUserPrincipal loggedInUser = deliveriesService.getLoggedInUser();
-
+    private void getDeliveriesPage(Model model) {
+        MyUserPrincipal loggedInUser = this.authService.getLoggedInUser();
         model.addAttribute("allDeliveries", deliveriesService.getAllDeliveries());
         model.addAttribute("clientSentDeliveries", deliveriesService.getSentDeliveries(loggedInUser));
         model.addAttribute("clientAwaitByDeliveries", deliveriesService.getAwaitByDeliveries(loggedInUser));
         model.addAttribute("clientAwaitToDeliveries", deliveriesService.getAwaitToDeliveries(loggedInUser));
         model.addAttribute("clientDeliveredDeliveries", deliveriesService.getDeliveredDeliveries(loggedInUser));
+    }
+
+    @GetMapping("/deliveries/create")
+    public String createDelivery(Model model) {
+        model.addAttribute("delivery", new Delivery());
+
+        return "create-delivery";
+    }
+
+    @PostMapping("/deliveries/create")
+    public String addDelivery(Model model, @ModelAttribute @Valid Delivery delivery, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "index";
+        }
+
+        deliveriesService.addDelivery(delivery);
+
+        return "message-added-delivery";
+    }
+
+    @PostMapping("/deliveries/delete")
+    public String deleteDelivery(@RequestParam("id") String id, Model model) {
+        try {
+            deliveriesService.deleteDelivery(id);
+        } catch (InvalidDataException e) {
+            model.addAttribute("error", e.getMessage());
+
+            return "deliveries";
+        }
+
+        this.getDeliveriesPage(model);
+        model.addAttribute("success", "Successfully deleted delivery!");
+
         return "deliveries";
     }
 
-
-
-   /* @RequestMapping("/deliveries/client")
-    public String showClientDeliveries(Model model, Delivery delivery)
-    {
-        model.addAttribute("clientDeliveries", deliveriesService.getClientDeliveries(deliveriesService.getLoggedInUser()));
+    @RequestMapping("/deliveries")
+    public String showAllDeliveries(Model model, Delivery delivery) {
+        this.getDeliveriesPage(model);
 
         return "deliveries";
-    }*/
-
-
+    }
 }
