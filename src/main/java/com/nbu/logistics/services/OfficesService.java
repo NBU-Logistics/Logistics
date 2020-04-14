@@ -19,7 +19,6 @@ public class OfficesService {
     private OfficesRepository officesRepository;
 
     public List<Office> getAllOffices() {
-        // return officesRepository.findAll();
         return officesRepository.findAllByOrderByName();
     }
 
@@ -35,7 +34,6 @@ public class OfficesService {
         Office theOffice = null;
 
         if (result.isPresent()) {
-            // office.getName();
             theOffice = result.get();
         } else {
             throw new RuntimeException("Didn't find any office id - " + id);
@@ -68,7 +66,7 @@ public class OfficesService {
         }
 
         if (changedOffice.getName().length() == 0) {
-            throw new InvalidDataException("Office name can not be empty!");
+            throw new InvalidDataException("Please type the name of the office you want to edit!");
         }
 
         office.setName(changedOffice.getName());
