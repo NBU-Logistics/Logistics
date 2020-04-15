@@ -18,6 +18,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Where(clause = "is_deleted='false'")
+
 public class User extends BaseEntity {
     private String firstName;
 

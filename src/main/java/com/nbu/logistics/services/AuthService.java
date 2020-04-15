@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.nbu.logistics.config.MyUserPrincipal;
 import com.nbu.logistics.entities.Client;
 import com.nbu.logistics.entities.User;
 import com.nbu.logistics.entities.UserRole;
@@ -13,6 +14,8 @@ import com.nbu.logistics.repositories.RolesRepository;
 import com.nbu.logistics.repositories.UsersRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -116,5 +119,10 @@ public class AuthService {
         this.clientsRepository.save(existingClient);
 
         this.deleteUser(email);
+    }
+
+    public MyUserPrincipal getLoggedInUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (MyUserPrincipal) authentication.getPrincipal();
     }
 }
