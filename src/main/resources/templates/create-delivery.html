@@ -10,7 +10,7 @@
         <br />
         <form action="#" th:action="@{/deliveries/create}" th:object="${delivery}" method="post">
             <div class="form-group">
-                <p>Delivery sender's email</p>
+                <p>Delivery sender's email (yours)</p>
                 <input type="text" th:field="*{sender.user.email}" class="form-control" />
             </div>
 

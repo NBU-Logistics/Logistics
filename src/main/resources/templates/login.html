@@ -2,8 +2,10 @@
 <html
     lang="EN"
     xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
     data-th-replace="~{base-centered::centered(data=~{::body})}"
 >
+
     <body>
         <h2 class="pb-4 flex-item text-center">Log in</h2>
         <form data-th-action="@{/login}" data-th-object="${user}" method="POST">

@@ -10,7 +10,7 @@
     </section>
 
     <body>
-        <h2 class="pb-4 flex-item text-center">All deliveries</h2>
+        <h2 class="pb-4 flex-item text-center">All </h2>
         <br />
         <div th:if="${not #lists.isEmpty(allDeliveries)}">
             <div class="scrollbar">
@@ -31,7 +31,12 @@
                         <td th:text="${delivery.address}"></td>
                         <td th:text="${delivery.weight}"></td>
                         <td th:text="${delivery.isOfficeDelivery()} ? 'Yes' : 'No'"></td>
-                        <td><button class="btn btn-style">Edit</button></td>
+                        <td>
+                            <form  data-th-action="@{~/deliveries/info}" method="POST">
+                                <input type="hidden" name="id" data-th-value="${delivery.name}" />
+                                <button type="submit" class="btn btn-style">Edit</button>
+                            </form>
+                        </td>
                         <td>
                             <form data-th-action="@{~/deliveries/delete}" method="POST">
                                 <input type="hidden" name="id" data-th-value="${delivery.name}" />
@@ -42,10 +47,13 @@
                 </table>
             </div>
         </div>
+        <div th:if="${#lists.isEmpty(allDeliveries)}">
+            <p class="no-deliveries-text">Nothing to show</p>
+        </div>
 
-        <h2 class="pb-4 flex-item text-center">Sent by me</h2>
+        <h2 class="pb-4 flex-item text-center">Registered</h2>
         <br />
-        <div th:if="${not #lists.isEmpty(clientSentDeliveries)}">
+        <div th:if="${not #lists.isEmpty(registeredDeliveries)}">
             <div class="scrollbar">
                 <table class="table table-borderless">
                     <tr>
@@ -57,21 +65,36 @@
                         <th>Delivery sent to office?</th>
                         <th></th>
                     </tr>
-                    <tr th:each="delivery : ${clientSentDeliveries}">
+                    <tr th:each="delivery: ${registeredDeliveries}">
                         <td th:text="${delivery.sender?.user.email}"></td>
                         <td th:text="${delivery.recipient?.user.email}"></td>
                         <td th:text="${delivery.name}"></td>
                         <td th:text="${delivery.address}"></td>
                         <td th:text="${delivery.weight}"></td>
                         <td th:text="${delivery.isOfficeDelivery()} ? 'Yes' : 'No'"></td>
+                        <td>
+                            <form  data-th-action="@{~/deliveries/info}" method="POST">
+                                <input type="hidden" name="id" data-th-value="${delivery.name}" />
+                                <button type="submit" class="btn btn-style">Edit</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form data-th-action="@{~/deliveries/delete}" method="POST">
+                                <input type="hidden" name="id" data-th-value="${delivery.name}" />
+                                <button type="submit" class="btn btn-style">Delete</button>
+                            </form>
+                        </td>
                     </tr>
                 </table>
             </div>
         </div>
+        <div th:if="${#lists.isEmpty(registeredDeliveries)}">
+            <p class="no-deliveries-text">Nothing to show</p>
+        </div>
 
-        <h2 class="pb-4 flex-item text-center">Sent by me (awaiting approval)</h2>
+        <h2 class="pb-4 flex-item text-center">Sent but not delivered </h2>
         <br />
-        <div th:if="${not #lists.isEmpty(clientAwaitByDeliveries)}">
+        <div th:if="${not #lists.isEmpty(sentUndelivered)}">
             <div class="scrollbar">
                 <table class="table table-borderless">
                     <tr>
@@ -83,7 +106,48 @@
                         <th>Delivery sent to office?</th>
                         <th></th>
                     </tr>
-                    <tr th:each="delivery : ${clientAwaitByDeliveries}">
+                    <tr th:each="delivery: ${sentUndelivered}">
+                        <td th:text="${delivery.sender?.user.email}"></td>
+                        <td th:text="${delivery.recipient?.user.email}"></td>
+                        <td th:text="${delivery.name}"></td>
+                        <td th:text="${delivery.address}"></td>
+                        <td th:text="${delivery.weight}"></td>
+                        <td th:text="${delivery.isOfficeDelivery()} ? 'Yes' : 'No'"></td>
+                        <td>
+                            <form  data-th-action="@{~/deliveries/info}" method="POST">
+                                <input type="hidden" name="id" data-th-value="${delivery.name}" />
+                                <button type="submit" class="btn btn-style">Edit</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form data-th-action="@{~/deliveries/delete}" method="POST">
+                                <input type="hidden" name="id" data-th-value="${delivery.name}" />
+                                <button type="submit" class="btn btn-style">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div th:if="${#lists.isEmpty(sentUndelivered)}">
+            <p class="no-deliveries-text">Nothing to show</p>
+        </div>
+
+        <h2 class="pb-4 flex-item text-center">Sent and delivered</h2>
+        <br />
+        <div th:if="${not #lists.isEmpty(clientSentDelivered)}">
+            <div class="scrollbar">
+                <table class="table table-borderless">
+                    <tr>
+                        <th>Sender email</th>
+                        <th>Recipient email</th>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Weight</th>
+                        <th>Delivery sent to office?</th>
+                        <th></th>
+                    </tr>
+                    <tr th:each="delivery : ${clientSentDelivered}">
                         <td th:text="${delivery.sender?.user.email}"></td>
                         <td th:text="${delivery.recipient?.user.email}"></td>
                         <td th:text="${delivery.name}"></td>
@@ -94,9 +158,41 @@
                 </table>
             </div>
         </div>
+        <div th:if="${#lists.isEmpty(clientSentDelivered)}">
+            <p class="no-deliveries-text">Nothing to show</p>
+        </div>
 
-        <h2 class="pb-4 flex-item text-center">Sent to me</h2>
-        <div th:if="${not #lists.isEmpty(clientDeliveredDeliveries)}">
+        <h2 class="pb-4 flex-item text-center">Sent but not delivered yet</h2>
+        <br />
+        <div th:if="${not #lists.isEmpty(clientSentUndelivered)}">
+            <div class="scrollbar">
+                <table class="table table-borderless">
+                    <tr>
+                        <th>Sender email</th>
+                        <th>Recipient email</th>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Weight</th>
+                        <th>Delivery sent to office?</th>
+                        <th></th>
+                    </tr>
+                    <tr th:each="delivery : ${clientSentUndelivered}">
+                        <td th:text="${delivery.sender?.user.email}"></td>
+                        <td th:text="${delivery.recipient?.user.email}"></td>
+                        <td th:text="${delivery.name}"></td>
+                        <td th:text="${delivery.address}"></td>
+                        <td th:text="${delivery.weight}"></td>
+                        <td th:text="${delivery.isOfficeDelivery()} ? 'Yes' : 'No'"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div th:if="${#lists.isEmpty(clientSentUndelivered)}">
+            <p class="no-deliveries-text">Nothing to show</p>
+        </div>
+
+        <h2 class="pb-4 flex-item text-center">Received and delivered</h2>
+        <div th:if="${not #lists.isEmpty(clientReceivedDelivered)}">
             <div class="scrollbar scrollbar-lady-lips">
                 <div class="force-overflow">
                     <table class="table table-borderless">
@@ -109,7 +205,7 @@
                             <th>Delivery sent to office?</th>
                             <th></th>
                         </tr>
-                        <tr th:each="delivery : ${clientDeliveredDeliveries}">
+                        <tr th:each="delivery : ${clientReceivedDelivered}">
                             <td th:text="${delivery.sender?.user.email}"></td>
                             <td th:text="${delivery.recipient?.user.email}"></td>
                             <td th:text="${delivery.name}"></td>
@@ -121,9 +217,12 @@
                 </div>
             </div>
         </div>
+        <div th:if="${#lists.isEmpty(clientReceivedDelivered)}">
+            <p class="no-deliveries-text">Nothing to show</p>
+        </div>
 
-        <h2 class="pb-4 flex-item text-center">Sent to me (awaiting approval)</h2>
-        <div th:if="${not #lists.isEmpty(clientAwaitToDeliveries)}">
+        <h2 class="pb-4 flex-item text-center">Received but not delivered yet</h2>
+        <div th:if="${not #lists.isEmpty(clientReceivedUndelivered)}">
             <div class="scrollbar scrollbar-lady-lips">
                 <div class="force-overflow">
                     <table class="table table-borderless">
@@ -136,7 +235,7 @@
                             <th>Delivery sent to office?</th>
                             <th></th>
                         </tr>
-                        <tr th:each="delivery : ${clientAwaitToDeliveries}">
+                        <tr th:each="delivery : ${clientReceivedUndelivered}">
                             <td th:text="${delivery.sender?.user.email}"></td>
                             <td th:text="${delivery.recipient?.user.email}"></td>
                             <td th:text="${delivery.name}"></td>
@@ -148,5 +247,14 @@
                 </div>
             </div>
         </div>
+        <div th:if="${#lists.isEmpty(clientReceivedUndelivered)}">
+            <p class="no-deliveries-text">Nothing to show</p>
+        </div>
+
+
+
+
+
+
     </body>
 </html>
