@@ -15,6 +15,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 @Service
 public class DeliveriesService {
     @Autowired
@@ -37,11 +39,12 @@ public class DeliveriesService {
     }
 
     public void checkDeliveryWeight(double weight) throws InvalidDataException {
-        if(weight <= 0) {
+        if (weight <= 0) {
             throw new InvalidDataException("Please, enter valid weight.");
         }
     }
 
+    @Transactional
     public void addDelivery(Delivery delivery) throws InvalidDataException {
         this.checkDeliveryName(delivery);
         this.checkDeliveryWeight(delivery.getWeight());
@@ -49,11 +52,12 @@ public class DeliveriesService {
         String senderEmail = delivery.getSender().getUser().getEmail();
         String recipientEmail = delivery.getRecipient().getUser().getEmail();
 
+        if (senderEmail == recipientEmail) {
+            throw new InvalidDataException("You can not send deliveries to yourself!");
+        }
+
         Client sender = this.findUser(senderEmail);
         Client recipient = this.findUser(recipientEmail);
-
-        sender.getDeliveries().add(delivery);
-        recipient.getDeliveries().add(delivery);
 
         delivery.setPrice(delivery.getWeight() * 3);
         delivery.setSender(sender);
@@ -61,6 +65,11 @@ public class DeliveriesService {
         delivery.setStatus(DeliveryStatus.POSTED);
         delivery.setCreatedOn(new Date());
         deliveriesRepository.save(delivery);
+
+        sender.getDeliveries().add(delivery);
+        recipient.getDeliveries().add(delivery);
+        clientsRepository.save(sender);
+        clientsRepository.save(recipient);
     }
 
     public Delivery findDelivery(String id) {
@@ -75,35 +84,39 @@ public class DeliveriesService {
             throw new InvalidDataException("Delivery does not exist!");
         }
 
-        if(delivery.getAddress() != null && !delivery.getAddress().isBlank()) {
+        if (delivery.getAddress() != null && !delivery.getAddress().isBlank()) {
             delivery.setAddress(newDelivery.getAddress());
         }
 
-        if(delivery.getWeight() > 0) {
+        if (delivery.getWeight() > 0) {
             delivery.setWeight(newDelivery.getWeight());
             delivery.setPrice(delivery.getWeight() * 3);
         }
 
-        if(delivery.getStatus() != null) {
+        if (delivery.getStatus() != null) {
             delivery.setStatus(newDelivery.getStatus());
         }
 
         delivery.setOfficeDelivery(newDelivery.isOfficeDelivery());
         delivery.setCreatedOn(new Date());
 
-      /*  if(delivery.getSender() != null && !delivery.getSender().getUser().getEmail().isBlank()) {
-            delivery.setSender(newDelivery.getSender());
-            Client sender = this.findUser(newDelivery.getSender().getUser().getEmail());
-            if(sender.getDeliveries().stream().noneMatch(del -> del.getName().equals(delivery.getName())))
-               sender.getDeliveries().add(delivery);
-        }
-
-        if(delivery.getRecipient() != null && !delivery.getRecipient().getUser().getEmail().isBlank()) {
-            delivery.setRecipient(newDelivery.getRecipient());
-            Client recipient = this.findUser(newDelivery.getRecipient().getUser().getEmail());
-            if(recipient.getDeliveries().stream().noneMatch(del -> del.getName().equals(delivery.getName())))
-               recipient.getDeliveries().add(delivery);
-        }*/
+        /*
+         * if(delivery.getSender() != null &&
+         * !delivery.getSender().getUser().getEmail().isBlank()) {
+         * delivery.setSender(newDelivery.getSender()); Client sender =
+         * this.findUser(newDelivery.getSender().getUser().getEmail());
+         * if(sender.getDeliveries().stream().noneMatch(del ->
+         * del.getName().equals(delivery.getName())))
+         * sender.getDeliveries().add(delivery); }
+         * 
+         * if(delivery.getRecipient() != null &&
+         * !delivery.getRecipient().getUser().getEmail().isBlank()) {
+         * delivery.setRecipient(newDelivery.getRecipient()); Client recipient =
+         * this.findUser(newDelivery.getRecipient().getUser().getEmail());
+         * if(recipient.getDeliveries().stream().noneMatch(del ->
+         * del.getName().equals(delivery.getName())))
+         * recipient.getDeliveries().add(delivery); }
+         */
 
         deliveriesRepository.save(delivery);
     }
@@ -120,7 +133,7 @@ public class DeliveriesService {
     }
 
     public List<Delivery> getAll() {
-         return deliveriesRepository.findAll();
+        return deliveriesRepository.findAll();
     }
 
     public List<Delivery> getRegistered() {
@@ -183,4 +196,3 @@ public class DeliveriesService {
         return receivedUndelivered;
     }
 }
-

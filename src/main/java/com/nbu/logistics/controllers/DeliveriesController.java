@@ -49,13 +49,13 @@ public class DeliveriesController {
 
         try {
             deliveriesService.addDelivery(delivery);
-        } catch(InvalidDataException e) {
+        } catch (InvalidDataException e) {
             model.addAttribute("error", e.getMessage());
 
             return "create-delivery";
         }
 
-        return "deliveries";
+        return showAllDeliveries(model, delivery);
     }
 
     @PostMapping("/deliveries/delete")
@@ -76,10 +76,10 @@ public class DeliveriesController {
 
     @PostMapping("/deliveries/info")
     public String infoDelivery(@RequestParam("id") String id, Model model) {
-     //   this.getDeliveriesPage(model);
+        // this.getDeliveriesPage(model);
         model.addAttribute("editDelivery", deliveriesService.findDelivery(id));
-       // model.addAttribute("success", "Successfully edited delivery!");
-        //model.addAttribute("");
+        // model.addAttribute("success", "Successfully edited delivery!");
+        // model.addAttribute("");
         return "edit-delivery";
     }
 
@@ -91,7 +91,7 @@ public class DeliveriesController {
 
         try {
             deliveriesService.editDelivery(delivery, delivery.getName());
-        } catch(InvalidDataException e) {
+        } catch (InvalidDataException e) {
             model.addAttribute("error", e.getMessage());
 
             return "index";
