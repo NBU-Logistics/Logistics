@@ -12,16 +12,6 @@ data-th-replace="~{base-centered::centered(data=~{::body}, styles=~{::#style})}"
 
     <input type = "hidden" th:field="*{name}" class="form-control" >
 
-    <div class="form-group">
-       <p>Sender's email</p>
-       <input type="email" th:field="*{sender.user.email}" class="form-control">
-    </div>
-
-    <div class="form-group">
-        <p>Recipient's email</p>
-        <input type="email" th:field="*{recipient.user.email}" class="form-control">
-    </div>
-
      <div class="form-group">
          <p>Address</p>
           <input type="text" th:field="*{address}" class="form-control">

@@ -29,9 +29,21 @@ public class DeliveriesService {
         return clientsRepository.findByUserEmail(email);
     }
 
-    public void checkDeliveryName(Delivery del) throws InvalidDataException {
+    public void checkDeliverySender(String senderEmail, String recipientEmail) throws InvalidDataException {
+        if (senderEmail.equals(recipientEmail)) {
+            throw new InvalidDataException("You can not send deliveries to yourself!");
+        }
+    }
+
+    public void checkDeliveryRecipient(String recipientEmail) throws InvalidDataException {
+        if (this.findUser(recipientEmail) == null) {
+            throw new InvalidDataException("This recipient is not a client of this company.");
+        }
+    }
+
+    public void checkDeliveryName(Delivery delivery) throws InvalidDataException {
         boolean isPresent = deliveriesRepository.findAll().stream()
-                .anyMatch(delivery -> delivery.getName().equals(del.getName()));
+                .anyMatch(deliv -> deliv.getName().equals(delivery.getName()));
 
         if (isPresent) {
             throw new InvalidDataException("This delivery name already exists. Please, enter a different one.");
@@ -45,16 +57,13 @@ public class DeliveriesService {
     }
 
     @Transactional
-    public void addDelivery(Delivery delivery) throws InvalidDataException {
-        this.checkDeliveryName(delivery);
-        this.checkDeliveryWeight(delivery.getWeight());
-
-        String senderEmail = delivery.getSender().getUser().getEmail();
+    public void addDelivery(Delivery delivery, String senderEmail) throws InvalidDataException {
         String recipientEmail = delivery.getRecipient().getUser().getEmail();
 
-        if (senderEmail == recipientEmail) {
-            throw new InvalidDataException("You can not send deliveries to yourself!");
-        }
+        this.checkDeliveryName(delivery);
+        this.checkDeliveryWeight(delivery.getWeight());
+        this.checkDeliverySender(senderEmail, recipientEmail);
+        this.checkDeliveryRecipient(recipientEmail);
 
         Client sender = this.findUser(senderEmail);
         Client recipient = this.findUser(recipientEmail);
@@ -100,25 +109,8 @@ public class DeliveriesService {
         delivery.setOfficeDelivery(newDelivery.isOfficeDelivery());
         delivery.setCreatedOn(new Date());
 
-        /*
-         * if(delivery.getSender() != null &&
-         * !delivery.getSender().getUser().getEmail().isBlank()) {
-         * delivery.setSender(newDelivery.getSender()); Client sender =
-         * this.findUser(newDelivery.getSender().getUser().getEmail());
-         * if(sender.getDeliveries().stream().noneMatch(del ->
-         * del.getName().equals(delivery.getName())))
-         * sender.getDeliveries().add(delivery); }
-         * 
-         * if(delivery.getRecipient() != null &&
-         * !delivery.getRecipient().getUser().getEmail().isBlank()) {
-         * delivery.setRecipient(newDelivery.getRecipient()); Client recipient =
-         * this.findUser(newDelivery.getRecipient().getUser().getEmail());
-         * if(recipient.getDeliveries().stream().noneMatch(del ->
-         * del.getName().equals(delivery.getName())))
-         * recipient.getDeliveries().add(delivery); }
-         */
-
         deliveriesRepository.save(delivery);
+
     }
 
     public void deleteDelivery(String name) throws InvalidDataException {

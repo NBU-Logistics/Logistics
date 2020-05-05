@@ -7,6 +7,8 @@ import com.nbu.logistics.services.AuthService;
 import com.nbu.logistics.services.DeliveriesService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,6 +27,7 @@ public class DeliveriesController {
 
     private void getDeliveriesPage(Model model) {
         MyUserPrincipal loggedInUser = this.authService.getLoggedInUser();
+
         model.addAttribute("allDeliveries", deliveriesService.getAll());
         model.addAttribute("registeredDeliveries", deliveriesService.getRegistered());
         model.addAttribute("sentUndelivered", deliveriesService.getSentUndelivered());
@@ -43,12 +46,14 @@ public class DeliveriesController {
 
     @PostMapping("/deliveries/create")
     public String addDelivery(Model model, @ModelAttribute @Valid Delivery delivery, BindingResult bindingResult) {
+        MyUserPrincipal loggedInUser = this.authService.getLoggedInUser();
+
         if (bindingResult.hasErrors()) {
             return "index";
         }
 
         try {
-            deliveriesService.addDelivery(delivery);
+            deliveriesService.addDelivery(delivery, loggedInUser.getEmail());
         } catch (InvalidDataException e) {
             model.addAttribute("error", e.getMessage());
 
@@ -76,10 +81,8 @@ public class DeliveriesController {
 
     @PostMapping("/deliveries/info")
     public String infoDelivery(@RequestParam("id") String id, Model model) {
-        // this.getDeliveriesPage(model);
         model.addAttribute("editDelivery", deliveriesService.findDelivery(id));
-        // model.addAttribute("success", "Successfully edited delivery!");
-        // model.addAttribute("");
+
         return "edit-delivery";
     }
 
@@ -97,6 +100,7 @@ public class DeliveriesController {
             return "index";
         }
         this.getDeliveriesPage(model);
+
         return "deliveries";
     }
 
