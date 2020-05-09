@@ -12,8 +12,7 @@ public class ClientsService {
     @Autowired
     private ClientsRepository clientsRepository;
 
-    public void createClient(User user)
-    {
-        this.clientsRepository.save(new Client(user, null));
+    public void createClient(User user) {
+        this.clientsRepository.save(new Client(user, null, null));
     }
 }

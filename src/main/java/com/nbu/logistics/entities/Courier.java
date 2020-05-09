@@ -21,6 +21,6 @@ public class Courier extends BaseEntity {
     @OneToOne
     private User user;
 
-    @OneToMany
+    @ManyToMany
     private List<Delivery> deliveries;
 }

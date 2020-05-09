@@ -15,6 +15,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 @Service
 public class DeliveriesService {
     @Autowired
@@ -27,9 +29,40 @@ public class DeliveriesService {
         return clientsRepository.findByUserEmail(email);
     }
 
-    public void addDelivery(Delivery delivery) {
-        String senderEmail = delivery.getSender().getUser().getEmail();
+    public void checkDeliverySender(String senderEmail, String recipientEmail) throws InvalidDataException {
+        if (senderEmail.equals(recipientEmail)) {
+            throw new InvalidDataException("You can not send deliveries to yourself!");
+        }
+    }
+
+    public void checkDeliveryRecipient(String recipientEmail) throws InvalidDataException {
+        if (this.findUser(recipientEmail) == null) {
+            throw new InvalidDataException("This recipient is not a client of this company.");
+        }
+    }
+
+    public void checkDeliveryName(Delivery delivery) throws InvalidDataException {
+        boolean isPresent = deliveriesRepository.existsByName(delivery.getName());
+
+        if (isPresent) {
+            throw new InvalidDataException("This delivery name already exists. Please, enter a different one.");
+        }
+    }
+
+    public void checkDeliveryWeight(double weight) throws InvalidDataException {
+        if (weight <= 0) {
+            throw new InvalidDataException("Please, enter valid weight.");
+        }
+    }
+
+    @Transactional
+    public void addDelivery(Delivery delivery, String senderEmail) throws InvalidDataException {
         String recipientEmail = delivery.getRecipient().getUser().getEmail();
+
+        this.checkDeliveryName(delivery);
+        this.checkDeliveryWeight(delivery.getWeight());
+        this.checkDeliverySender(senderEmail, recipientEmail);
+        this.checkDeliveryRecipient(recipientEmail);
 
         Client sender = this.findUser(senderEmail);
         Client recipient = this.findUser(recipientEmail);
@@ -40,10 +73,46 @@ public class DeliveriesService {
         delivery.setStatus(DeliveryStatus.POSTED);
         delivery.setCreatedOn(new Date());
         deliveriesRepository.save(delivery);
+
+        sender.getSentDeliveries().add(delivery);
+        recipient.getReceivedDeliveries().add(delivery);
+        clientsRepository.save(sender);
+        clientsRepository.save(recipient);
+    }
+
+    public Delivery findDelivery(String id) {
+        return deliveriesRepository.findByName(id);
+    }
+
+    public void editDelivery(Delivery newDelivery, String id) throws InvalidDataException {
+        Delivery delivery = deliveriesRepository.findByName(id);
+
+        if (delivery == null) {
+            throw new InvalidDataException("Delivery does not exist!");
+        }
+
+        if (delivery.getAddress() != null && !delivery.getAddress().isBlank()) {
+            delivery.setAddress(newDelivery.getAddress());
+        }
+
+        if (delivery.getWeight() > 0) {
+            delivery.setWeight(newDelivery.getWeight());
+            delivery.setPrice(delivery.getWeight() * 3);
+        }
+
+        if (delivery.getStatus() != null) {
+            delivery.setStatus(newDelivery.getStatus());
+        }
+
+        delivery.setOfficeDelivery(newDelivery.isOfficeDelivery());
+        delivery.setCreatedOn(new Date());
+
+        deliveriesRepository.save(delivery);
     }
 
     public void deleteDelivery(String name) throws InvalidDataException {
         Delivery delivery = this.deliveriesRepository.findByName(name);
+
         if (delivery == null) {
             throw new InvalidDataException("Delivery does not exist!");
         }
@@ -52,61 +121,55 @@ public class DeliveriesService {
         this.deliveriesRepository.save(delivery);
     }
 
-    public List<Delivery> getAllDeliveries() {
+    public List<Delivery> getAll() {
         return deliveriesRepository.findAll();
     }
 
-    public List<Delivery> getSentDeliveries(MyUserPrincipal user) {
-        String email = user.getEmail();
-        List<Delivery> deliveries = this.clientsRepository.findByUserEmail(email).getDeliveries();
-        List<Delivery> sentDeliveries = deliveries.stream()
-                .filter(delivery -> delivery.getSender().getUser().getEmail().equals(email))
-                .collect(Collectors.toList());
-
-        return sentDeliveries;
+    public List<Delivery> getRegistered() {
+        return deliveriesRepository.findByStatus(DeliveryStatus.REGISTERED);
     }
 
-    public List<Delivery> getAwaitByDeliveries(MyUserPrincipal user) {
-        String email = user.getEmail();
-
-        return deliveriesRepository.findAll().stream()
-                .filter(delivery -> delivery.getSender().getUser().getEmail().equals(email)
-                        && delivery.getStatus() != (DeliveryStatus.DELIVERED) && delivery.getStatus() != null)
-                .collect(Collectors.toList());
+    public List<Delivery> getSentUndelivered() {
+        return deliveriesRepository.findByStatusNot(DeliveryStatus.DELIVERED);
     }
 
-    public List<Delivery> getAwaitToDeliveries(MyUserPrincipal user) {
+    public List<Delivery> getSentDelivered(MyUserPrincipal user) {
         String email = user.getEmail();
 
-        return deliveriesRepository.findAll().stream()
-                .filter(delivery -> delivery.getRecipient().getUser().getEmail().equals(email)
-                        && delivery.getStatus() != (DeliveryStatus.DELIVERED) && delivery.getStatus() != null)
-                .collect(Collectors.toList());
+        List<Delivery> sentDelivered = this.clientsRepository.findByUserEmail(email).getSentDeliveries().stream()
+                .filter(delivery -> delivery.getStatus() == DeliveryStatus.DELIVERED).collect(Collectors.toList());
+
+        return sentDelivered;
     }
 
-    public List<Delivery> getDeliveredDeliveries(MyUserPrincipal user) {
+    public List<Delivery> getSentUndelivered(MyUserPrincipal user) {
         String email = user.getEmail();
 
-        return deliveriesRepository.findAll().stream()
-                .filter(delivery -> delivery.getRecipient().getUser().getEmail().equals(email))
+        List<Delivery> sentUndelivered = this.clientsRepository.findByUserEmail(email).getSentDeliveries().stream()
+                .filter(delivery -> delivery.getStatus() != DeliveryStatus.DELIVERED && delivery.getStatus() != null)
                 .collect(Collectors.toList());
+
+        return sentUndelivered;
+    }
+
+    public List<Delivery> getReceivedDelivered(MyUserPrincipal user) {
+        String email = user.getEmail();
+
+        List<Delivery> receivedDelivered = this.clientsRepository.findByUserEmail(email).getReceivedDeliveries()
+                .stream().filter(delivery -> delivery.getStatus() == DeliveryStatus.DELIVERED)
+                .collect(Collectors.toList());
+
+        return receivedDelivered;
+    }
+
+    public List<Delivery> getReceivedUndelivered(MyUserPrincipal user) {
+        String email = user.getEmail();
+
+        List<Delivery> receivedUndelivered = this.clientsRepository.findByUserEmail(email).getReceivedDeliveries()
+                .stream()
+                .filter(delivery -> delivery.getStatus() != DeliveryStatus.DELIVERED && delivery.getStatus() != null)
+                .collect(Collectors.toList());
+
+        return receivedUndelivered;
     }
 }
-
-/*
- * /Client client = clientsRepository.findByUserEmail(email);
- * 
- * List<Delivery> deli = new ArrayList<Delivery>();
- * deliveriesRepository.findAll().forEach(deli::add);
- * 
- * 
- * List<Delivery> deliCl = new ArrayList<Delivery>(); // String nz =
- * delivery.getStatus().name();
- * 
- * for(Delivery del : deli) {
- * if(del.getSender().getUser().getEmail().equals(email) && del.getStatus() !=
- * (DeliveryStatus.DELIVERED) && del.getStatus() != null) {
- * //System.out.println(delivery.getStatus()); deliCl.add(del); } }
- * 
- * return deliCl;
- */

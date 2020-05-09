@@ -149,18 +149,22 @@ a:hover {
 
 .dropdown-menu {
     margin-top: 0;
-    padding: 2rem 1rem 1rem 3rem;
+    padding: 2rem 1.25rem 0.2rem 1.25rem;
     float: left;
     font-size: 1.24rem;
-    text-align: right;
+    text-align: center;
     background-clip: padding-box;
     border: none;
     border-radius: 0;
     background-color: #bad9d2;
 }
 
+.dropdown-menu.show {
+    display: inline-block;
+}
+
 .dropdown-item {
-    padding: 1rem 1.2rem 1rem 2.2rem;
+    padding: 1rem 2.2rem;
     letter-spacing: 0.04em;
     color: #5a8675;
 }
@@ -261,22 +265,30 @@ button:focus {
     outline: none;
 }
 
-.btn-style,
+.btn-style {
+    border-radius: 0;
+    border: solid medium #e4f0f2;
+    outline: medium solid #86a8a0;
+    box-shadow: 0  7px #1d4464;
+}
+
 .btn-primary,
 .btn-primary:hover,
 .btn-primary:focus,
 .btn-primary:not(:disabled):not(.disabled):active {
     font-size: 21px;
     border-radius: 0;
-    border-color: transparent;
-    border-bottom: solid medium #235883;
+    border: solid medium #e4f0f2;
+    outline: medium solid #1d4464;
     color: #235883;
     background-color: transparent;
 }
 
 .btn {
-    margin-top: 40px;
-    height: 50px;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    height: 43px;
+    transition: step-end;
 }
 
 .btn:focus {
@@ -289,8 +301,8 @@ button:focus {
 .btn-danger:not(:disabled):not(.disabled):active {
     font-size: 21px;
     border-radius: 0;
-    border-color: transparent;
-    border-bottom: solid medium #a60b19;
+    border: solid medium  #e4f0f2;
+    outline: medium solid #a60b19;
     color: #a60b19;
     background-color: transparent;
 }
@@ -365,13 +377,10 @@ label[for="lastName"] {
     display: flex;
     width: 100%;
     text-align: center;
-    transition: all 1.73s;
+    z-index: 1000;
+    transition: all 1.6s;
     background-color: #e4f0f2;
     border-bottom: solid medium rgb(176, 208, 201);
-}
-
-.navbar-nav .dropdown-menu {
-    position: absolute;
 }
 
 .mr-auto .nav-item {
@@ -395,7 +404,27 @@ label[for="lastName"] {
     padding-right: 10px;
 }
 
+select {
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+select::-ms-expand {
+    display: none;
+}
+
+
+.dropdown-menu-right .menu-top  {
+    position: absolute;
+    margin-right: -36px;
+}
+
 @media (max-width: 576px) {
+    .btn {
+      height: 50px;
+    }
+
     .navbar-nav .dropdown-menu {
         position: relative;
         float: none;
@@ -462,6 +491,7 @@ label[for="lastName"] {
 
     .dropdown-item {
         padding: 0.5rem 0;
+        text-align: center;
         letter-spacing: 0;
         color: rgba(0, 0, 0, 0.5);
     }
