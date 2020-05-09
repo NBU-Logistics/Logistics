@@ -42,8 +42,7 @@ public class DeliveriesService {
     }
 
     public void checkDeliveryName(Delivery delivery) throws InvalidDataException {
-        boolean isPresent = deliveriesRepository.findAll().stream()
-                .anyMatch(deliv -> deliv.getName().equals(delivery.getName()));
+        boolean isPresent = deliveriesRepository.existsByName(delivery.getName());
 
         if (isPresent) {
             throw new InvalidDataException("This delivery name already exists. Please, enter a different one.");
@@ -75,8 +74,8 @@ public class DeliveriesService {
         delivery.setCreatedOn(new Date());
         deliveriesRepository.save(delivery);
 
-        sender.getDeliveries().add(delivery);
-        recipient.getDeliveries().add(delivery);
+        sender.getSentDeliveries().add(delivery);
+        recipient.getReceivedDeliveries().add(delivery);
         clientsRepository.save(sender);
         clientsRepository.save(recipient);
     }
@@ -86,7 +85,6 @@ public class DeliveriesService {
     }
 
     public void editDelivery(Delivery newDelivery, String id) throws InvalidDataException {
-
         Delivery delivery = deliveriesRepository.findByName(id);
 
         if (delivery == null) {
@@ -110,7 +108,6 @@ public class DeliveriesService {
         delivery.setCreatedOn(new Date());
 
         deliveriesRepository.save(delivery);
-
     }
 
     public void deleteDelivery(String name) throws InvalidDataException {
@@ -129,25 +126,18 @@ public class DeliveriesService {
     }
 
     public List<Delivery> getRegistered() {
-        return deliveriesRepository.findAll().stream()
-                .filter(delivery -> delivery.getStatus() == (DeliveryStatus.REGISTERED) && delivery.getStatus() != null)
-                .collect(Collectors.toList());
+        return deliveriesRepository.findByStatus(DeliveryStatus.REGISTERED);
     }
 
     public List<Delivery> getSentUndelivered() {
-        return deliveriesRepository.findAll().stream()
-                .filter(delivery -> delivery.getStatus() != (DeliveryStatus.DELIVERED) && delivery.getStatus() != null)
-                .collect(Collectors.toList());
+        return deliveriesRepository.findByStatusNot(DeliveryStatus.DELIVERED);
     }
 
     public List<Delivery> getSentDelivered(MyUserPrincipal user) {
         String email = user.getEmail();
 
-        List<Delivery> deliveries = this.clientsRepository.findByUserEmail(email).getDeliveries();
-        List<Delivery> sentDelivered = deliveries.stream()
-                .filter(delivery -> delivery.getSender().getUser().getEmail().equals(email)
-                        && delivery.getStatus() == (DeliveryStatus.DELIVERED) && delivery.getStatus() != null)
-                .collect(Collectors.toList());
+        List<Delivery> sentDelivered = this.clientsRepository.findByUserEmail(email).getSentDeliveries().stream()
+                .filter(delivery -> delivery.getStatus() == DeliveryStatus.DELIVERED).collect(Collectors.toList());
 
         return sentDelivered;
     }
@@ -155,10 +145,8 @@ public class DeliveriesService {
     public List<Delivery> getSentUndelivered(MyUserPrincipal user) {
         String email = user.getEmail();
 
-        List<Delivery> deliveries = this.clientsRepository.findByUserEmail(email).getDeliveries();
-        List<Delivery> sentUndelivered = deliveries.stream()
-                .filter(delivery -> delivery.getSender().getUser().getEmail().equals(email)
-                        && delivery.getStatus() != (DeliveryStatus.DELIVERED) && delivery.getStatus() != null)
+        List<Delivery> sentUndelivered = this.clientsRepository.findByUserEmail(email).getSentDeliveries().stream()
+                .filter(delivery -> delivery.getStatus() != DeliveryStatus.DELIVERED && delivery.getStatus() != null)
                 .collect(Collectors.toList());
 
         return sentUndelivered;
@@ -167,10 +155,8 @@ public class DeliveriesService {
     public List<Delivery> getReceivedDelivered(MyUserPrincipal user) {
         String email = user.getEmail();
 
-        List<Delivery> deliveries = this.clientsRepository.findByUserEmail(email).getDeliveries();
-        List<Delivery> receivedDelivered = deliveries.stream()
-                .filter(delivery -> delivery.getRecipient().getUser().getEmail().equals(email)
-                        && delivery.getStatus() == (DeliveryStatus.DELIVERED))
+        List<Delivery> receivedDelivered = this.clientsRepository.findByUserEmail(email).getReceivedDeliveries()
+                .stream().filter(delivery -> delivery.getStatus() == DeliveryStatus.DELIVERED)
                 .collect(Collectors.toList());
 
         return receivedDelivered;
@@ -179,10 +165,9 @@ public class DeliveriesService {
     public List<Delivery> getReceivedUndelivered(MyUserPrincipal user) {
         String email = user.getEmail();
 
-        List<Delivery> deliveries = this.clientsRepository.findByUserEmail(email).getDeliveries();
-        List<Delivery> receivedUndelivered = deliveries.stream()
-                .filter(delivery -> delivery.getRecipient().getUser().getEmail().equals(email)
-                        && delivery.getStatus() != (DeliveryStatus.DELIVERED) && delivery.getStatus() != null)
+        List<Delivery> receivedUndelivered = this.clientsRepository.findByUserEmail(email).getReceivedDeliveries()
+                .stream()
+                .filter(delivery -> delivery.getStatus() != DeliveryStatus.DELIVERED && delivery.getStatus() != null)
                 .collect(Collectors.toList());
 
         return receivedUndelivered;
