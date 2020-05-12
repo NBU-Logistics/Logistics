@@ -21,6 +21,9 @@ public class Client extends BaseEntity {
     @OneToOne
     private User user;
 
-    @OneToMany
-    private List<Delivery> deliveries;
+    @ManyToMany
+    private List<Delivery> sentDeliveries;
+
+    @ManyToMany
+    private List<Delivery> receivedDeliveries;
 }

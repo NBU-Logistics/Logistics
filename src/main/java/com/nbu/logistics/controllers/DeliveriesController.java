@@ -25,11 +25,14 @@ public class DeliveriesController {
 
     private void getDeliveriesPage(Model model) {
         MyUserPrincipal loggedInUser = this.authService.getLoggedInUser();
-        model.addAttribute("allDeliveries", deliveriesService.getAllDeliveries());
-        model.addAttribute("clientSentDeliveries", deliveriesService.getSentDeliveries(loggedInUser));
-        model.addAttribute("clientAwaitByDeliveries", deliveriesService.getAwaitByDeliveries(loggedInUser));
-        model.addAttribute("clientAwaitToDeliveries", deliveriesService.getAwaitToDeliveries(loggedInUser));
-        model.addAttribute("clientDeliveredDeliveries", deliveriesService.getDeliveredDeliveries(loggedInUser));
+
+        model.addAttribute("allDeliveries", deliveriesService.getAll());
+        model.addAttribute("registeredDeliveries", deliveriesService.getRegistered());
+        model.addAttribute("sentUndelivered", deliveriesService.getSentUndelivered());
+        model.addAttribute("clientSentDelivered", deliveriesService.getSentDelivered(loggedInUser));
+        model.addAttribute("clientSentUndelivered", deliveriesService.getSentUndelivered(loggedInUser));
+        model.addAttribute("clientReceivedDelivered", deliveriesService.getReceivedDelivered(loggedInUser));
+        model.addAttribute("clientReceivedUndelivered", deliveriesService.getReceivedUndelivered(loggedInUser));
     }
 
     @GetMapping("/deliveries/create")
@@ -41,13 +44,21 @@ public class DeliveriesController {
 
     @PostMapping("/deliveries/create")
     public String addDelivery(Model model, @ModelAttribute @Valid Delivery delivery, BindingResult bindingResult) {
+        MyUserPrincipal loggedInUser = this.authService.getLoggedInUser();
+
         if (bindingResult.hasErrors()) {
             return "index";
         }
 
-        deliveriesService.addDelivery(delivery);
+        try {
+            deliveriesService.addDelivery(delivery, loggedInUser.getEmail());
+        } catch (InvalidDataException e) {
+            model.addAttribute("error", e.getMessage());
 
-        return "message-added-delivery";
+            return "create-delivery";
+        }
+
+        return showAllDeliveries(model, delivery);
     }
 
     @PostMapping("/deliveries/delete")
@@ -61,7 +72,34 @@ public class DeliveriesController {
         }
 
         this.getDeliveriesPage(model);
+
         model.addAttribute("success", "Successfully deleted delivery!");
+
+        return "deliveries";
+    }
+
+    @PostMapping("/deliveries/info")
+    public String infoDelivery(@RequestParam("id") String id, Model model) {
+        model.addAttribute("editDelivery", deliveriesService.findDelivery(id));
+
+        return "edit-delivery";
+    }
+
+    @PostMapping("/deliveries/edit")
+    public String editDelivery(Model model, @ModelAttribute @Valid Delivery delivery, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "index";
+        }
+
+        try {
+            deliveriesService.editDelivery(delivery, delivery.getName());
+        } catch (InvalidDataException e) {
+            model.addAttribute("error", e.getMessage());
+
+            return "index";
+        }
+
+        this.getDeliveriesPage(model);
 
         return "deliveries";
     }
