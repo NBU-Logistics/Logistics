@@ -1,6 +1,39 @@
 <!DOCTYPE html>
-<html data-th-replace="~{base-centered::centered(data=~{::body})}">
-    <body>
-        <h2 class="pb-4">Employees</h2>
-    </body>
+<html
+        lang="EN"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        data-th-replace="~{base-centered::centered(data=~{::body}, styles=~{::#style})}"
+>
+
+<section id="style">
+    <link th:href="@{/css/deliveries.css}" rel="stylesheet" />
+</section>
+
+<body>
+<h2 class="pb-4">Manage employees</h2>
+
+<ul class="list-group mt-3">
+    <div
+            data-th-each="employee : ${employees}"
+            data-th-insert="~{employees-elements::employeeItem(${employee})}"
+            data-th-remove="tag"
+    ></div>
+</ul>
+
+<div>
+    <div
+            data-th-each="employee : ${employees}"
+            data-th-insert="~{employees-elements::deleteEmployeeModal(${employee})}"
+            data-th-remove="tag"
+    ></div>
+
+    <div
+            data-th-each="employee : ${employees}"
+            data-th-insert="~{employees-elements::editEmployeeModal(${employee})}"
+            data-th-remove="tag"
+    ></div>
+</div>
+</body>
+
 </html>
