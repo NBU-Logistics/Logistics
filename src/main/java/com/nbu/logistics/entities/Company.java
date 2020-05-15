@@ -17,9 +17,6 @@ import org.hibernate.annotations.Where;
 @Where(clause = "is_deleted='false'")
 public class Company extends BaseEntity {
     @Column
-    private String dtype;
-
-    @Column
     private String name;
 
     @Column

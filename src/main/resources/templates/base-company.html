@@ -1,60 +1,58 @@
 <!DOCTYPE html>
 <html
-        data-th-fragment="input(action, title)"
-        data-th-replace="~{base-centered::centered(data=~{::body})}"
+    data-th-fragment="input(action, title)"
+    data-th-replace="~{base-centered::centered(data=~{::body})}"
 >
-<body>
-<h2 class="pb-4 flex-item text-center" data-th-text="${title}"></h2>
-<form data-th-action="${action}" data-th-object="${company}" method="POST">
-
-    <div
-            data-th-replace="~{form-elements::validatedInput(
+    <body>
+        <h2 class="pb-4 text-center" data-th-text="${title}"></h2>
+        <form data-th-action="${action}" data-th-object="${company}" method="POST">
+            <div
+                data-th-replace="~{form-elements::validatedInput(
                     type='text',
                     placeholder='Name',
                     label='Company name',
                     name='name',
                     isValid=${not #fields.hasErrors('name')},
                     invalidMessage='Company name is invalid!')}"
-    ></div>
-    <div
-            data-th-replace="~{form-elements::validatedInput(
+            ></div>
+            <div
+                data-th-replace="~{form-elements::validatedInput(
                     type='email',
                     placeholder='email@example.com',
                     label='Email address',
                     name='email',
                     isValid=${not #fields.hasErrors('email')},
                     invalidMessage='E-mail is invalid!')}"
-    ></div>
-    <div
-            data-th-replace="~{form-elements::validatedInput(
+            ></div>
+            <div
+                data-th-replace="~{form-elements::validatedInput(
                     type='text',
                     placeholder='Owner Name',
                     label='Owner name',
                     name='ownerName',
                     isValid=${not #fields.hasErrors('ownerName')},
                     invalidMessage='Owner name is invalid!')}"
-    ></div>
-    <div
-            data-th-replace="~{form-elements::validatedInput(
+            ></div>
+            <div
+                data-th-replace="~{form-elements::validatedInput(
                     type='text',
                     placeholder='Address',
                     label='Address',
                     name='address',
                     isValid=${not #fields.hasErrors('address')},
                     invalidMessage='Address is invalid!')}"
-    ></div>
-    <div
-            data-th-replace="~{form-elements::validatedInput(
+            ></div>
+            <div
+                data-th-replace="~{form-elements::validatedInput(
                     type='text',
                     placeholder='Phone Number',
                     label='Phone number',
                     name='phoneNumber',
                     isValid=${not #fields.hasErrors('phoneNumber')},
                     invalidMessage='Phone number is invalid!')}"
-    ></div>
+            ></div>
 
-    <button data-th-replace="~{form-elements::button('Complete')}"></button>
-
-</form>
-</body>
+            <button data-th-replace="~{form-elements::button('Complete')}"></button>
+        </form>
+    </body>
 </html>
