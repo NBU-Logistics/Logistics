@@ -1,6 +1,35 @@
 <!DOCTYPE html>
-<html data-th-replace="~{base-centered::centered(data=~{::body})}">
+<html
+        lang="EN"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        data-th-replace="~{base-centered::centered(data=~{::body}, styles=~{::#style})}"
+>
+<section id="style">
+    <link th:href="@{/css/base.css}" rel="stylesheet" />
+</section>
     <body>
-        <h2 class="pb-4">Clients</h2>
+        <h2 class="pb-4 flex-item text-center">All Clients</h2>
+        <br />
+        <div th:if="${not #lists.isEmpty(allClients)}">
+            <div class="scrollbar">
+                <table class="table table-borderless">
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th></th>
+                    </tr>
+                    <tr th:each="client: ${allClients}">
+                        <td th:text="${client.user.firstName}"></td>
+                        <td th:text="${client.user.lastName}"></td>
+                        <td th:text="${client.user.email}"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div th:if="${#lists.isEmpty(allClients)}">
+            <p class="no-base-text">Nothing to show</p>
+        </div>
     </body>
 </html>
