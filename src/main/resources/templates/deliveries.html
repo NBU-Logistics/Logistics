@@ -6,7 +6,7 @@
     data-th-replace="~{base-centered::centered(data=~{::body}, styles=~{::#style})}"
 >
     <section id="style">
-        <link th:href="@{/css/deliveries.css}" rel="stylesheet" />
+        <link th:href="@{/static/css/base.css}" rel="stylesheet" />
     </section>
 
     <body>
@@ -48,7 +48,7 @@
             </div>
         </div>
         <div th:if="${#lists.isEmpty(allDeliveries)}">
-            <p class="no-deliveries-text">Nothing to show</p>
+            <p class="no-data-text">Nothing to show</p>
         </div>
 
         <h2 class="pb-4 flex-item text-center">Registered</h2>
@@ -89,7 +89,7 @@
             </div>
         </div>
         <div th:if="${#lists.isEmpty(registeredDeliveries)}">
-            <p class="no-deliveries-text">Nothing to show</p>
+            <p class="no-data-text">Nothing to show</p>
         </div>
 
         <h2 class="pb-4 flex-item text-center">Sent but not delivered </h2>
@@ -130,7 +130,7 @@
             </div>
         </div>
         <div th:if="${#lists.isEmpty(sentUndelivered)}">
-            <p class="no-deliveries-text">Nothing to show</p>
+            <p class="no-data-text">Nothing to show</p>
         </div>
 
         <h2 class="pb-4 flex-item text-center">Sent and delivered</h2>
@@ -159,7 +159,7 @@
             </div>
         </div>
         <div th:if="${#lists.isEmpty(clientSentDelivered)}">
-            <p class="no-deliveries-text">Nothing to show</p>
+            <p class="no-data-text">Nothing to show</p>
         </div>
 
         <h2 class="pb-4 flex-item text-center">Sent but not delivered yet</h2>
@@ -188,7 +188,7 @@
             </div>
         </div>
         <div th:if="${#lists.isEmpty(clientSentUndelivered)}">
-            <p class="no-deliveries-text">Nothing to show</p>
+            <p class="no-data-text">Nothing to show</p>
         </div>
 
         <h2 class="pb-4 flex-item text-center">Received and delivered</h2>
@@ -218,7 +218,7 @@
             </div>
         </div>
         <div th:if="${#lists.isEmpty(clientReceivedDelivered)}">
-            <p class="no-deliveries-text">Nothing to show</p>
+            <p class="no-data-text">Nothing to show</p>
         </div>
 
         <h2 class="pb-4 flex-item text-center">Received but not delivered yet</h2>
@@ -248,13 +248,7 @@
             </div>
         </div>
         <div th:if="${#lists.isEmpty(clientReceivedUndelivered)}">
-            <p class="no-deliveries-text">Nothing to show</p>
+            <p class="no-data-text">Nothing to show</p>
         </div>
-
-
-
-
-
-
     </body>
 </html>
