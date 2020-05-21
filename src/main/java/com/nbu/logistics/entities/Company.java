@@ -3,12 +3,11 @@ package com.nbu.logistics.entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
-import org.hibernate.annotations.Where;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 @Getter
 @Setter

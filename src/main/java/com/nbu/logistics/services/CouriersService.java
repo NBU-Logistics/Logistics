@@ -1,13 +1,14 @@
 package com.nbu.logistics.services;
 
 import com.nbu.logistics.entities.Courier;
-import com.nbu.logistics.entities.OfficeEmployee;
 import com.nbu.logistics.entities.User;
 import com.nbu.logistics.exceptions.InvalidDataException;
 import com.nbu.logistics.repositories.CouriersRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CouriersService {
@@ -22,7 +23,8 @@ public class CouriersService {
     }
 
     public void deleteCourier(long id) throws InvalidDataException {
-//      OfficeEmployee existingEmployee = this.officeEmployeesRepository.findByUserById(officeEmployeesRepository.getOne(id));
+        // OfficeEmployee existingEmployee =
+        // this.officeEmployeesRepository.findByUserById(officeEmployeesRepository.getOne(id));
         if (id == 0) {
             throw new InvalidDataException("Invalid data!");
         }
@@ -36,5 +38,9 @@ public class CouriersService {
         this.couriersRepository.save(existingCourier);
 
         this.authService.deleteUser(existingCourier.getUser().getEmail());
+    }
+
+    public List<Courier> getAllCouriers() {
+        return this.couriersRepository.findAll();
     }
 }
