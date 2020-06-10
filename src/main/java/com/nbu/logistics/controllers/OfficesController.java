@@ -29,17 +29,16 @@ public class OfficesController {
     }
 
     @GetMapping("/create")
-    public String getCreateOffice(Model model) {
-        Office office = new Office();
-        model.addAttribute("office", office);
-
+    public String getCreateOffice(Model model, Office office) {
         return "create-office";
     }
 
     @PostMapping("/create")
     public String saveOffice(Model model, @Valid @ModelAttribute("office") Office office, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "offices";
+            model.addAttribute("error", bindingResult.getAllErrors().get(0).getDefaultMessage());
+
+            return this.getCreateOffice(model, office);
         }
 
         officesService.save(office);
@@ -60,7 +59,13 @@ public class OfficesController {
     }
 
     @PostMapping("/update")
-    public String update(Model model, @Valid @ModelAttribute("office") Office office) {
+    public String update(Model model, @Valid @ModelAttribute("office") Office office, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("error", bindingResult.getAllErrors().get(0).getDefaultMessage());
+
+            return "edit-office";
+        }
+
         try {
             this.officesService.modifyOffice(office);
         } catch (InvalidDataException e) {
