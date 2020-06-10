@@ -1,6 +1,61 @@
 <!DOCTYPE html>
-<html data-th-replace="~{base-centered::centered(data=~{::body})}">
+<html
+    lang="EN"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    data-th-replace="~{base-centered::centered(data=~{::body}, styles=~{::#style})}"
+>
+    <section id="style">
+        <link th:href="@{/css/deliveries.css}" rel="stylesheet" />
+    </section>
+
     <body>
-        <h2 class="pb-4">Offices</h2>
+        <h2 class="pb-4 flex-item text-center">All offices</h2>
+        <br />
+        <a
+            data-th-href="@{/offices/create}"
+            class="btn btn-primary btn-sm mb-3"
+        >
+            Add an office
+        </a>
+        <div class="scrollbar">
+            <table class="table table-borderless">
+                <tr>
+                    <th>Office ID</th>
+                    <th>Office Name</th>
+                    <th>Office Address</th>
+                    <th></th>
+                </tr>
+                <tr data-th-each="office : ${offices}">
+                    <td data-th-text="${office.id}" />
+                    <td data-th-text="${office.name}" />
+                    <td data-th-text="${office.address}" />
+                    <td>
+                        <a
+                            type="submit"
+                            class="btn btn-style"
+                            data-th-href="@{|~/offices/${office.id}|}"
+                        >
+                            Edit
+                        </a>
+                    </td>
+                    <td>
+                        <form
+                            data-th-action="@{~/offices/delete}"
+                            method="POST"
+                        >
+                            <input
+                                type="hidden"
+                                name="id"
+                                data-th-value="${office.id}"
+                            />
+                            <button type="submit" class="btn btn-style">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </body>
 </html>

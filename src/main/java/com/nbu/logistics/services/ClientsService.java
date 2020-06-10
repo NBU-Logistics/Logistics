@@ -1,7 +1,6 @@
 package com.nbu.logistics.services;
 
 import com.nbu.logistics.entities.Client;
-import com.nbu.logistics.entities.Company;
 import com.nbu.logistics.entities.User;
 import com.nbu.logistics.repositories.ClientsRepository;
 
@@ -19,7 +18,7 @@ public class ClientsService {
         this.clientsRepository.save(new Client(user, null, null));
     }
 
-    public List<Client> getAllClients(){
+    public List<Client> getAllClients() {
         return this.clientsRepository.findAll();
     }
 }

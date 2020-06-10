@@ -6,14 +6,16 @@
         data-th-replace="~{base-centered::centered(data=~{::body})}"
 >
     <body>
-        <h2 class="pb-4 flex-item text-center">Create an office</h2>
-        <form action="#" th:action="@{/offices/create}" th:object="${office}" method="post">
+        <h2 class="pb-4 flex-item text-center">Edit office</h2>
+        <form action="#" th:action="@{/offices/update}" th:object="${office}" method="post">
+            <input type="hidden" th:field="*{id}">
+
             <div class="form-group">
                 <p>Name the office</p>
                 <input type="text" th:field="*{name}" class="form-control" />
             </div>
             <div class="form-group">
-                <p>Set office address</p>
+                <p>Set address of the office</p>
                 <input type="text" th:field="*{address}" class="form-control" />
             </div>
             <p>
@@ -22,7 +24,7 @@
                 </button>
             </p>
             </form>
-            <a data-th-href="@{/offices}">Back to the Offices</a>
+            <a data-th-href="@{~/offices}">Back to the Offices</a>
         </div>
     </body>
 </html>

@@ -1,57 +1,57 @@
 <!DOCTYPE html>
 <html
-        lang="EN"
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:th="http://www.thymeleaf.org"
-        data-th-replace="~{base-centered::centered(data=~{::body}, styles=~{::#style})}"
+    lang="EN"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    data-th-replace="~{base-centered::centered(data=~{::body}, styles=~{::#style})}"
 >
-<section id="style">
-    <link th:href="@{/css/base.css}" rel="stylesheet" />
-</section>
-<body>
-<h2 class="pb-4 flex-item text-center">All Office Employees</h2>
-<br />
-<div th:if="${not #lists.isEmpty(allEmployees)}">
-    <div class="scrollbar">
-        <table class="table table-borderless">
-            <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th></th>
-            </tr>
-            <tr th:each="employee: ${allEmployees}">
-                <td th:text="${employee.user.firstName}"></td>
-                <td th:text="${employee.user.lastName}"></td>
-                <td th:text="${employee.user.email}"></td>
-            </tr>
-        </table>
-    </div>
-</div>
-<div th:if="${#lists.isEmpty(allEmployees)}">
-    <p class="no-employees-text">Nothing to show</p>
-</div>
-<h2 class="pb-4 flex-item text-center">All Couriers</h2>
-<br />
-<div th:if="${not #lists.isEmpty(allCouriers)}">
-    <div class="scrollbar">
-        <table class="table table-borderless">
-            <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th></th>
-            </tr>
-            <tr th:each="courier: ${allCouriers}">
-                <td th:text="${courier.user.firstName}"></td>
-                <td th:text="${courier.user.lastName}"></td>
-                <td th:text="${courier.user.email}"></td>
-            </tr>
-        </table>
-    </div>
-</div>
-<div th:if="${#lists.isEmpty(allCouriers)}">
-    <p class="no-employees-text">Nothing to show</p>
-</div>
-</body>
+    <section id="style">
+        <link th:href="@{/css/base.css}" rel="stylesheet" />
+    </section>
+    <body>
+        <h2 class="pb-4 flex-item text-center">All Office Employees</h2>
+        <br />
+        <div th:if="${not #lists.isEmpty(allEmployees)}">
+            <div class="scrollbar">
+                <table class="table table-borderless">
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th></th>
+                    </tr>
+                    <tr th:each="employee: ${allEmployees}">
+                        <td th:text="${employee.user.firstName}"></td>
+                        <td th:text="${employee.user.lastName}"></td>
+                        <td th:text="${employee.user.email}"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div th:if="${#lists.isEmpty(allEmployees)}">
+            <p class="no-employees-text">Nothing to show</p>
+        </div>
+        <h2 class="pb-4 flex-item text-center">All Couriers</h2>
+        <br />
+        <div th:if="${not #lists.isEmpty(allCouriers)}">
+            <div class="scrollbar">
+                <table class="table table-borderless">
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th></th>
+                    </tr>
+                    <tr th:each="courier: ${allCouriers}">
+                        <td th:text="${courier.user.firstName}"></td>
+                        <td th:text="${courier.user.lastName}"></td>
+                        <td th:text="${courier.user.email}"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div th:if="${#lists.isEmpty(allCouriers)}">
+            <p class="no-employees-text">Nothing to show</p>
+        </div>
+    </body>
 </html>
