@@ -23,11 +23,13 @@
                 <tr>
                     <th>Office ID</th>
                     <th>Office Name</th>
+                    <th>Office Address</th>
                     <th></th>
                 </tr>
                 <tr data-th-each="office : ${offices}">
                     <td data-th-text="${office.id}" />
                     <td data-th-text="${office.name}" />
+                    <td data-th-text="${office.address}" />
                     <td>
                         <a
                             type="submit"

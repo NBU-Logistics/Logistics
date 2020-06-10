@@ -17,4 +17,5 @@ import lombok.Setter;
 @Where(clause = "is_deleted='false'")
 public class Office extends BaseEntity {
     private String name;
+    private String address;
 }

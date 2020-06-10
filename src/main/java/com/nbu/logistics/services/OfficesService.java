@@ -49,16 +49,18 @@ public class OfficesService {
         }
 
         Office office = this.getOffice(changedOffice.getId());
-
         if (office == null) {
             throw new InvalidDataException("Office does not exist!");
         }
 
-        if (changedOffice.getName().isBlank()) {
-            throw new InvalidDataException("Please type the name of the office you want to eddit!");
+        if (!changedOffice.getName().equals(office.getName())) {
+            office.setName(changedOffice.getName());
         }
 
-        office.setName(changedOffice.getName());
+        if (!changedOffice.getAddress().equals(office.getAddress())) {
+            office.setAddress(changedOffice.getAddress());
+        }
+
         this.officesRepository.save(office);
     }
 }
