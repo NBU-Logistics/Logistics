@@ -5,11 +5,8 @@ import com.nbu.logistics.exceptions.InvalidDataException;
 import com.nbu.logistics.repositories.OfficesRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,36 +19,28 @@ public class OfficesService {
         return officesRepository.findAllByOrderByName();
     }
 
-    public Office getOffice(long id) {
-        Office office = officesRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid office Id:" + id));
-        return office;
-    }
-
-    public Office getByIdOffice(long id) {
-        Optional<Office> result = officesRepository.findById(id);
-
-        Office theOffice = null;
-
-        if (result.isPresent()) {
-            theOffice = result.get();
-        } else {
-            throw new RuntimeException("Didn't find any office id - " + id);
+    public Office getOffice(long id) throws InvalidDataException {
+        Optional<Office> office = officesRepository.findById(id);
+        if (!office.isPresent()) {
+            throw new InvalidDataException("Office does not exist!");
         }
-        return theOffice;
+
+        return office.get();
     }
 
     public void save(Office newOffice) {
         officesRepository.save(newOffice);
     }
 
-    public void deleteOffice(long id) {
+    public void deleteOffice(long id) throws InvalidDataException {
         Optional<Office> office = this.officesRepository.findById(id);
 
-        if (office.isPresent()) {
-            office.get().setDeleted(true);
-            this.officesRepository.save(office.get());
+        if (!office.isPresent()) {
+            throw new InvalidDataException("Office does not exist!");
         }
+
+        office.get().setDeleted(true);
+        this.officesRepository.save(office.get());
     }
 
     public void modifyOffice(Office changedOffice) throws InvalidDataException {
@@ -59,14 +48,14 @@ public class OfficesService {
             throw new InvalidDataException("Missing office!");
         }
 
-        Office office = this.officesRepository.getOne(changedOffice.getId());
+        Office office = this.getOffice(changedOffice.getId());
 
         if (office == null) {
             throw new InvalidDataException("Office does not exist!");
         }
 
-        if (changedOffice.getName().length() == 0) {
-            throw new InvalidDataException("Please type the name of the office you want to edit!");
+        if (changedOffice.getName().isBlank()) {
+            throw new InvalidDataException("Please type the name of the office you want to eddit!");
         }
 
         office.setName(changedOffice.getName());

@@ -2,7 +2,6 @@ package com.nbu.logistics.controllers;
 
 import com.nbu.logistics.entities.OfficeEmployee;
 import com.nbu.logistics.exceptions.InvalidDataException;
-import com.nbu.logistics.services.AuthService;
 import com.nbu.logistics.services.CouriersService;
 import com.nbu.logistics.services.OfficeEmployeesService;
 
@@ -17,9 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class EmployeesController {
     @Autowired
     private CouriersService couriersService;
-
-    @Autowired
-    private AuthService authService;
 
     @Autowired
     private OfficeEmployeesService officeEmployeesService;
