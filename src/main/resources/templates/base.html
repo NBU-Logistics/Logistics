@@ -6,7 +6,10 @@
 >
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
         <link
             rel="stylesheet"
             href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -54,10 +57,18 @@
                     </a>
                     <div
                         class="dropdown-menu dropdown-menu-right menu-top"
-                        style="position: absolute; margin-right: -36px; text-align: right"
+                        style="
+                            position: absolute;
+                            margin-right: -36px;
+                            text-align: right;
+                        "
                     >
-                        <a class="dropdown-item" data-th-href="@{~/logout}">Log out</a>
-                        <a class="dropdown-item" data-th-href="@{~/profile}">User profile</a>
+                        <a class="dropdown-item" data-th-href="@{~/logout}"
+                            >Log out</a
+                        >
+                        <a class="dropdown-item" data-th-href="@{~/profile}"
+                            >User profile</a
+                        >
                     </div>
                 </li>
             </ul>
@@ -73,17 +84,27 @@
                     </a>
                     <div
                         class="dropdown-menu dropdown-menu-right"
-                        style="position: absolute; margin-right: -36px; text-align: right"
+                        style="
+                            position: absolute;
+                            margin-right: -36px;
+                            text-align: right;
+                        "
                     >
-                        <a class="dropdown-item" data-th-href="@{/clients/register}">Register</a>
-                        <a class="dropdown-item" data-th-href="@{/login}">Log in</a>
+                        <a
+                            class="dropdown-item"
+                            data-th-href="@{/clients/register}"
+                            >Register</a
+                        >
+                        <a class="dropdown-item" data-th-href="@{/login}"
+                            >Log in</a
+                        >
                     </div>
                 </li>
             </ul>
         </nav>
 
         <div class="navbar">
-            <div class="collapse navbar-collapse " id="navbar">
+            <div class="collapse navbar-collapse" id="navbar">
                 <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                     <li
                         data-th-replace="base-elements::navDropdown(
@@ -107,9 +128,9 @@
                             condition=${loggedIn})"
                     ></li>
                     <li
-                            data-th-replace="base-elements::navDropdown(
-                            urls=${ {'/company', '/company/create', '/company/update'} },
-                            names=${ {'Company info', 'Create company', 'Update company'} },
+                        data-th-replace="base-elements::navDropdown(
+                            urls=${ {'/company', '/company/create', '/company/update', '/company/income'} },
+                            names=${ {'Company info', 'Create company', 'Update company', 'View income'} },
                             text='Company',
                             condition=${loggedIn})"
                     ></li>
@@ -119,7 +140,9 @@
                             text='Clients',
                             condition=${loggedIn})"
                     ></li>
-                    <li data-th-replace="base-elements::navLink(@{~/about}, 'About us')"></li>
+                    <li
+                        data-th-replace="base-elements::navLink(@{~/about}, 'About us')"
+                    ></li>
                 </ul>
             </div>
         </div>
