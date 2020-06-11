@@ -107,6 +107,13 @@ public class CompanyController {
             LocalDate fromDateConverted = LocalDate.parse(fromDate);
             LocalDate toDateConverted = LocalDate.parse(toDate);
 
+            int dateComparison = fromDateConverted.compareTo(toDateConverted);
+            if (dateComparison == 0 || dateComparison > 0) {
+                model.addAttribute("error", "Invalid date!");
+
+                return "income";
+            }
+
             BigDecimal income = this.companyService.calculateIncome(fromDateConverted, toDateConverted);
             model.addAttribute("income", income);
         } catch (DateTimeParseException e) {
