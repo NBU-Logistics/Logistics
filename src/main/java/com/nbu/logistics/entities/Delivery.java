@@ -1,10 +1,11 @@
 package com.nbu.logistics.entities;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.*;
 
 import org.hibernate.annotations.Where;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -42,6 +43,6 @@ public class Delivery extends BaseEntity {
     @Column
     private double price;
 
-    @Column
-    private Date createdOn;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate createdOn;
 }

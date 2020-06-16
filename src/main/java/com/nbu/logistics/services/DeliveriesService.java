@@ -11,7 +11,7 @@ import com.nbu.logistics.repositories.DeliveriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,7 +71,7 @@ public class DeliveriesService {
         delivery.setSender(sender);
         delivery.setRecipient(recipient);
         delivery.setStatus(DeliveryStatus.POSTED);
-        delivery.setCreatedOn(new Date());
+        delivery.setCreatedOn(LocalDate.now());
         deliveriesRepository.save(delivery);
 
         sender.getSentDeliveries().add(delivery);
@@ -105,7 +105,7 @@ public class DeliveriesService {
         }
 
         delivery.setOfficeDelivery(newDelivery.isOfficeDelivery());
-        delivery.setCreatedOn(new Date());
+        delivery.setCreatedOn(LocalDate.now());
 
         deliveriesRepository.save(delivery);
     }

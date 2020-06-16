@@ -1,5 +1,9 @@
 package com.nbu.logistics.controllers;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+
 import javax.validation.Valid;
 
 import com.nbu.logistics.entities.Company;
@@ -10,15 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/company")
 public class CompanyController {
     @Autowired
     private CompanyService companyService;
 
-    @RequestMapping("/company")
+    @GetMapping()
     public String showCompany(Model model) {
         try {
             model.addAttribute("company", this.companyService.getCompany());
@@ -29,12 +36,12 @@ public class CompanyController {
         return "company";
     }
 
-    @RequestMapping("/company/create")
+    @GetMapping("/create")
     public String getCreateCompany(Company company) {
         return "create-company";
     }
 
-    @PostMapping("/company/create")
+    @PostMapping("/create")
     public String createCompany(Model model, @Valid Company company, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "create-company";
@@ -53,12 +60,12 @@ public class CompanyController {
         return "create-company";
     }
 
-    @RequestMapping("/company/update")
+    @GetMapping("/update")
     public String getUpdateCompany(Company company) {
         return "update-company";
     }
 
-    @PostMapping("/company/update")
+    @PostMapping("/update")
     public String updateCompany(Model model, @Valid Company company, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "update-company";
@@ -71,12 +78,13 @@ public class CompanyController {
 
             return "update-company";
         }
+
         model.addAttribute("success", "Successfully updated!");
 
         return "update-company";
     }
 
-    @PostMapping("/company/delete")
+    @PostMapping("/delete")
     public String deleteCompany(Model model) {
         try {
             this.companyService.deleteCompany();
@@ -85,5 +93,33 @@ public class CompanyController {
         }
 
         return "company";
+    }
+
+    @GetMapping("/income")
+    public String getShowCompanyIncome(Model model) {
+        return "income";
+    }
+
+    @PostMapping("/income")
+    public String getCompanyIncome(Model model, @ModelAttribute("fromDate") String fromDate,
+            @ModelAttribute("toDate") String toDate) {
+        try {
+            LocalDate fromDateConverted = LocalDate.parse(fromDate);
+            LocalDate toDateConverted = LocalDate.parse(toDate);
+
+            int dateComparison = fromDateConverted.compareTo(toDateConverted);
+            if (dateComparison == 0 || dateComparison > 0) {
+                model.addAttribute("error", "Invalid date!");
+
+                return "income";
+            }
+
+            BigDecimal income = this.companyService.calculateIncome(fromDateConverted, toDateConverted);
+            model.addAttribute("income", income);
+        } catch (DateTimeParseException e) {
+            model.addAttribute("error", "Invalid date!");
+        }
+
+        return "income";
     }
 }
