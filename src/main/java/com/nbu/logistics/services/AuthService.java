@@ -15,6 +15,8 @@ import com.nbu.logistics.repositories.UsersRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -124,5 +126,12 @@ public class AuthService {
     public MyUserPrincipal getLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (MyUserPrincipal) authentication.getPrincipal();
+    }
+
+    public boolean isInRole(String role) {
+        Collection<? extends GrantedAuthority> authorities = this.getLoggedInUser().getAuthorities();
+        boolean authorized = authorities.contains(new SimpleGrantedAuthority(role));
+
+        return authorized;
     }
 }
