@@ -24,15 +24,14 @@ public class DeliveriesController {
     private AuthService authService;
 
     private void getDeliveriesPage(Model model) {
-        MyUserPrincipal loggedInUser = this.authService.getLoggedInUser();
-
-        model.addAttribute("allDeliveries", deliveriesService.getAll());
-        model.addAttribute("registeredDeliveries", deliveriesService.getRegistered());
-        model.addAttribute("sentUndelivered", deliveriesService.getSentUndelivered());
-        model.addAttribute("clientSentDelivered", deliveriesService.getSentDelivered(loggedInUser));
-        model.addAttribute("clientSentUndelivered", deliveriesService.getSentUndelivered(loggedInUser));
-        model.addAttribute("clientReceivedDelivered", deliveriesService.getReceivedDelivered(loggedInUser));
-        model.addAttribute("clientReceivedUndelivered", deliveriesService.getReceivedUndelivered(loggedInUser));
+        model.addAttribute("allDeliveries", this.deliveriesService.getAll());
+        model.addAttribute("registeredDeliveries", this.deliveriesService.getRegistered());
+        model.addAttribute("sentUndelivered", this.deliveriesService.getSentUndelivered());
+        model.addAttribute("clientSentDelivered", this.deliveriesService.getClientSentDelivered());
+        model.addAttribute("clientSentUndelivered", this.deliveriesService.getClientSentUndelivered());
+        model.addAttribute("clientReceivedDelivered", this.deliveriesService.getClientReceivedDelivered());
+        model.addAttribute("clientReceivedUndelivered", this.deliveriesService.getClientReceivedUndelivered());
+        model.addAttribute("employeeRegisteredDeliveries", this.deliveriesService.getRegisteredByCurrentEmployee());
     }
 
     @GetMapping("/deliveries/create")
