@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @Controller
+@RequestMapping("/deliveries")
 public class DeliveriesController {
 
     @Autowired
@@ -34,19 +35,19 @@ public class DeliveriesController {
         model.addAttribute("employeeRegisteredDeliveries", this.deliveriesService.getRegisteredByCurrentEmployee());
     }
 
-    @GetMapping("/deliveries/create")
+    @GetMapping("/create")
     public String createDelivery(Model model) {
         model.addAttribute("delivery", new Delivery());
 
         return "create-delivery";
     }
 
-    @PostMapping("/deliveries/create")
-    public String addDelivery(Model model, @ModelAttribute @Valid Delivery delivery, BindingResult bindingResult) {
+    @PostMapping("/create")
+    public String addDelivery(Model model, @Valid @ModelAttribute Delivery delivery, BindingResult bindingResult) {
         MyUserPrincipal loggedInUser = this.authService.getLoggedInUser();
 
         if (bindingResult.hasErrors()) {
-            return "index";
+            return "create-delivery";
         }
 
         try {
@@ -60,7 +61,7 @@ public class DeliveriesController {
         return showAllDeliveries(model, delivery);
     }
 
-    @PostMapping("/deliveries/delete")
+    @PostMapping("/delete")
     public String deleteDelivery(@RequestParam("id") String id, Model model) {
         try {
             deliveriesService.deleteDelivery(id);
@@ -77,14 +78,14 @@ public class DeliveriesController {
         return "deliveries";
     }
 
-    @PostMapping("/deliveries/info")
+    @PostMapping("/info")
     public String infoDelivery(@RequestParam("id") String id, Model model) {
         model.addAttribute("editDelivery", deliveriesService.findDelivery(id));
 
         return "edit-delivery";
     }
 
-    @PostMapping("/deliveries/edit")
+    @PostMapping("/edit")
     public String editDelivery(Model model, @ModelAttribute @Valid Delivery delivery, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "index";
@@ -103,7 +104,7 @@ public class DeliveriesController {
         return "deliveries";
     }
 
-    @RequestMapping("/deliveries")
+    @GetMapping()
     public String showAllDeliveries(Model model, Delivery delivery) {
         this.getDeliveriesPage(model);
 
