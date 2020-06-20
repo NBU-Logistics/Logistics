@@ -107,6 +107,8 @@ public class DeliveriesService {
         delivery.setOfficeDelivery(newDelivery.isOfficeDelivery());
         delivery.setCreatedOn(new Date());
 
+        if(delivery.getStatus().equals(DeliveryStatus.REGISTERED))
+
         deliveriesRepository.save(delivery);
     }
 

@@ -32,15 +32,41 @@ public class EmployeesController {
         return "employees";
     }
 
-    @PostMapping("/employees/delete")
-    public String delete(@RequestParam("employeeId") long employeeId, Model model) {
+    @PostMapping("/employees/delete-employee")
+    public String deleteEmployee(@RequestParam("id") long employeeId, Model model) {
         try {
             officeEmployeesService.deleteEmployee(employeeId);
         } catch (InvalidDataException e) {
             model.addAttribute("error", e.getMessage());
-            return "redirect:/employees";
 
+            return "redirect:/employees";
         }
+
+        this.getEmployeesPage(model);
+
+        model.addAttribute("success", "Successfully deleted employee!");
+
+        return "employees";
+    }
+
+    @PostMapping("/employees/employee-deliveries")
+    public String getEmployeeDeliveries(@RequestParam("id") long employeeId, Model model) {
+
+        return "employees";
+    }
+
+    @PostMapping("/employees/delete-courier")
+    public String deleteCourier(@RequestParam("id") long employeeId, Model model) {
+        try {
+            couriersService.deleteCourier(employeeId);
+        } catch (InvalidDataException e) {
+            model.addAttribute("error", e.getMessage());
+
+            return "redirect:/employees";
+        }
+
+        this.getEmployeesPage(model);
+
         model.addAttribute("success", "Successfully deleted employee!");
 
         return "employees";

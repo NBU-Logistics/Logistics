@@ -23,8 +23,6 @@ public class CouriersService {
     }
 
     public void deleteCourier(long id) throws InvalidDataException {
-        // OfficeEmployee existingEmployee =
-        // this.officeEmployeesRepository.findByUserById(officeEmployeesRepository.getOne(id));
         if (id == 0) {
             throw new InvalidDataException("Invalid data!");
         }
