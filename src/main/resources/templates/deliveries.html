@@ -25,8 +25,8 @@
                         <th></th>
                     </tr>
                     <tr th:each="delivery: ${allDeliveries}">
-                        <td th:text="${delivery.sender?.user.email}"></td>
-                        <td th:text="${delivery.recipient?.user.email}"></td>
+                        <td th:text="${delivery.sender?.user?.email}"></td>
+                        <td th:text="${delivery.recipient?.user?.email}"></td>
                         <td th:text="${delivery.name}"></td>
                         <td th:text="${delivery.address}"></td>
                         <td th:text="${delivery.weight}"></td>
@@ -40,7 +40,7 @@
                             >
                                 <input
                                     type="hidden"
-                                    name="id"
+                                    name="name"
                                     data-th-value="${delivery.name}"
                                 />
                                 <button type="submit" class="btn btn-style">
@@ -86,8 +86,8 @@
                         <th></th>
                     </tr>
                     <tr th:each="delivery: ${registeredDeliveries}">
-                        <td th:text="${delivery.sender?.user.email}"></td>
-                        <td th:text="${delivery.recipient?.user.email}"></td>
+                        <td th:text="${delivery.sender?.user?.email}"></td>
+                        <td th:text="${delivery.recipient?.user?.email}"></td>
                         <td th:text="${delivery.name}"></td>
                         <td th:text="${delivery.address}"></td>
                         <td th:text="${delivery.weight}"></td>
@@ -101,7 +101,7 @@
                             >
                                 <input
                                     type="hidden"
-                                    name="id"
+                                    name="name"
                                     data-th-value="${delivery.name}"
                                 />
                                 <button type="submit" class="btn btn-style">
@@ -147,8 +147,8 @@
                         <th></th>
                     </tr>
                     <tr th:each="delivery: ${sentUndelivered}">
-                        <td th:text="${delivery.sender?.user.email}"></td>
-                        <td th:text="${delivery.recipient?.user.email}"></td>
+                        <td th:text="${delivery.sender?.user?.email}"></td>
+                        <td th:text="${delivery.recipient?.user?.email}"></td>
                         <td th:text="${delivery.name}"></td>
                         <td th:text="${delivery.address}"></td>
                         <td th:text="${delivery.weight}"></td>
@@ -162,7 +162,7 @@
                             >
                                 <input
                                     type="hidden"
-                                    name="id"
+                                    name="name"
                                     data-th-value="${delivery.name}"
                                 />
                                 <button type="submit" class="btn btn-style">
@@ -208,8 +208,8 @@
                         <th></th>
                     </tr>
                     <tr th:each="delivery : ${clientSentDelivered}">
-                        <td th:text="${delivery.sender?.user.email}"></td>
-                        <td th:text="${delivery.recipient?.user.email}"></td>
+                        <td th:text="${delivery.sender?.user?.email}"></td>
+                        <td th:text="${delivery.recipient?.user?.email}"></td>
                         <td th:text="${delivery.name}"></td>
                         <td th:text="${delivery.address}"></td>
                         <td th:text="${delivery.weight}"></td>
@@ -239,8 +239,8 @@
                         <th></th>
                     </tr>
                     <tr th:each="delivery : ${clientSentUndelivered}">
-                        <td th:text="${delivery.sender?.user.email}"></td>
-                        <td th:text="${delivery.recipient?.user.email}"></td>
+                        <td th:text="${delivery.sender?.user?.email}"></td>
+                        <td th:text="${delivery.recipient?.user?.email}"></td>
                         <td th:text="${delivery.name}"></td>
                         <td th:text="${delivery.address}"></td>
                         <td th:text="${delivery.weight}"></td>
@@ -270,9 +270,9 @@
                             <th></th>
                         </tr>
                         <tr th:each="delivery : ${clientReceivedDelivered}">
-                            <td th:text="${delivery.sender?.user.email}"></td>
+                            <td th:text="${delivery.sender?.user?.email}"></td>
                             <td
-                                th:text="${delivery.recipient?.user.email}"
+                                th:text="${delivery.recipient?.user?.email}"
                             ></td>
                             <td th:text="${delivery.name}"></td>
                             <td th:text="${delivery.address}"></td>
@@ -305,8 +305,8 @@
                         <th></th>
                     </tr>
                     <tr th:each="delivery : ${clientReceivedUndelivered}">
-                        <td th:text="${delivery.sender?.user.email}"></td>
-                        <td th:text="${delivery.recipient?.user.email}"></td>
+                        <td th:text="${delivery.sender?.user?.email}"></td>
+                        <td th:text="${delivery.recipient?.user?.email}"></td>
                         <td th:text="${delivery.name}"></td>
                         <td th:text="${delivery.address}"></td>
                         <td th:text="${delivery.weight}"></td>
@@ -337,8 +337,8 @@
                         <th></th>
                     </tr>
                     <tr th:each="delivery : ${employeeRegisteredDeliveries}">
-                        <td th:text="${delivery.sender?.user.email}"></td>
-                        <td th:text="${delivery.recipient?.user.email}"></td>
+                        <td th:text="${delivery.sender?.user?.email}"></td>
+                        <td th:text="${delivery.recipient?.user?.email}"></td>
                         <td th:text="${delivery.name}"></td>
                         <td th:text="${delivery.address}"></td>
                         <td th:text="${delivery.weight}"></td>

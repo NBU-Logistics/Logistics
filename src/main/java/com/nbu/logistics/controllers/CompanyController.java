@@ -61,7 +61,23 @@ public class CompanyController {
     }
 
     @GetMapping("/update")
-    public String getUpdateCompany(Company company) {
+    public String getUpdateCompany(Model model) {
+        Company company = null;
+
+        try {
+            company = this.companyService.getCompany();
+        } catch (InvalidDataException e) {
+            model.addAttribute("error", e.getMessage());
+
+            return "update-company";
+        }
+
+        if (company != null) {
+            model.addAttribute("company", company);
+        } else {
+            company = new Company();
+        }
+
         return "update-company";
     }
 

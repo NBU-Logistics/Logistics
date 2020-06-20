@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.nbu.logistics.config.MyUserPrincipal;
+import com.nbu.logistics.controllers.models.UpdateUserViewModel;
 import com.nbu.logistics.entities.Client;
 import com.nbu.logistics.entities.User;
 import com.nbu.logistics.entities.UserRole;
@@ -37,6 +38,9 @@ public class AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private ValidationService validator;
+
     public void registerUser(User user, Collection<String> roles) throws InvalidDataException {
         if (user == null || roles == null) {
             throw new InvalidDataException("Invalid input!");
@@ -64,7 +68,7 @@ public class AuthService {
         this.usersRepository.save(user);
     }
 
-    public void modifyUser(String email, User newUser) throws InvalidDataException {
+    public void modifyUser(String email, UpdateUserViewModel newUser) throws InvalidDataException {
         if (email == null || newUser == null) {
             throw new InvalidDataException("Invalid input!");
         }
@@ -74,19 +78,28 @@ public class AuthService {
             throw new InvalidDataException("User does not exist!");
         }
 
+        MyUserPrincipal userPrincipal = this.getLoggedInUser();
         if (newUser.getEmail() != null && !newUser.getEmail().isBlank()) {
             existingUser.setEmail(newUser.getEmail());
+            this.validator.validate(existingUser);
+            userPrincipal.setEmail(newUser.getEmail());
         }
 
         if (newUser.getFirstName() != null && !newUser.getFirstName().isBlank()) {
             existingUser.setFirstName(newUser.getFirstName());
+            this.validator.validate(existingUser);
+            userPrincipal.setFirstName(newUser.getFirstName());
         }
 
         if (newUser.getLastName() != null && !newUser.getLastName().isBlank()) {
             existingUser.setLastName(newUser.getLastName());
+            this.validator.validate(existingUser);
+            userPrincipal.setLastName(newUser.getLastName());
         }
 
         if (newUser.getPassword() != null && !newUser.getPassword().isBlank()) {
+            existingUser.setPassword(newUser.getPassword());
+            this.validator.validate(existingUser);
             existingUser.setPassword(this.passwordEncoder.encode(newUser.getPassword()));
         }
 
@@ -117,6 +130,8 @@ public class AuthService {
             throw new InvalidDataException("Client does not exist!");
         }
 
+        existingClient.getReceivedDeliveries().forEach((delivery) -> delivery.setRecipient(null));
+        existingClient.getSentDeliveries().forEach((delivery) -> delivery.setSender(null));
         existingClient.setDeleted(true);
         this.clientsRepository.save(existingClient);
 

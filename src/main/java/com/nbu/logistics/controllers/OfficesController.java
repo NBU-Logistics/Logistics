@@ -36,15 +36,13 @@ public class OfficesController {
     @PostMapping("/create")
     public String saveOffice(Model model, @Valid @ModelAttribute("office") Office office, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("error", bindingResult.getAllErrors().get(0).getDefaultMessage());
-
-            return this.getCreateOffice(model, office);
+            return "create-office";
         }
 
         officesService.save(office);
         model.addAttribute("success", "Office created!");
 
-        return this.showOffices(model, office);
+        return "create-office";
     }
 
     @GetMapping("/{id}")
@@ -61,8 +59,6 @@ public class OfficesController {
     @PostMapping("/update")
     public String update(Model model, @Valid @ModelAttribute("office") Office office, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("error", bindingResult.getAllErrors().get(0).getDefaultMessage());
-
             return "edit-office";
         }
 
@@ -76,7 +72,7 @@ public class OfficesController {
 
         model.addAttribute("success", "Office eddited successfully!");
 
-        return this.showOffices(model, office);
+        return "edit-office";
     }
 
     @PostMapping("/delete")
