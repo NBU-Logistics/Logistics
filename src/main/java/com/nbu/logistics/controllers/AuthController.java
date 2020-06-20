@@ -163,4 +163,23 @@ public class AuthController {
                     this.officeEmployeesService.createOfficeEmployee(user);
                 });
     }
+
+    @PostMapping("/admins/register")
+    public String registerAdmin(Model model, @Valid @ModelAttribute("user") User admin, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "register-admin";
+        }
+
+        try {
+            this.authService.createAdmin(admin);
+        } catch (InvalidDataException e) {
+            model.addAttribute("error", e.getMessage());
+
+            return "register-admin";
+        }
+
+        model.addAttribute("success", "Admin created!");
+
+        return "register-admin";
+    }
 }
