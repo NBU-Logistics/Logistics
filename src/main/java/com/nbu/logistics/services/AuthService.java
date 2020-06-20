@@ -130,6 +130,8 @@ public class AuthService {
             throw new InvalidDataException("Client does not exist!");
         }
 
+        existingClient.getReceivedDeliveries().forEach((delivery) -> delivery.setRecipient(null));
+        existingClient.getSentDeliveries().forEach((delivery) -> delivery.setSender(null));
         existingClient.setDeleted(true);
         this.clientsRepository.save(existingClient);
 
