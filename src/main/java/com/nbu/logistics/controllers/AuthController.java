@@ -5,6 +5,7 @@ import java.util.Arrays;
 import javax.validation.Valid;
 
 import com.nbu.logistics.config.MyUserPrincipal;
+import com.nbu.logistics.controllers.models.UpdateUserViewModel;
 import com.nbu.logistics.entities.*;
 import com.nbu.logistics.exceptions.InvalidDataException;
 import com.nbu.logistics.services.AuthService;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -70,7 +72,8 @@ public class AuthController {
 
     @PreAuthorize("!isAuthenticated()")
     @GetMapping("/login")
-    public String showLogin(@RequestParam(required = false) String error, Model model, User user) {
+    public String showLogin(@RequestParam(required = false) String error, Model model,
+            @ModelAttribute("user") User user) {
         if (error != null) {
             model.addAttribute("error", "Wrong login information!");
         }
@@ -80,7 +83,7 @@ public class AuthController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
-    public String showProfile(Model model, User user) {
+    public String showProfile(Model model, @ModelAttribute("user") UpdateUserViewModel user) {
         model.addAttribute("loggedInUser", this.getLoggedInUser());
 
         return "profile";
@@ -88,7 +91,7 @@ public class AuthController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/profile")
-    public String changeProfile(Model model, @Valid User user) {
+    public String changeProfile(Model model, @Valid @ModelAttribute("user") UpdateUserViewModel user) {
         MyUserPrincipal loggedInUser = this.getLoggedInUser();
         model.addAttribute("loggedInUser", loggedInUser);
 
@@ -105,7 +108,7 @@ public class AuthController {
 
     @PreAuthorize("isAuthenticated() && hasRole('ROLE_CLIENT')")
     @PostMapping("/clients/delete")
-    public String deleteClient(Model model, User user) {
+    public String deleteClient(Model model, @ModelAttribute("user") User user) {
         MyUserPrincipal loggedInUser = this.getLoggedInUser();
         model.addAttribute("loggedInUser", loggedInUser);
 
@@ -127,7 +130,7 @@ public class AuthController {
     }
 
     @PostMapping("/clients/register")
-    public String registerClient(Model model, @Valid User user, BindingResult bindingResult) {
+    public String registerClient(Model model, @Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
         return this.registerUser(model, user, bindingResult, "register", "Successfully registered!", "ROLE_CLIENT",
                 () -> {
                     this.clientsService.createClient(user);
@@ -135,17 +138,17 @@ public class AuthController {
     }
 
     @GetMapping("/employees/couriers/register")
-    public String showCreateCourierEmployee(User user) {
+    public String showCreateCourierEmployee(@ModelAttribute("user") User user) {
         return "create-courier-employee";
     }
 
     @GetMapping("/employees/office/register")
-    public String showCreateOfficeEmployee(User user) {
+    public String showCreateOfficeEmployee(@ModelAttribute("user") User user) {
         return "create-office-employee";
     }
 
     @PostMapping("/employees/couriers/register")
-    public String createCourier(Model model, @Valid User user, BindingResult bindingResult) {
+    public String createCourier(Model model, @Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
         return this.registerUser(model, user, bindingResult, "create-courier-employee",
                 "Successfully created a courier employee!", "ROLE_COURIER", () -> {
                     this.couriersService.createCourier(user);
@@ -153,7 +156,8 @@ public class AuthController {
     }
 
     @PostMapping("/employees/office/register")
-    public String createOfficeEmployee(Model model, @Valid User user, BindingResult bindingResult) {
+    public String createOfficeEmployee(Model model, @Valid @ModelAttribute("user") User user,
+            BindingResult bindingResult) {
         return this.registerUser(model, user, bindingResult, "create-office-employee",
                 "Successfully created an office employee!", "ROLE_OFFICE_EMPLOYEE", () -> {
                     this.officeEmployeesService.createOfficeEmployee(user);
