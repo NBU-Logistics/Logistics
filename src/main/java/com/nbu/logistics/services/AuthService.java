@@ -1,6 +1,7 @@
 package com.nbu.logistics.services;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -148,5 +149,26 @@ public class AuthService {
         boolean authorized = authorities.contains(new SimpleGrantedAuthority(role));
 
         return authorized;
+    }
+
+    public boolean adminExists() {
+        UserRole adminRole = this.rolesRepository.findFirstByName("ROLE_ADMIN");
+        if (adminRole == null) {
+            return false;
+        }
+
+        return this.usersRepository.existsByRoles(adminRole);
+    }
+
+    public void createAdmin(User admin) throws InvalidDataException {
+        if (admin == null) {
+            throw new InvalidDataException("No user provided!");
+        }
+
+        if (this.adminExists()) {
+            throw new InvalidDataException("Admin already exists!");
+        }
+
+        this.registerUser(admin, Arrays.asList("ROLE_ADMIN"));
     }
 }

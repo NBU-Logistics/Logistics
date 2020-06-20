@@ -27,9 +27,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.headers().frameOptions().disable();
 
+        http.exceptionHandling().accessDeniedPage("/denied");
+
         http.authorizeRequests().antMatchers("/**").permitAll().anyRequest().authenticated().and().formLogin()
                 .loginPage("/login").usernameParameter("email").passwordParameter("password").successForwardUrl("/")
                 .permitAll().and().logout().logoutSuccessUrl("/").permitAll();
+
     }
 
     @Override
