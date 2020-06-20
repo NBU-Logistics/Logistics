@@ -42,8 +42,7 @@ public class Delivery extends BaseEntity {
     @DecimalMin(value = "0.1")
     private double weight;
 
-    @DecimalMin(value = "0.1")
-    private double price;
+    private double price = 0.1;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate createdOn = LocalDate.now();

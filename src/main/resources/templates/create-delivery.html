@@ -46,16 +46,6 @@
             <div
                 data-th-replace="~{form-elements::validatedInput(
                     type='text',
-                    placeholder='Some address',
-                    label='Delivery weight',
-                    name='address',
-                    isValid=${not #fields.hasErrors('address')},
-                    invalidMessage='Delivery address is invalid!')}"
-            ></div>
-
-            <div
-                data-th-replace="~{form-elements::validatedInput(
-                    type='text',
                     placeholder='0.0',
                     label='Delivery weight',
                     name='weight',

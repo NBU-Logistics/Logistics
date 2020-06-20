@@ -24,7 +24,7 @@ public class DeliveriesController {
     @Autowired
     private AuthService authService;
 
-    private void getDeliveriesPage(Model model) {
+    private String getDeliveriesPage(Model model) {
         model.addAttribute("allDeliveries", this.deliveriesService.getAll());
         model.addAttribute("registeredDeliveries", this.deliveriesService.getRegistered());
         model.addAttribute("sentUndelivered", this.deliveriesService.getSentUndelivered());
@@ -33,6 +33,8 @@ public class DeliveriesController {
         model.addAttribute("clientReceivedDelivered", this.deliveriesService.getClientReceivedDelivered());
         model.addAttribute("clientReceivedUndelivered", this.deliveriesService.getClientReceivedUndelivered());
         model.addAttribute("employeeRegisteredDeliveries", this.deliveriesService.getRegisteredByCurrentEmployee());
+
+        return "deliveries";
     }
 
     @GetMapping("/create")
@@ -51,63 +53,59 @@ public class DeliveriesController {
         }
 
         try {
-            deliveriesService.addDelivery(delivery, loggedInUser.getEmail());
+            this.deliveriesService.addDelivery(delivery, loggedInUser.getEmail());
         } catch (InvalidDataException e) {
             model.addAttribute("error", e.getMessage());
 
             return "create-delivery";
         }
 
-        return showAllDeliveries(model, delivery);
+        return this.showAllDeliveries(model, delivery);
     }
 
     @PostMapping("/delete")
     public String deleteDelivery(@RequestParam("id") String id, Model model) {
         try {
-            deliveriesService.deleteDelivery(id);
+            this.deliveriesService.deleteDelivery(id);
         } catch (InvalidDataException e) {
             model.addAttribute("error", e.getMessage());
 
-            return "deliveries";
+            return this.getDeliveriesPage(model);
         }
-
-        this.getDeliveriesPage(model);
 
         model.addAttribute("success", "Successfully deleted delivery!");
 
-        return "deliveries";
+        return this.getDeliveriesPage(model);
+
     }
 
     @PostMapping("/info")
-    public String infoDelivery(@RequestParam("id") String id, Model model) {
-        model.addAttribute("editDelivery", deliveriesService.findDelivery(id));
+    public String infoDelivery(Model model, @RequestParam("name") String name) {
+        model.addAttribute("delivery", this.deliveriesService.findDelivery(name));
 
         return "edit-delivery";
     }
 
     @PostMapping("/edit")
-    public String editDelivery(Model model, @ModelAttribute @Valid Delivery delivery, BindingResult bindingResult) {
+    public String editDelivery(Model model, @ModelAttribute("delivery") @Valid Delivery delivery,
+            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "index";
+            return "edit-delivery";
         }
 
         try {
-            deliveriesService.editDelivery(delivery, delivery.getName());
+            this.deliveriesService.editDelivery(delivery, delivery.getName());
         } catch (InvalidDataException e) {
             model.addAttribute("error", e.getMessage());
 
-            return "index";
+            return "edit-delivery";
         }
 
-        this.getDeliveriesPage(model);
-
-        return "deliveries";
+        return this.getDeliveriesPage(model);
     }
 
     @GetMapping()
     public String showAllDeliveries(Model model, Delivery delivery) {
-        this.getDeliveriesPage(model);
-
-        return "deliveries";
+        return this.getDeliveriesPage(model);
     }
 }
