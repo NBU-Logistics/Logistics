@@ -1,20 +1,14 @@
 package com.nbu.logistics.services;
 
-import com.nbu.logistics.entities.Client;
-import com.nbu.logistics.entities.Delivery;
-import com.nbu.logistics.entities.DeliveryStatus;
-import com.nbu.logistics.entities.OfficeEmployee;
+import com.nbu.logistics.entities.*;
 import com.nbu.logistics.exceptions.InvalidDataException;
-import com.nbu.logistics.repositories.ClientsRepository;
-import com.nbu.logistics.repositories.DeliveriesRepository;
-import com.nbu.logistics.repositories.OfficeEmployeesRepository;
+import com.nbu.logistics.repositories.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -28,10 +22,16 @@ public class DeliveriesService {
     private ClientsRepository clientsRepository;
 
     @Autowired
+    private CouriersRepository couriersRepository;
+
+    @Autowired
     private OfficeEmployeesRepository officeEmployeesRepository;
 
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private SettingsService settingsService;
 
     public Client findUser(String email) {
         return clientsRepository.findByUserEmail(email);
@@ -75,7 +75,16 @@ public class DeliveriesService {
         Client sender = this.findUser(senderEmail);
         Client recipient = this.findUser(recipientEmail);
 
-        delivery.setPrice(delivery.getWeight() * 3);
+        Settings settings = this.settingsService.getSettings();
+        if (delivery.getWeight() > 0) {
+            delivery.setPrice(delivery.getWeight() * settings.getPricePerKilogram());
+        }
+
+        if (delivery.isOfficeDelivery()) {
+            double discountAmount = delivery.getPrice() * settings.getSentToOfficeDiscount() / 100.0;
+            delivery.setPrice(delivery.getPrice() - discountAmount);
+        }
+
         delivery.setSender(sender);
         delivery.setRecipient(recipient);
         delivery.setStatus(DeliveryStatus.POSTED);
@@ -103,9 +112,15 @@ public class DeliveriesService {
             delivery.setAddress(newDelivery.getAddress());
         }
 
+        Settings settings = this.settingsService.getSettings();
         if (delivery.getWeight() > 0) {
             delivery.setWeight(newDelivery.getWeight());
-            delivery.setPrice(delivery.getWeight() * 3);
+            delivery.setPrice(delivery.getWeight() * settings.getPricePerKilogram());
+        }
+
+        if (delivery.isOfficeDelivery()) {
+            double discountAmount = delivery.getPrice() * settings.getSentToOfficeDiscount() / 100.0;
+            delivery.setPrice(delivery.getPrice() - discountAmount);
         }
 
         if (delivery.getStatus() != null) {
@@ -116,6 +131,15 @@ public class DeliveriesService {
                     if (!employee.getDeliveries().contains(delivery)) {
                         employee.getDeliveries().add(delivery);
                         this.officeEmployeesRepository.save(employee);
+                    }
+                }
+            } else if (newDelivery.getStatus() == DeliveryStatus.IN_COURIER) {
+                if (this.authService.isInRole("ROLE_COURIER")) {
+                    Courier courier = this.couriersRepository
+                            .findByUserEmail(this.authService.getLoggedInUser().getEmail());
+                    if (!courier.getDeliveries().contains(delivery)) {
+                        courier.getDeliveries().add(delivery);
+                        this.couriersRepository.save(courier);
                     }
                 }
             }
@@ -223,16 +247,23 @@ public class DeliveriesService {
     }
 
     public List<Delivery> getRegisteredByCurrentEmployee() {
-        if (!this.authService.isInRole("ROLE_OFFICE_EMPLOYEE")) {
-            return new ArrayList<Delivery>();
-        }
-
         String email = this.authService.getLoggedInUser().getEmail();
-        OfficeEmployee employee = this.officeEmployeesRepository.findByUserEmail(email);
-        if (employee == null) {
-            return new ArrayList<Delivery>();
+        if (this.authService.isInRole("ROLE_OFFICE_EMPLOYEE")) {
+            OfficeEmployee employee = this.officeEmployeesRepository.findByUserEmail(email);
+            if (employee == null) {
+                return new ArrayList<Delivery>();
+            }
+
+            return employee.getDeliveries();
+        } else if (this.authService.isInRole("ROLE_COURIER")) {
+            Courier courier = this.couriersRepository.findByUserEmail(email);
+            if (courier == null) {
+                return new ArrayList<Delivery>();
+            }
+
+            return courier.getDeliveries();
         }
 
-        return employee.getDeliveries();
+        return new ArrayList<Delivery>();
     }
 }

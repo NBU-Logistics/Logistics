@@ -25,15 +25,19 @@
                     <td data-th-text="${office.name}" />
                     <td data-th-text="${office.address}" />
                     <td>
-                         <a
+                        <a
+                            data-th-if="${isAdmin}"
                             type="submit"
                             data-th-href="@{|~/offices/${office.id}|}"
-                         >
-                            <button class="change-btn btn btn-style"> Edit </button>
-                         </a>
+                        >
+                            <button class="change-btn btn btn-style">
+                                Edit
+                            </button>
+                        </a>
                     </td>
                     <td>
                         <form
+                            data-th-if="${isAdmin}"
                             data-th-action="@{~/offices/delete}"
                             method="POST"
                         >
@@ -42,7 +46,10 @@
                                 name="id"
                                 data-th-value="${office.id}"
                             />
-                            <button type="submit" class="change-btn btn btn-style">
+                            <button
+                                type="submit"
+                                class="change-btn btn btn-style"
+                            >
                                 Delete
                             </button>
                         </form>

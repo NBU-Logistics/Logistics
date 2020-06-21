@@ -1,49 +1,56 @@
 <!DOCTYPE html>
 <html
-        lang="EN"
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:th="http://www.thymeleaf.org"
-        data-th-replace="~{base-centered::centered(styles=~{::#style}, data=~{::body})}"
+    lang="EN"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    data-th-replace="~{base-centered::centered(styles=~{::#style}, data=~{::body})}"
 >
+    <section id="style">
+        <link th:href="@{/css/index.css}" rel="stylesheet" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Jura&display=swap"
+            rel="stylesheet"
+        />
+    </section>
+    <body style="background-color: #bad9d2;">
+        <img class="truck-img" src="/css/truck.jpg" />
+        <span class="company">
+            <span class="company-title">Agility</span>
+            <img class="truck-img-logo" src="/css/logo-truck.png" />
+        </span>
+        <div class="subtitle">Logistics company</div>
 
-<section id="style">
-    <link th:href="@{/css/index.css}" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Jura&display=swap" rel="stylesheet">
-</section>
-<body style="background-color: #bad9d2">
-     <img class="truck-img" src="/css/truck.jpg" >
-     <span class="company">
-         <span class="company-title" >Agility</span>
-         <img class="truck-img-logo" src="/css/logo-truck.png">
-     </span>
-     <div class = "subtitle">Logistics company</div>
-
-     <div class="visual-container"></div>
-     <div class="visual-container-content">
-         <ul>
-             <li>
-                 <img class="bullet" src="css/bullet.png"> Quick solution to all sort of tasks
-             </li>
-            <li>
-                <img class="bullet" src="css/bullet.png"> Transparent politics
-            </li>
-             <li>
-                 <img class="bullet" src="css/bullet.png"> Confidentiality, trustworthy
-             </li>
-             <li>
-                 <img class="bullet" src="css/bullet.png"> Protection of your interests
-             </li>
-             <li>
-                 <img class="bullet" src="css/bullet.png"> Costs optimization
-             </li>
-             <li>
-                 <img class="bullet" src="css/bullet.png"> Team of professionalists
-             </li>
-         </ul>
-     </div>
-     <div class="footer">
-         A
-     </div>
-
-</body>
+        <div class="visual-container"></div>
+        <div class="visual-container-content">
+            <ul>
+                <li>
+                    <img class="bullet" src="css/bullet.png" /> Quick solution
+                    to all sort of tasks
+                </li>
+                <li>
+                    <img class="bullet" src="css/bullet.png" /> Transparent
+                    politics
+                </li>
+                <li>
+                    <img class="bullet" src="css/bullet.png" /> Confidentiality,
+                    trustworthy
+                </li>
+                <li>
+                    <img class="bullet" src="css/bullet.png" /> Protection of
+                    your interests
+                </li>
+                <li>
+                    <img class="bullet" src="css/bullet.png" /> Costs
+                    optimization
+                </li>
+                <li>
+                    <img class="bullet" src="css/bullet.png" /> Team of
+                    professionalists
+                </li>
+            </ul>
+        </div>
+        <div class="footer">
+            A
+        </div>
+    </body>
 </html>

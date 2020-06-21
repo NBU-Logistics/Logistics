@@ -5,6 +5,7 @@ import com.nbu.logistics.exceptions.InvalidDataException;
 import com.nbu.logistics.services.OfficesService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,11 +29,13 @@ public class OfficesController {
         return "offices";
     }
 
+    @PreAuthorize("isAuthenticated() && hasRole('ROLE_ADMIN')")
     @GetMapping("/create")
     public String getCreateOffice(Model model, Office office) {
         return "create-office";
     }
 
+    @PreAuthorize("isAuthenticated() && hasRole('ROLE_ADMIN')")
     @PostMapping("/create")
     public String saveOffice(Model model, @Valid @ModelAttribute("office") Office office, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -45,6 +48,7 @@ public class OfficesController {
         return "create-office";
     }
 
+    @PreAuthorize("isAuthenticated() && hasRole('ROLE_ADMIN')")
     @GetMapping("/{id}")
     public String getUpdateOffice(Model model, @PathVariable("id") long id) {
         try {
@@ -56,6 +60,7 @@ public class OfficesController {
         return "edit-office";
     }
 
+    @PreAuthorize("isAuthenticated() && hasRole('ROLE_ADMIN')")
     @PostMapping("/update")
     public String update(Model model, @Valid @ModelAttribute("office") Office office, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -75,6 +80,7 @@ public class OfficesController {
         return "edit-office";
     }
 
+    @PreAuthorize("isAuthenticated() && hasRole('ROLE_ADMIN')")
     @PostMapping("/delete")
     public String delete(Model model, @RequestParam("id") long id) {
         try {

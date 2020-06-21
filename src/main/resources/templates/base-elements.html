@@ -4,19 +4,25 @@
         <li
             data-th-fragment="navLink(url, text)"
             class="nav-item"
-            data-th-classappend="${url} == ${#httpServletRequest.requestURI} ? 'active'"
             data-th-if="${condition == true || condition == null}"
         >
-            <a class="nav-link" data-th-href="${url}" data-th-text="${text}"></a>
+            <a
+                class="nav-link"
+                data-th-href="${url}"
+                data-th-text="${text}"
+            ></a>
         </li>
 
         <li
             class="nav-item dropdown"
             data-th-fragment="navDropdown(urls, names, text)"
-            data-th-classappend="${#arrays.contains(urls, #httpServletRequest.requestURI)} ? 'active'"
             data-th-if="${condition == true || condition == null}"
         >
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" data-th-text="${text}"></a>
+            <a
+                class="nav-link dropdown-toggle"
+                data-toggle="dropdown"
+                data-th-text="${text}"
+            ></a>
             <div class="dropdown-menu dropdown-menu-right">
                 <a
                     class="dropdown-item"
@@ -38,7 +44,11 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" data-th-include="${title}"></h5>
-                        <button type="button" class="close" data-dismiss="modal">
+                        <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                        >
                             <span>&times;</span>
                         </button>
                     </div>
