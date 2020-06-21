@@ -108,7 +108,7 @@ public class DeliveriesController {
         return this.getDeliveriesPage(model);
     }
 
-    @PreAuthorize("isAuthenticated() && !hasRole('ROLE_CLIENT')")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping()
     public String showAllDeliveries(Model model, Delivery delivery) {
         return this.getDeliveriesPage(model);

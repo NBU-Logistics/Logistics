@@ -26,6 +26,7 @@
                     <td data-th-text="${office.address}" />
                     <td>
                         <a
+                            data-th-if="${isAdmin}"
                             type="submit"
                             data-th-href="@{|~/offices/${office.id}|}"
                         >
@@ -36,6 +37,7 @@
                     </td>
                     <td>
                         <form
+                            data-th-if="${isAdmin}"
                             data-th-action="@{~/offices/delete}"
                             method="POST"
                         >
