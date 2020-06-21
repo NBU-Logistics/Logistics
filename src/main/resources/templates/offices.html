@@ -25,12 +25,14 @@
                     <td data-th-text="${office.name}" />
                     <td data-th-text="${office.address}" />
                     <td>
-                         <a
+                        <a
                             type="submit"
                             data-th-href="@{|~/offices/${office.id}|}"
-                         >
-                            <button class="change-btn btn btn-style"> Edit </button>
-                         </a>
+                        >
+                            <button class="change-btn btn btn-style">
+                                Edit
+                            </button>
+                        </a>
                     </td>
                     <td>
                         <form
@@ -42,7 +44,10 @@
                                 name="id"
                                 data-th-value="${office.id}"
                             />
-                            <button type="submit" class="change-btn btn btn-style">
+                            <button
+                                type="submit"
+                                class="change-btn btn btn-style"
+                            >
                                 Delete
                             </button>
                         </form>

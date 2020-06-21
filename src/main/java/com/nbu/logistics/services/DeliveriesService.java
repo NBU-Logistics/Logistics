@@ -1,21 +1,14 @@
 package com.nbu.logistics.services;
 
-import com.nbu.logistics.entities.Client;
-import com.nbu.logistics.entities.Delivery;
-import com.nbu.logistics.entities.DeliveryStatus;
-import com.nbu.logistics.entities.OfficeEmployee;
-import com.nbu.logistics.entities.Settings;
+import com.nbu.logistics.entities.*;
 import com.nbu.logistics.exceptions.InvalidDataException;
-import com.nbu.logistics.repositories.ClientsRepository;
-import com.nbu.logistics.repositories.DeliveriesRepository;
-import com.nbu.logistics.repositories.OfficeEmployeesRepository;
+import com.nbu.logistics.repositories.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -27,6 +20,9 @@ public class DeliveriesService {
 
     @Autowired
     private ClientsRepository clientsRepository;
+
+    @Autowired
+    private CouriersRepository couriersRepository;
 
     @Autowired
     private OfficeEmployeesRepository officeEmployeesRepository;
@@ -137,6 +133,15 @@ public class DeliveriesService {
                         this.officeEmployeesRepository.save(employee);
                     }
                 }
+            } else if (newDelivery.getStatus() == DeliveryStatus.IN_COURIER) {
+                if (this.authService.isInRole("ROLE_COURIER")) {
+                    Courier courier = this.couriersRepository
+                            .findByUserEmail(this.authService.getLoggedInUser().getEmail());
+                    if (!courier.getDeliveries().contains(delivery)) {
+                        courier.getDeliveries().add(delivery);
+                        this.couriersRepository.save(courier);
+                    }
+                }
             }
 
             delivery.setStatus(newDelivery.getStatus());
@@ -242,16 +247,23 @@ public class DeliveriesService {
     }
 
     public List<Delivery> getRegisteredByCurrentEmployee() {
-        if (!this.authService.isInRole("ROLE_OFFICE_EMPLOYEE")) {
-            return new ArrayList<Delivery>();
-        }
-
         String email = this.authService.getLoggedInUser().getEmail();
-        OfficeEmployee employee = this.officeEmployeesRepository.findByUserEmail(email);
-        if (employee == null) {
-            return new ArrayList<Delivery>();
+        if (this.authService.isInRole("ROLE_OFFICE_EMPLOYEE")) {
+            OfficeEmployee employee = this.officeEmployeesRepository.findByUserEmail(email);
+            if (employee == null) {
+                return new ArrayList<Delivery>();
+            }
+
+            return employee.getDeliveries();
+        } else if (this.authService.isInRole("ROLE_COURIER")) {
+            Courier courier = this.couriersRepository.findByUserEmail(email);
+            if (courier == null) {
+                return new ArrayList<Delivery>();
+            }
+
+            return courier.getDeliveries();
         }
 
-        return employee.getDeliveries();
+        return new ArrayList<Delivery>();
     }
 }

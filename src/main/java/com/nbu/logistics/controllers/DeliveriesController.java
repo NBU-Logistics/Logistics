@@ -81,7 +81,7 @@ public class DeliveriesController {
 
     }
 
-    @PreAuthorize("isAuthenticated() && (hasRole('ROLE_ADMIN') || hasRole('ROLE_OFFICE_EMPLOYEE'))")
+    @PreAuthorize("isAuthenticated() && (hasRole('ROLE_ADMIN') || hasRole('ROLE_OFFICE_EMPLOYEE') || hasRole('ROLE_COURIER'))")
     @PostMapping("/info")
     public String infoDelivery(Model model, @RequestParam("name") String name) {
         model.addAttribute("delivery", this.deliveriesService.findDelivery(name));
@@ -89,7 +89,7 @@ public class DeliveriesController {
         return "edit-delivery";
     }
 
-    @PreAuthorize("isAuthenticated() && (hasRole('ROLE_ADMIN') || hasRole('ROLE_OFFICE_EMPLOYEE'))")
+    @PreAuthorize("isAuthenticated() && (hasRole('ROLE_ADMIN') || hasRole('ROLE_OFFICE_EMPLOYEE') || hasRole('ROLE_COURIER'))")
     @PostMapping("/edit")
     public String editDelivery(Model model, @ModelAttribute("delivery") @Valid Delivery delivery,
             BindingResult bindingResult) {
@@ -108,7 +108,7 @@ public class DeliveriesController {
         return this.getDeliveriesPage(model);
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() && !hasRole('ROLE_CLIENT')")
     @GetMapping()
     public String showAllDeliveries(Model model, Delivery delivery) {
         return this.getDeliveriesPage(model);

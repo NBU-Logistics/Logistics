@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html
-        lang="EN"
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:th="http://www.thymeleaf.org"
-        data-th-replace="~{base-centered::centered(data=~{::body})}"
+    lang="EN"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    data-th-replace="~{base-centered::centered(data=~{::body})}"
 >
     <body>
         <h2 class="pb-4 flex-item text-center">Edit office</h2>
-        <form action="#" th:action="@{/offices/update}" th:object="${office}" method="post">
-            <input type="hidden" th:field="*{id}">
+        <form
+            action="#"
+            th:action="@{/offices/update}"
+            th:object="${office}"
+            method="post"
+        >
+            <input type="hidden" th:field="*{id}" />
 
             <div
                 data-th-replace="~{form-elements::validatedInput(
@@ -29,13 +34,12 @@
                     isValid=${not #fields.hasErrors('address')},
                     invalidMessage='Address is invalid!')}"
             ></div>
-            
+
             <p>
                 <button class="btn btn-style w-75" type="submit">
                     Save office
                 </button>
             </p>
-            </form>
-        </div>
+        </form>
     </body>
 </html>

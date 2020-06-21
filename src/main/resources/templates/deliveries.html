@@ -9,14 +9,7 @@
         <link th:href="@{/static/css/base.css}" rel="stylesheet" />
     </section>
 
-    <body
-        data-th-with="
-            loggedIn=${#authorization.expression('isAuthenticated()')},
-            isAdmin=${#authorization.expression('isAuthenticated() && hasRole(''ROLE_ADMIN'')')},
-            isOfficeEmployee=${#authorization.expression('isAuthenticated() && hasRole(''ROLE_OFFICE_EMPLOYEE'')')},
-            isCourier=${#authorization.expression('isAuthenticated() && hasRole(''ROLE_OFFICE_EMPLOYEE'')')},
-            isClient=${#authorization.expression('isAuthenticated() && hasRole(''ROLE_CLIENT'')')}"
-    >
+    <body>
         <div data-th-if="${!isClient}">
             <h2 class="pb-4 flex-item text-center">All</h2>
             <br />
@@ -411,7 +404,7 @@
             </div>
         </div>
 
-        <div data-th-if="${isOfficeEmployee}">
+        <div data-th-if="${isCourier}">
             <h2 class="pb-4 flex-item text-center">
                 Registered by me
             </h2>

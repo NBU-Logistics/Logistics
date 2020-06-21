@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html data-th-replace="~{base-centered::centered(data=~{::body})}">
-    <body
-        data-th-with="
-            loggedIn=${#authorization.expression('isAuthenticated()')},
-            isAdmin=${#authorization.expression('isAuthenticated() && hasRole(''ROLE_ADMIN'')')}"
-    >
+    <body>
         <div
             data-th-if="${company != null}"
             class="d-flex flex-column align-items-center"

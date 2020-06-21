@@ -6,7 +6,7 @@
         loggedIn=${#authorization.expression('isAuthenticated()')},
         isAdmin=${#authorization.expression('isAuthenticated() && hasRole(''ROLE_ADMIN'')')},
         isOfficeEmployee=${#authorization.expression('isAuthenticated() && hasRole(''ROLE_OFFICE_EMPLOYEE'')')},
-        isCourier=${#authorization.expression('isAuthenticated() && hasRole(''ROLE_OFFICE_EMPLOYEE'')')},
+        isCourier=${#authorization.expression('isAuthenticated() && hasRole(''ROLE_COURIER'')')},
         isClient=${#authorization.expression('isAuthenticated() && hasRole(''ROLE_CLIENT'')')}"
 >
     <head>
