@@ -25,15 +25,21 @@
                         <td th:text="${employee.user.lastName}"></td>
                         <td th:text="${employee.user.email}"></td>
                         <td>
-                            <form data-th-action="@{~/employees/employee-deliveries}" method="POST">
-                                <input type="hidden" name="id" data-th-value="${employee.user.id}" />
-                                <button type="submit" class="change-btn btn btn-style">Deliveries</button>
-                            </form>
-                        </td>
-                        <td>
-                            <form data-th-action="@{~/employees/delete-employee}" method="POST">
-                                <input type="hidden" name="id" data-th-value="${employee.user.id}" />
-                                <button type="submit" class="change-btn btn btn-style">Delete</button>
+                            <form
+                                data-th-action="@{~/employees/delete-employee}"
+                                method="POST"
+                            >
+                                <input
+                                    type="hidden"
+                                    name="id"
+                                    data-th-value="${employee.user.id}"
+                                />
+                                <button
+                                    type="submit"
+                                    class="change-btn btn btn-style"
+                                >
+                                    Delete
+                                </button>
                             </form>
                         </td>
                     </tr>
@@ -46,7 +52,7 @@
 
         <h2 class="pb-4 flex-item text-center">All Couriers</h2>
         <br />
-        <div class="list"  th:if="${not #lists.isEmpty(allCouriers)}">
+        <div class="list" th:if="${not #lists.isEmpty(allCouriers)}">
             <div class="scrollbar">
                 <table class="table table-borderless">
                     <tr>
@@ -60,9 +66,21 @@
                         <td th:text="${courier.user.lastName}"></td>
                         <td th:text="${courier.user.email}"></td>
                         <td>
-                            <form data-th-action="@{~/employees/delete-courier}" method="POST">
-                                <input type="hidden" name="id" data-th-value="${courier.user.id}" />
-                                <button type="submit" class="change-btn btn btn-style">Delete</button>
+                            <form
+                                data-th-action="@{~/employees/delete-courier}"
+                                method="POST"
+                            >
+                                <input
+                                    type="hidden"
+                                    name="id"
+                                    data-th-value="${courier.user.id}"
+                                />
+                                <button
+                                    type="submit"
+                                    class="change-btn btn btn-style"
+                                >
+                                    Delete
+                                </button>
                             </form>
                         </td>
                     </tr>

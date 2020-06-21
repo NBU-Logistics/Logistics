@@ -22,10 +22,6 @@ public class OfficeEmployeesService {
     }
 
     public void deleteEmployee(long id) throws InvalidDataException {
-        if (id == 0) {
-            throw new InvalidDataException("Invalid data!");
-        }
-
         OfficeEmployee existingEmployee = this.officeEmployeesRepository.findByUserId(id);
         if (existingEmployee == null) {
             throw new InvalidDataException("Employee does not exist!");
