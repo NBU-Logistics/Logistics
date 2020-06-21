@@ -8,22 +8,14 @@ import com.nbu.logistics.config.MyUserPrincipal;
 import com.nbu.logistics.controllers.models.UpdateUserViewModel;
 import com.nbu.logistics.entities.*;
 import com.nbu.logistics.exceptions.InvalidDataException;
-import com.nbu.logistics.services.AuthService;
-import com.nbu.logistics.services.ClientsService;
-import com.nbu.logistics.services.CouriersService;
-import com.nbu.logistics.services.OfficeEmployeesService;
+import com.nbu.logistics.services.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class AuthController {
@@ -63,13 +55,6 @@ public class AuthController {
         return template;
     }
 
-    private MyUserPrincipal getLoggedInUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        MyUserPrincipal loggedInUser = (MyUserPrincipal) authentication.getPrincipal();
-
-        return loggedInUser;
-    }
-
     @PreAuthorize("!isAuthenticated()")
     @GetMapping("/login")
     public String showLogin(@RequestParam(required = false) String error, Model model,
@@ -84,7 +69,7 @@ public class AuthController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
     public String showProfile(Model model, @ModelAttribute("user") UpdateUserViewModel user) {
-        model.addAttribute("loggedInUser", this.getLoggedInUser());
+        model.addAttribute("loggedInUser", this.authService.getLoggedInUser());
 
         return "profile";
     }
@@ -92,7 +77,7 @@ public class AuthController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/profile")
     public String changeProfile(Model model, @Valid @ModelAttribute("user") UpdateUserViewModel user) {
-        MyUserPrincipal loggedInUser = this.getLoggedInUser();
+        MyUserPrincipal loggedInUser = this.authService.getLoggedInUser();
         model.addAttribute("loggedInUser", loggedInUser);
 
         try {
@@ -109,7 +94,7 @@ public class AuthController {
     @PreAuthorize("isAuthenticated() && hasRole('ROLE_CLIENT')")
     @PostMapping("/clients/delete")
     public String deleteClient(Model model, @ModelAttribute("user") User user) {
-        MyUserPrincipal loggedInUser = this.getLoggedInUser();
+        MyUserPrincipal loggedInUser = this.authService.getLoggedInUser();
         model.addAttribute("loggedInUser", loggedInUser);
 
         try {
@@ -129,6 +114,7 @@ public class AuthController {
         return "register";
     }
 
+    @PreAuthorize("!isAuthenticated()")
     @PostMapping("/clients/register")
     public String registerClient(Model model, @Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
         return this.registerUser(model, user, bindingResult, "register", "Successfully registered!", "ROLE_CLIENT",
@@ -137,16 +123,19 @@ public class AuthController {
                 });
     }
 
+    @PreAuthorize("isAuthenticated() && hasRole('ROLE_ADMIN')")
     @GetMapping("/employees/couriers/register")
     public String showCreateCourierEmployee(@ModelAttribute("user") User user) {
         return "create-courier-employee";
     }
 
+    @PreAuthorize("isAuthenticated() && hasRole('ROLE_ADMIN')")
     @GetMapping("/employees/office/register")
     public String showCreateOfficeEmployee(@ModelAttribute("user") User user) {
         return "create-office-employee";
     }
 
+    @PreAuthorize("isAuthenticated() && hasRole('ROLE_ADMIN')")
     @PostMapping("/employees/couriers/register")
     public String createCourier(Model model, @Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
         return this.registerUser(model, user, bindingResult, "create-courier-employee",
@@ -155,6 +144,7 @@ public class AuthController {
                 });
     }
 
+    @PreAuthorize("isAuthenticated() && hasRole('ROLE_ADMIN')")
     @PostMapping("/employees/office/register")
     public String createOfficeEmployee(Model model, @Valid @ModelAttribute("user") User user,
             BindingResult bindingResult) {

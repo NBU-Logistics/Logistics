@@ -3,10 +3,10 @@ package com.nbu.logistics.controllers;
 import com.nbu.logistics.config.MyUserPrincipal;
 import com.nbu.logistics.entities.Delivery;
 import com.nbu.logistics.exceptions.InvalidDataException;
-import com.nbu.logistics.services.AuthService;
-import com.nbu.logistics.services.DeliveriesService;
+import com.nbu.logistics.services.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,7 +17,6 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/deliveries")
 public class DeliveriesController {
-
     @Autowired
     private DeliveriesService deliveriesService;
 
@@ -37,6 +36,7 @@ public class DeliveriesController {
         return "deliveries";
     }
 
+    @PreAuthorize("isAuthenticated() && hasRole('ROLE_CLIENT')")
     @GetMapping("/create")
     public String createDelivery(Model model) {
         model.addAttribute("delivery", new Delivery());
@@ -44,6 +44,7 @@ public class DeliveriesController {
         return "create-delivery";
     }
 
+    @PreAuthorize("isAuthenticated() && hasRole('ROLE_CLIENT')")
     @PostMapping("/create")
     public String addDelivery(Model model, @Valid @ModelAttribute Delivery delivery, BindingResult bindingResult) {
         MyUserPrincipal loggedInUser = this.authService.getLoggedInUser();
@@ -63,6 +64,7 @@ public class DeliveriesController {
         return this.showAllDeliveries(model, delivery);
     }
 
+    @PreAuthorize("isAuthenticated() && (hasRole('ROLE_ADMIN') || hasRole('ROLE_OFFICE_EMPLOYEE'))")
     @PostMapping("/delete")
     public String deleteDelivery(@RequestParam("id") String id, Model model) {
         try {
@@ -79,6 +81,7 @@ public class DeliveriesController {
 
     }
 
+    @PreAuthorize("isAuthenticated() && (hasRole('ROLE_ADMIN') || hasRole('ROLE_OFFICE_EMPLOYEE'))")
     @PostMapping("/info")
     public String infoDelivery(Model model, @RequestParam("name") String name) {
         model.addAttribute("delivery", this.deliveriesService.findDelivery(name));
@@ -86,6 +89,7 @@ public class DeliveriesController {
         return "edit-delivery";
     }
 
+    @PreAuthorize("isAuthenticated() && (hasRole('ROLE_ADMIN') || hasRole('ROLE_OFFICE_EMPLOYEE'))")
     @PostMapping("/edit")
     public String editDelivery(Model model, @ModelAttribute("delivery") @Valid Delivery delivery,
             BindingResult bindingResult) {
@@ -104,6 +108,7 @@ public class DeliveriesController {
         return this.getDeliveriesPage(model);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping()
     public String showAllDeliveries(Model model, Delivery delivery) {
         return this.getDeliveriesPage(model);
