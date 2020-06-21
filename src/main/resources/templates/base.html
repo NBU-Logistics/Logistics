@@ -116,16 +116,10 @@
                     ></li>
                     <li
                         data-th-replace="base-elements::navDropdown(
-                            urls=${ {'/deliveries/create', '/deliveries'} },
-                            names=${ {'Create a delivery', 'View deliveries'} },
-                            text='Deliveries',
-                            condition=${isClient})"
-                    ></li>
-                    <li
-                        data-th-replace="base-elements::navLink(
-                            url=@{~/deliveries}, 
-                            text='View deliveries',
-                            condition=${loggedIn && !isClient})"
+                            urls=${ {'/company', '/company/create', '/company/update', '/company/income'} },
+                            names=${ {'Company info', 'Create company', 'Update company', 'View income'} },
+                            text='Company',
+                            condition=${isAdmin})"
                     ></li>
                     <li
                         data-th-replace="base-elements::navDropdown(
@@ -136,6 +130,13 @@
                     ></li>
                     <li
                         data-th-replace="base-elements::navDropdown(
+                            urls=${ {'/deliveries/create', '/deliveries'} },
+                            names=${ {'Create a delivery', 'View deliveries'} },
+                            text='Deliveries',
+                            condition=${isClient})"
+                    ></li>
+                    <li
+                        data-th-replace="base-elements::navDropdown(
                             urls=${ {'/offices/create', '/offices'} },
                             names=${ {'Create an office', 'View offices'} },
                             text='Offices',
@@ -143,16 +144,15 @@
                     ></li>
                     <li
                         data-th-replace="base-elements::navLink(
+                            url=@{~/deliveries}, 
+                            text='View deliveries',
+                            condition=${loggedIn && !isClient})"
+                    ></li>
+                    <li
+                        data-th-replace="base-elements::navLink(
                             url=@{~/offices}, 
                             text='View offices',
                             condition=${loggedIn && !isAdmin})"
-                    ></li>
-                    <li
-                        data-th-replace="base-elements::navDropdown(
-                            urls=${ {'/company', '/company/create', '/company/update', '/company/income'} },
-                            names=${ {'Company info', 'Create company', 'Update company', 'View income'} },
-                            text='Company',
-                            condition=${isAdmin})"
                     ></li>
                     <li
                         data-th-replace="base-elements::navLink(
