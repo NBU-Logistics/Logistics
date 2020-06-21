@@ -20,29 +20,45 @@ public class EmployeesController {
     @Autowired
     private OfficeEmployeesService officeEmployeesService;
 
-    private void getEmployeesPage(Model model) {
+    private String getEmployeesPage(Model model) {
         model.addAttribute("allEmployees", officeEmployeesService.getAllOfficeEmployees());
         model.addAttribute("allCouriers", couriersService.getAllCouriers());
+
+        return "employees";
     }
 
     @RequestMapping("/employees")
     public String showAllEmployees(Model model, OfficeEmployee employee) {
-        this.getEmployeesPage(model);
-
-        return "employees";
+        return this.getEmployeesPage(model);
     }
 
-    @PostMapping("/employees/delete")
-    public String delete(@RequestParam("employeeId") long employeeId, Model model) {
+    @PostMapping("/employees/delete-employee")
+    public String deleteEmployee(@RequestParam("id") long employeeId, Model model) {
         try {
             officeEmployeesService.deleteEmployee(employeeId);
         } catch (InvalidDataException e) {
             model.addAttribute("error", e.getMessage());
-            return "redirect:/employees";
 
+            return this.getEmployeesPage(model);
         }
+
         model.addAttribute("success", "Successfully deleted employee!");
 
-        return "employees";
+        return this.getEmployeesPage(model);
+    }
+
+    @PostMapping("/employees/delete-courier")
+    public String deleteCourier(@RequestParam("id") long employeeId, Model model) {
+        try {
+            couriersService.deleteCourier(employeeId);
+        } catch (InvalidDataException e) {
+            model.addAttribute("error", e.getMessage());
+
+            return this.getEmployeesPage(model);
+        }
+
+        model.addAttribute("success", "Successfully deleted employee!");
+
+        return this.getEmployeesPage(model);
     }
 }

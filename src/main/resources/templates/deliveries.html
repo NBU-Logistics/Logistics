@@ -12,7 +12,7 @@
     <body>
         <h2 class="pb-4 flex-item text-center">All</h2>
         <br />
-        <div th:if="${not #lists.isEmpty(allDeliveries)}">
+        <div class="list" th:if="${not #lists.isEmpty(allDeliveries)}">
             <div class="scrollbar">
                 <table class="table table-borderless">
                     <tr>
@@ -43,7 +43,10 @@
                                     name="name"
                                     data-th-value="${delivery.name}"
                                 />
-                                <button type="submit" class="btn btn-style">
+                                <button
+                                    type="submit"
+                                    class="change-btn btn btn-style"
+                                >
                                     Edit
                                 </button>
                             </form>
@@ -58,7 +61,10 @@
                                     name="id"
                                     data-th-value="${delivery.name}"
                                 />
-                                <button type="submit" class="btn btn-style">
+                                <button
+                                    type="submit"
+                                    class="change-btn btn btn-style"
+                                >
                                     Delete
                                 </button>
                             </form>
@@ -73,7 +79,7 @@
 
         <h2 class="pb-4 flex-item text-center">Registered</h2>
         <br />
-        <div th:if="${not #lists.isEmpty(registeredDeliveries)}">
+        <div class="list" th:if="${not #lists.isEmpty(registeredDeliveries)}">
             <div class="scrollbar">
                 <table class="table table-borderless">
                     <tr>
@@ -104,7 +110,10 @@
                                     name="name"
                                     data-th-value="${delivery.name}"
                                 />
-                                <button type="submit" class="btn btn-style">
+                                <button
+                                    type="submit"
+                                    class="change-btn btn btn-style"
+                                >
                                     Edit
                                 </button>
                             </form>
@@ -119,7 +128,10 @@
                                     name="id"
                                     data-th-value="${delivery.name}"
                                 />
-                                <button type="submit" class="btn btn-style">
+                                <button
+                                    type="submit"
+                                    class="change-btn btn btn-style"
+                                >
                                     Delete
                                 </button>
                             </form>
@@ -134,7 +146,7 @@
 
         <h2 class="pb-4 flex-item text-center">Sent but not delivered</h2>
         <br />
-        <div th:if="${not #lists.isEmpty(sentUndelivered)}">
+        <div class="list" th:if="${not #lists.isEmpty(sentUndelivered)}">
             <div class="scrollbar">
                 <table class="table table-borderless">
                     <tr>
@@ -165,7 +177,10 @@
                                     name="name"
                                     data-th-value="${delivery.name}"
                                 />
-                                <button type="submit" class="btn btn-style">
+                                <button
+                                    type="submit"
+                                    class="change-btn btn btn-style"
+                                >
                                     Edit
                                 </button>
                             </form>
@@ -180,7 +195,10 @@
                                     name="id"
                                     data-th-value="${delivery.name}"
                                 />
-                                <button type="submit" class="btn btn-style">
+                                <button
+                                    type="submit"
+                                    class="change-btn btn btn-style"
+                                >
                                     Delete
                                 </button>
                             </form>
@@ -195,7 +213,7 @@
 
         <h2 class="pb-4 flex-item text-center">Sent and delivered</h2>
         <br />
-        <div th:if="${not #lists.isEmpty(clientSentDelivered)}">
+        <div class="list" th:if="${not #lists.isEmpty(clientSentDelivered)}">
             <div class="scrollbar">
                 <table class="table table-borderless">
                     <tr>
@@ -226,7 +244,7 @@
 
         <h2 class="pb-4 flex-item text-center">Sent but not delivered yet</h2>
         <br />
-        <div th:if="${not #lists.isEmpty(clientSentUndelivered)}">
+        <div class="list" th:if="${not #lists.isEmpty(clientSentUndelivered)}">
             <div class="scrollbar">
                 <table class="table table-borderless">
                     <tr>
@@ -256,7 +274,10 @@
         </div>
 
         <h2 class="pb-4 flex-item text-center">Received and delivered</h2>
-        <div th:if="${not #lists.isEmpty(clientReceivedDelivered)}">
+        <div
+            class="list"
+            th:if="${not #lists.isEmpty(clientReceivedDelivered)}"
+        >
             <div class="scrollbar scrollbar-lady-lips">
                 <div class="force-overflow">
                     <table class="table table-borderless">
@@ -292,29 +313,36 @@
         <h2 class="pb-4 flex-item text-center">
             Received but not delivered yet
         </h2>
-        <div th:if="${not #lists.isEmpty(clientReceivedUndelivered)}">
-            <div class="scrollbar">
-                <table class="table table-borderless">
-                    <tr>
-                        <th>Sender email</th>
-                        <th>Recipient email</th>
-                        <th>Name</th>
-                        <th>Address</th>
-                        <th>Weight</th>
-                        <th>Delivery sent to office?</th>
-                        <th></th>
-                    </tr>
-                    <tr th:each="delivery : ${clientReceivedUndelivered}">
-                        <td th:text="${delivery.sender?.user?.email}"></td>
-                        <td th:text="${delivery.recipient?.user?.email}"></td>
-                        <td th:text="${delivery.name}"></td>
-                        <td th:text="${delivery.address}"></td>
-                        <td th:text="${delivery.weight}"></td>
-                        <td
-                            th:text="${delivery.isOfficeDelivery()} ? 'Yes' : 'No'"
-                        ></td>
-                    </tr>
-                </table>
+        <div
+            class="list"
+            th:if="${not #lists.isEmpty(clientReceivedUndelivered)}"
+        >
+            <div class="scrollbar scrollbar-lady-lips">
+                <div class="force-overflow">
+                    <table class="table table-borderless">
+                        <tr>
+                            <th>Sender email</th>
+                            <th>Recipient email</th>
+                            <th>Name</th>
+                            <th>Address</th>
+                            <th>Weight</th>
+                            <th>Delivery sent to office?</th>
+                            <th></th>
+                        </tr>
+                        <tr th:each="delivery : ${clientReceivedUndelivered}">
+                            <td th:text="${delivery.sender?.user?.email}"></td>
+                            <td
+                                th:text="${delivery.recipient?.user?.email}"
+                            ></td>
+                            <td th:text="${delivery.name}"></td>
+                            <td th:text="${delivery.address}"></td>
+                            <td th:text="${delivery.weight}"></td>
+                            <td
+                                th:text="${delivery.isOfficeDelivery()} ? 'Yes' : 'No'"
+                            ></td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
         <div th:if="${#lists.isEmpty(clientReceivedUndelivered)}">

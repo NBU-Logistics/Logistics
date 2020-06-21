@@ -12,12 +12,6 @@
     <body>
         <h2 class="pb-4 flex-item text-center">All offices</h2>
         <br />
-        <a
-            data-th-href="@{/offices/create}"
-            class="btn btn-primary btn-sm mb-3"
-        >
-            Add an office
-        </a>
         <div class="scrollbar">
             <table class="table table-borderless">
                 <tr>
@@ -31,13 +25,12 @@
                     <td data-th-text="${office.name}" />
                     <td data-th-text="${office.address}" />
                     <td>
-                        <a
+                         <a
                             type="submit"
-                            class="btn btn-style"
                             data-th-href="@{|~/offices/${office.id}|}"
-                        >
-                            Edit
-                        </a>
+                         >
+                            <button class="change-btn btn btn-style"> Edit </button>
+                         </a>
                     </td>
                     <td>
                         <form
@@ -49,7 +42,7 @@
                                 name="id"
                                 data-th-value="${office.id}"
                             />
-                            <button type="submit" class="btn btn-style">
+                            <button type="submit" class="change-btn btn btn-style">
                                 Delete
                             </button>
                         </form>

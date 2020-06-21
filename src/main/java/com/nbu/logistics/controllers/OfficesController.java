@@ -70,7 +70,7 @@ public class OfficesController {
             return "edit-office";
         }
 
-        model.addAttribute("success", "Office eddited successfully!");
+        model.addAttribute("success", "Office edited successfully!");
 
         return "edit-office";
     }
@@ -82,6 +82,8 @@ public class OfficesController {
         } catch (InvalidDataException e) {
             model.addAttribute("error", e.getMessage());
         }
+
+        model.addAttribute("success", "Successfully deleted office!");
 
         return this.showOffices(model, new Office());
     }

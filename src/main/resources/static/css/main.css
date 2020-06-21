@@ -27,6 +27,10 @@ body {
     z-index: 1000;
 }
 
+.alert {
+    padding: .75rem 1.25rem !important;
+}
+
 .fixed-top {
     padding-top: 0;
     padding-bottom: 0;
@@ -187,6 +191,10 @@ a:hover {
     display: block;
 }
 
+.list, .no-data-text {
+  margin-bottom: 80px;
+}
+
 .scrollbar,
 .scrollbar:focus {
     overflow-y: auto;
@@ -253,6 +261,10 @@ h2 {
     color: #235883;
 }
 
+.form-control::placeholder {
+    text-align: center;
+}
+
 p {
     font-family: Montserrat, sans-serif;
     font-weight: 400;
@@ -287,8 +299,14 @@ button:focus {
 .btn {
     margin-top: 30px;
     margin-bottom: 15px;
+    padding: 0 .75rem;
     height: 43px;
     transition: step-end;
+}
+
+.btn a {
+    padding-top: 7px;
+    color: #212529;
 }
 
 .btn:focus {
@@ -307,13 +325,20 @@ button:focus {
     background-color: transparent;
 }
 
+.change-btn {
+    margin-top: 0;
+}
+
 label {
+    display: block;
     font-family: Montserrat, sans-serif;
+    text-align: center;
     font-weight: 400;
     font-size: 19px;
     color: #1a3f5d;
 }
 
+/*
 label[for="email"] {
     margin-left: 20%;
 }
@@ -326,7 +351,7 @@ label[for="firstName"],
 label[for="lastName"] {
     margin-left: 27%;
 }
-
+*/
 .checkbox-lg .custom-control-label::before,
 .checkbox-lg .custom-control-label::after {
     top: 0.8rem;
@@ -418,6 +443,23 @@ select::-ms-expand {
 .dropdown-menu-right .menu-top  {
     position: absolute;
     margin-right: -36px;
+}
+
+.company-info {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 50px;
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 20px;
+    color: #1d4464;
+}
+
+.title {
+    font-size: 24px;
+    font-family: Montserrat;
+    color: #212529;
 }
 
 @media (max-width: 576px) {

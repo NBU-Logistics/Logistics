@@ -21,24 +21,7 @@ public class OfficeEmployeesService {
         this.officeEmployeesRepository.save(new OfficeEmployee(user, null));
     }
 
-    // public void deleteOfficeEmployee(long id) {
-    //
-    // Optional<OfficeEmployee> office =
-    // this.officeEmployeesRepository.findById(id);
-    //
-    // if (employee.isPresent()) {
-    // office.get().setDeleted(true);
-    // this.officeEmployeesRepository.save(office.get());
-    // }
-    // }
-
     public void deleteEmployee(long id) throws InvalidDataException {
-        // OfficeEmployee existingEmployee =
-        // this.officeEmployeesRepository.findByUserById(officeEmployeesRepository.getOne(id));
-        if (id == 0) {
-            throw new InvalidDataException("Invalid data!");
-        }
-
         OfficeEmployee existingEmployee = this.officeEmployeesRepository.findByUserId(id);
         if (existingEmployee == null) {
             throw new InvalidDataException("Employee does not exist!");

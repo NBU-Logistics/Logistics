@@ -6,12 +6,12 @@
     data-th-replace="~{base-centered::centered(data=~{::body}, styles=~{::#style})}"
 >
     <section id="style">
-        <link th:href="@{/css/base.css}" rel="stylesheet" />
+        <link th:href="@{static/css/base.css}" rel="stylesheet" />
     </section>
     <body>
         <h2 class="pb-4 flex-item text-center">All Office Employees</h2>
         <br />
-        <div th:if="${not #lists.isEmpty(allEmployees)}">
+        <div class="list" th:if="${not #lists.isEmpty(allEmployees)}">
             <div class="scrollbar">
                 <table class="table table-borderless">
                     <tr>
@@ -24,6 +24,24 @@
                         <td th:text="${employee.user.firstName}"></td>
                         <td th:text="${employee.user.lastName}"></td>
                         <td th:text="${employee.user.email}"></td>
+                        <td>
+                            <form
+                                data-th-action="@{~/employees/delete-employee}"
+                                method="POST"
+                            >
+                                <input
+                                    type="hidden"
+                                    name="id"
+                                    data-th-value="${employee.user.id}"
+                                />
+                                <button
+                                    type="submit"
+                                    class="change-btn btn btn-style"
+                                >
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -31,9 +49,10 @@
         <div th:if="${#lists.isEmpty(allEmployees)}">
             <p class="no-employees-text">Nothing to show</p>
         </div>
+
         <h2 class="pb-4 flex-item text-center">All Couriers</h2>
         <br />
-        <div th:if="${not #lists.isEmpty(allCouriers)}">
+        <div class="list" th:if="${not #lists.isEmpty(allCouriers)}">
             <div class="scrollbar">
                 <table class="table table-borderless">
                     <tr>
@@ -46,6 +65,24 @@
                         <td th:text="${courier.user.firstName}"></td>
                         <td th:text="${courier.user.lastName}"></td>
                         <td th:text="${courier.user.email}"></td>
+                        <td>
+                            <form
+                                data-th-action="@{~/employees/delete-courier}"
+                                method="POST"
+                            >
+                                <input
+                                    type="hidden"
+                                    name="id"
+                                    data-th-value="${courier.user.id}"
+                                />
+                                <button
+                                    type="submit"
+                                    class="change-btn btn btn-style"
+                                >
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                 </table>
             </div>

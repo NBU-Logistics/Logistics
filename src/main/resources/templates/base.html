@@ -106,6 +106,7 @@
         <div class="navbar">
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <li data-th-replace="base-elements::navLink(@{~/}, 'Home')"></li>
                     <li
                         data-th-replace="base-elements::navDropdown(
                             urls=${ {'/deliveries/create', '/deliveries'} },
