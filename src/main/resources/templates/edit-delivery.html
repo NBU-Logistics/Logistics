@@ -37,6 +37,7 @@
             <div class="form-group">
                 <p>Delivery status</p>
                 <select
+                    data-th-if="${isAdmin}"
                     class="form-control mdb-select md-form colorful-select dropdown-primary"
                     th:field="*{status}"
                 >
@@ -44,6 +45,46 @@
                         th:each="status : ${T(com.nbu.logistics.entities.DeliveryStatus).values()}"
                         th:value="${status}"
                         th:text="${status}"
+                    >
+                    </option>
+                </select>
+                <select
+                    data-th-if="${isCourier}"
+                    class="form-control mdb-select md-form colorful-select dropdown-primary"
+                    th:field="*{status}"
+                >
+                    <option
+                        th:value="${delivery.status}"
+                        th:text="${delivery.status}"
+                    >
+                    </option>
+                    <option
+                        data-th-if="${delivery.status == T(com.nbu.logistics.entities.DeliveryStatus).REGISTERED}"
+                        th:value="${T(com.nbu.logistics.entities.DeliveryStatus).IN_COURIER.name()}"
+                        th:text="${T(com.nbu.logistics.entities.DeliveryStatus).IN_COURIER.name()}"
+                    >
+                    </option>
+                    <option
+                        data-th-if="${delivery.status == T(com.nbu.logistics.entities.DeliveryStatus).IN_COURIER}"
+                        th:value="${T(com.nbu.logistics.entities.DeliveryStatus).DELIVERED.name()}"
+                        th:text="${T(com.nbu.logistics.entities.DeliveryStatus).DELIVERED.name()}"
+                    >
+                    </option>
+                </select>
+                <select
+                    data-th-if="${isOfficeEmployee}"
+                    class="form-control mdb-select md-form colorful-select dropdown-primary"
+                    th:field="*{status}"
+                >
+                    <option
+                        th:value="${delivery.status}"
+                        th:text="${delivery.status}"
+                    >
+                    </option>
+                    <option
+                        data-th-if="${delivery.status == T(com.nbu.logistics.entities.DeliveryStatus).POSTED}"
+                        th:value="${T(com.nbu.logistics.entities.DeliveryStatus).REGISTERED.name()}"
+                        th:text="${T(com.nbu.logistics.entities.DeliveryStatus).REGISTERED.name()}"
                     >
                     </option>
                 </select>
