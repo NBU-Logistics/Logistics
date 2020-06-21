@@ -167,6 +167,12 @@
                             condition=${isAdmin || isOfficeEmployee})"
                     ></li>
                     <li
+                        data-th-replace="base-elements::navLink(
+                            url=@{~/settings},
+                            text='Settings',
+                            condition=${isAdmin})"
+                    ></li>
+                    <li
                         data-th-replace="base-elements::navLink(@{~/about}, 'About us')"
                     ></li>
                 </ul>

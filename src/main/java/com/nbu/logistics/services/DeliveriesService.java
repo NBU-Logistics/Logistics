@@ -4,6 +4,7 @@ import com.nbu.logistics.entities.Client;
 import com.nbu.logistics.entities.Delivery;
 import com.nbu.logistics.entities.DeliveryStatus;
 import com.nbu.logistics.entities.OfficeEmployee;
+import com.nbu.logistics.entities.Settings;
 import com.nbu.logistics.exceptions.InvalidDataException;
 import com.nbu.logistics.repositories.ClientsRepository;
 import com.nbu.logistics.repositories.DeliveriesRepository;
@@ -32,6 +33,9 @@ public class DeliveriesService {
 
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private SettingsService settingsService;
 
     public Client findUser(String email) {
         return clientsRepository.findByUserEmail(email);
@@ -75,7 +79,16 @@ public class DeliveriesService {
         Client sender = this.findUser(senderEmail);
         Client recipient = this.findUser(recipientEmail);
 
-        delivery.setPrice(delivery.getWeight() * 3);
+        Settings settings = this.settingsService.getSettings();
+        if (delivery.getWeight() > 0) {
+            delivery.setPrice(delivery.getWeight() * settings.getPricePerKilogram());
+        }
+
+        if (delivery.isOfficeDelivery()) {
+            double discountAmount = delivery.getPrice() * settings.getSentToOfficeDiscount() / 100.0;
+            delivery.setPrice(delivery.getPrice() - discountAmount);
+        }
+
         delivery.setSender(sender);
         delivery.setRecipient(recipient);
         delivery.setStatus(DeliveryStatus.POSTED);
@@ -103,9 +116,15 @@ public class DeliveriesService {
             delivery.setAddress(newDelivery.getAddress());
         }
 
+        Settings settings = this.settingsService.getSettings();
         if (delivery.getWeight() > 0) {
             delivery.setWeight(newDelivery.getWeight());
-            delivery.setPrice(delivery.getWeight() * 3);
+            delivery.setPrice(delivery.getWeight() * settings.getPricePerKilogram());
+        }
+
+        if (delivery.isOfficeDelivery()) {
+            double discountAmount = delivery.getPrice() * settings.getSentToOfficeDiscount() / 100.0;
+            delivery.setPrice(delivery.getPrice() - discountAmount);
         }
 
         if (delivery.getStatus() != null) {
