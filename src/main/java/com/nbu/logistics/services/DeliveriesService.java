@@ -1,17 +1,19 @@
 package com.nbu.logistics.services;
 
-import com.nbu.logistics.config.MyUserPrincipal;
 import com.nbu.logistics.entities.Client;
 import com.nbu.logistics.entities.Delivery;
 import com.nbu.logistics.entities.DeliveryStatus;
+import com.nbu.logistics.entities.OfficeEmployee;
 import com.nbu.logistics.exceptions.InvalidDataException;
 import com.nbu.logistics.repositories.ClientsRepository;
 import com.nbu.logistics.repositories.DeliveriesRepository;
+import com.nbu.logistics.repositories.OfficeEmployeesRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +26,12 @@ public class DeliveriesService {
 
     @Autowired
     private ClientsRepository clientsRepository;
+
+    @Autowired
+    private OfficeEmployeesRepository officeEmployeesRepository;
+
+    @Autowired
+    private AuthService authService;
 
     public Client findUser(String email) {
         return clientsRepository.findByUserEmail(email);
@@ -71,7 +79,7 @@ public class DeliveriesService {
         delivery.setSender(sender);
         delivery.setRecipient(recipient);
         delivery.setStatus(DeliveryStatus.POSTED);
-        delivery.setCreatedOn(new Date());
+        delivery.setCreatedOn(LocalDate.now());
         deliveriesRepository.save(delivery);
 
         sender.getSentDeliveries().add(delivery);
@@ -85,7 +93,7 @@ public class DeliveriesService {
     }
 
     public void editDelivery(Delivery newDelivery, String id) throws InvalidDataException {
-        Delivery delivery = deliveriesRepository.findByName(id);
+        Delivery delivery = this.deliveriesRepository.findByName(id);
 
         if (delivery == null) {
             throw new InvalidDataException("Delivery does not exist!");
@@ -101,15 +109,24 @@ public class DeliveriesService {
         }
 
         if (delivery.getStatus() != null) {
+            if (newDelivery.getStatus() == DeliveryStatus.REGISTERED) {
+                if (this.authService.isInRole("ROLE_OFFICE_EMPLOYEE")) {
+                    OfficeEmployee employee = this.officeEmployeesRepository
+                            .findByUserEmail(this.authService.getLoggedInUser().getEmail());
+                    if (!employee.getDeliveries().contains(delivery)) {
+                        employee.getDeliveries().add(delivery);
+                        this.officeEmployeesRepository.save(employee);
+                    }
+                }
+            }
+
             delivery.setStatus(newDelivery.getStatus());
         }
 
         delivery.setOfficeDelivery(newDelivery.isOfficeDelivery());
-        delivery.setCreatedOn(new Date());
+        delivery.setCreatedOn(LocalDate.now());
 
-        if(delivery.getStatus().equals(DeliveryStatus.REGISTERED))
-
-        deliveriesRepository.save(delivery);
+        this.deliveriesRepository.save(delivery);
     }
 
     public void deleteDelivery(String name) throws InvalidDataException {
@@ -135,43 +152,87 @@ public class DeliveriesService {
         return deliveriesRepository.findByStatusNot(DeliveryStatus.DELIVERED);
     }
 
-    public List<Delivery> getSentDelivered(MyUserPrincipal user) {
-        String email = user.getEmail();
+    public List<Delivery> getClientSentDelivered() {
+        if (!this.authService.isInRole("ROLE_CLIENT")) {
+            return new ArrayList<Delivery>();
+        }
 
-        List<Delivery> sentDelivered = this.clientsRepository.findByUserEmail(email).getSentDeliveries().stream()
+        String email = this.authService.getLoggedInUser().getEmail();
+        Client client = this.clientsRepository.findByUserEmail(email);
+        if (client == null) {
+            return new ArrayList<Delivery>();
+        }
+
+        List<Delivery> sentDelivered = client.getSentDeliveries().stream()
                 .filter(delivery -> delivery.getStatus() == DeliveryStatus.DELIVERED).collect(Collectors.toList());
 
         return sentDelivered;
     }
 
-    public List<Delivery> getSentUndelivered(MyUserPrincipal user) {
-        String email = user.getEmail();
+    public List<Delivery> getClientSentUndelivered() {
+        if (!this.authService.isInRole("ROLE_CLIENT")) {
+            return new ArrayList<Delivery>();
+        }
 
-        List<Delivery> sentUndelivered = this.clientsRepository.findByUserEmail(email).getSentDeliveries().stream()
+        String email = this.authService.getLoggedInUser().getEmail();
+        Client client = this.clientsRepository.findByUserEmail(email);
+        if (client == null) {
+            return new ArrayList<Delivery>();
+        }
+
+        List<Delivery> sentUndelivered = client.getSentDeliveries().stream()
                 .filter(delivery -> delivery.getStatus() != DeliveryStatus.DELIVERED && delivery.getStatus() != null)
                 .collect(Collectors.toList());
 
         return sentUndelivered;
     }
 
-    public List<Delivery> getReceivedDelivered(MyUserPrincipal user) {
-        String email = user.getEmail();
+    public List<Delivery> getClientReceivedDelivered() {
+        if (!this.authService.isInRole("ROLE_CLIENT")) {
+            return new ArrayList<Delivery>();
+        }
 
-        List<Delivery> receivedDelivered = this.clientsRepository.findByUserEmail(email).getReceivedDeliveries()
-                .stream().filter(delivery -> delivery.getStatus() == DeliveryStatus.DELIVERED)
-                .collect(Collectors.toList());
+        String email = this.authService.getLoggedInUser().getEmail();
+        Client client = this.clientsRepository.findByUserEmail(email);
+        if (client == null) {
+            return new ArrayList<Delivery>();
+        }
+
+        List<Delivery> receivedDelivered = client.getReceivedDeliveries().stream()
+                .filter(delivery -> delivery.getStatus() == DeliveryStatus.DELIVERED).collect(Collectors.toList());
 
         return receivedDelivered;
     }
 
-    public List<Delivery> getReceivedUndelivered(MyUserPrincipal user) {
-        String email = user.getEmail();
+    public List<Delivery> getClientReceivedUndelivered() {
+        if (!this.authService.isInRole("ROLE_CLIENT")) {
+            return new ArrayList<Delivery>();
+        }
 
-        List<Delivery> receivedUndelivered = this.clientsRepository.findByUserEmail(email).getReceivedDeliveries()
-                .stream()
+        String email = this.authService.getLoggedInUser().getEmail();
+        Client client = this.clientsRepository.findByUserEmail(email);
+        if (client == null) {
+            return new ArrayList<Delivery>();
+        }
+
+        List<Delivery> receivedUndelivered = client.getReceivedDeliveries().stream()
                 .filter(delivery -> delivery.getStatus() != DeliveryStatus.DELIVERED && delivery.getStatus() != null)
                 .collect(Collectors.toList());
 
         return receivedUndelivered;
+    }
+
+    public List<Delivery> getRegisteredByCurrentEmployee() {
+        if (!this.authService.isInRole("ROLE_OFFICE_EMPLOYEE")) {
+            return new ArrayList<Delivery>();
+        }
+
+        String email = this.authService.getLoggedInUser().getEmail();
+        OfficeEmployee employee = this.officeEmployeesRepository.findByUserEmail(email);
+        if (employee == null) {
+            return new ArrayList<Delivery>();
+        }
+
+        return employee.getDeliveries();
     }
 }

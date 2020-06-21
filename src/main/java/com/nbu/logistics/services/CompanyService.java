@@ -1,18 +1,27 @@
 package com.nbu.logistics.services;
 
 import com.nbu.logistics.entities.Company;
+import com.nbu.logistics.entities.Delivery;
+import com.nbu.logistics.entities.DeliveryStatus;
 import com.nbu.logistics.exceptions.InvalidDataException;
 import com.nbu.logistics.repositories.CompanyRepository;
+import com.nbu.logistics.repositories.DeliveriesRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CompanyService {
     @Autowired
     private CompanyRepository companyRepository;
+
+    @Autowired
+    private DeliveriesRepository deliveriesRepository;
 
     public void createCompany(Company companyData) throws InvalidDataException {
         if (companyRepository.findAll().size() == 0) {
@@ -95,5 +104,18 @@ public class CompanyService {
         } else {
             throw new InvalidDataException("Company does not exist!");
         }
+    }
+
+    public BigDecimal calculateIncome(LocalDate fromDate, LocalDate toDate) {
+        List<Delivery> deliveries = this.deliveriesRepository.findByStatus(DeliveryStatus.DELIVERED).stream()
+                .filter((delivery) -> fromDate.compareTo(delivery.getCreatedOn()) < 1
+                        && toDate.compareTo(delivery.getCreatedOn()) > -1)
+                .collect(Collectors.toList());
+        BigDecimal income = new BigDecimal(0);
+        for (Delivery delivery : deliveries) {
+            income = income.add(new BigDecimal(delivery.getPrice()));
+        }
+
+        return income;
     }
 }

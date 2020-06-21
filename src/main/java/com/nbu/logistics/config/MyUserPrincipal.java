@@ -20,16 +20,32 @@ public class MyUserPrincipal implements UserDetails {
         this.authorities = AuthorityUtils.createAuthorityList(userRoles);
     }
 
+    public long getUserId() {
+        return this.user.getId();
+    }
+
     public String getFirstName() {
         return this.user.getFirstName();
+    }
+
+    public void setFirstName(String firstName) {
+        this.user.setFirstName(firstName);
     }
 
     public String getLastName() {
         return this.user.getLastName();
     }
 
+    public void setLastName(String lastName) {
+        this.user.setLastName(lastName);
+    }
+
     public String getEmail() {
         return this.user.getEmail();
+    }
+
+    public void setEmail(String email) {
+        this.user.setEmail(email);
     }
 
     @Override

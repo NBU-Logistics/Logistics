@@ -1,10 +1,12 @@
 package com.nbu.logistics.services;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import com.nbu.logistics.config.MyUserPrincipal;
+import com.nbu.logistics.controllers.models.UpdateUserViewModel;
 import com.nbu.logistics.entities.Client;
 import com.nbu.logistics.entities.User;
 import com.nbu.logistics.entities.UserRole;
@@ -15,6 +17,8 @@ import com.nbu.logistics.repositories.UsersRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,6 +38,9 @@ public class AuthService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private ValidationService validator;
 
     public void registerUser(User user, Collection<String> roles) throws InvalidDataException {
         if (user == null || roles == null) {
@@ -62,7 +69,7 @@ public class AuthService {
         this.usersRepository.save(user);
     }
 
-    public void modifyUser(String email, User newUser) throws InvalidDataException {
+    public void modifyUser(String email, UpdateUserViewModel newUser) throws InvalidDataException {
         if (email == null || newUser == null) {
             throw new InvalidDataException("Invalid input!");
         }
@@ -72,19 +79,28 @@ public class AuthService {
             throw new InvalidDataException("User does not exist!");
         }
 
+        MyUserPrincipal userPrincipal = this.getLoggedInUser();
         if (newUser.getEmail() != null && !newUser.getEmail().isBlank()) {
             existingUser.setEmail(newUser.getEmail());
+            this.validator.validate(existingUser);
+            userPrincipal.setEmail(newUser.getEmail());
         }
 
         if (newUser.getFirstName() != null && !newUser.getFirstName().isBlank()) {
             existingUser.setFirstName(newUser.getFirstName());
+            this.validator.validate(existingUser);
+            userPrincipal.setFirstName(newUser.getFirstName());
         }
 
         if (newUser.getLastName() != null && !newUser.getLastName().isBlank()) {
             existingUser.setLastName(newUser.getLastName());
+            this.validator.validate(existingUser);
+            userPrincipal.setLastName(newUser.getLastName());
         }
 
         if (newUser.getPassword() != null && !newUser.getPassword().isBlank()) {
+            existingUser.setPassword(newUser.getPassword());
+            this.validator.validate(existingUser);
             existingUser.setPassword(this.passwordEncoder.encode(newUser.getPassword()));
         }
 
@@ -115,6 +131,8 @@ public class AuthService {
             throw new InvalidDataException("Client does not exist!");
         }
 
+        existingClient.getReceivedDeliveries().forEach((delivery) -> delivery.setRecipient(null));
+        existingClient.getSentDeliveries().forEach((delivery) -> delivery.setSender(null));
         existingClient.setDeleted(true);
         this.clientsRepository.save(existingClient);
 
@@ -124,5 +142,33 @@ public class AuthService {
     public MyUserPrincipal getLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (MyUserPrincipal) authentication.getPrincipal();
+    }
+
+    public boolean isInRole(String role) {
+        Collection<? extends GrantedAuthority> authorities = this.getLoggedInUser().getAuthorities();
+        boolean authorized = authorities.contains(new SimpleGrantedAuthority(role));
+
+        return authorized;
+    }
+
+    public boolean adminExists() {
+        UserRole adminRole = this.rolesRepository.findFirstByName("ROLE_ADMIN");
+        if (adminRole == null) {
+            return false;
+        }
+
+        return this.usersRepository.existsByRoles(adminRole);
+    }
+
+    public void createAdmin(User admin) throws InvalidDataException {
+        if (admin == null) {
+            throw new InvalidDataException("No user provided!");
+        }
+
+        if (this.adminExists()) {
+            throw new InvalidDataException("Admin already exists!");
+        }
+
+        this.registerUser(admin, Arrays.asList("ROLE_ADMIN"));
     }
 }
