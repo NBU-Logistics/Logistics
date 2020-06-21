@@ -58,6 +58,7 @@
                             </td>
                             <td>
                                 <form
+                                    data-th-if="${isAdmin || isOfficeEmployee}"
                                     data-th-action="@{~/deliveries/delete}"
                                     method="POST"
                                 >
@@ -134,6 +135,7 @@
                             </td>
                             <td>
                                 <form
+                                    data-th-if="${isAdmin || isOfficeEmployee}"
                                     data-th-action="@{~/deliveries/delete}"
                                     method="POST"
                                 >
@@ -207,6 +209,7 @@
                             </td>
                             <td>
                                 <form
+                                    data-th-if="${isAdmin || isOfficeEmployee}"
                                     data-th-action="@{~/deliveries/delete}"
                                     method="POST"
                                 >
@@ -435,6 +438,43 @@
                             <td
                                 th:text="${delivery.isOfficeDelivery()} ? 'Yes' : 'No'"
                             ></td>
+                            <td>
+                                <form
+                                    data-th-action="@{~/deliveries/info}"
+                                    method="POST"
+                                >
+                                    <input
+                                        type="hidden"
+                                        name="name"
+                                        data-th-value="${delivery.name}"
+                                    />
+                                    <button
+                                        type="submit"
+                                        class="change-btn btn btn-style"
+                                    >
+                                        Edit
+                                    </button>
+                                </form>
+                            </td>
+                            <td>
+                                <form
+                                    data-th-if="${isOfficeEmployee}"
+                                    data-th-action="@{~/deliveries/delete}"
+                                    method="POST"
+                                >
+                                    <input
+                                        type="hidden"
+                                        name="id"
+                                        data-th-value="${delivery.name}"
+                                    />
+                                    <button
+                                        type="submit"
+                                        class="change-btn btn btn-style"
+                                    >
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
                         </tr>
                     </table>
                 </div>
