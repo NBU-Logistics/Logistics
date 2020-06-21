@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <html data-th-replace="~{base-centered::centered(data=~{::body})}">
-    <body>
-        <div data-th-if="${company != null}" class="d-flex flex-column align-items-center">
+    <body
+        data-th-with="
+            loggedIn=${#authorization.expression('isAuthenticated()')},
+            isAdmin=${#authorization.expression('isAuthenticated() && hasRole(''ROLE_ADMIN'')')}"
+    >
+        <div
+            data-th-if="${company != null}"
+            class="d-flex flex-column align-items-center"
+        >
             <table class="table table-borderless">
                 <tr>
                     <th>Company name</th>
@@ -19,8 +26,14 @@
                 </tr>
             </table>
 
-            <form method="POST" data-th-action="@{~/company/delete}">
-                <button class="btn btn-primary" type="submit">Delete Company</button>
+            <form
+                data-th-if="${isAdmin}"
+                method="POST"
+                data-th-action="@{~/company/delete}"
+            >
+                <button class="btn btn-primary" type="submit">
+                    Delete Company
+                </button>
             </form>
         </div>
 
