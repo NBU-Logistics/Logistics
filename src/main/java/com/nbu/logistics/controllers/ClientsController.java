@@ -9,11 +9,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * The clients controller.
+ */
 @Controller
 public class ClientsController {
     @Autowired
     private ClientsService clientsService;
 
+    /**
+     * /clients get request handler
+     * 
+     * @param model  the controller model
+     * @param client the client model
+     * @return the clients page
+     */
     @PreAuthorize("isAuthenticated() && (hasRole('ROLE_ADMIN') || hasRole('ROLE_OFFICE_EMPLOYEE'))")
     @RequestMapping("/clients")
     public String showAllClients(Model model, Client client) {

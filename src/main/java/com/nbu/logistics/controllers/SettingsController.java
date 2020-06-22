@@ -12,12 +12,21 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * The settings controller.
+ */
 @RequestMapping("/settings")
 @Controller
 public class SettingsController {
     @Autowired
     private SettingsService settingsService;
 
+    /**
+     * /settings get request handler
+     * 
+     * @param model the controller model
+     * @return the settings page
+     */
     @PreAuthorize("isAuthenticated() && hasRole('ROLE_ADMIN')")
     @GetMapping()
     public String getSettingsPage(Model model) {
@@ -26,6 +35,14 @@ public class SettingsController {
         return "settings";
     }
 
+    /**
+     * /settings post request handler
+     * 
+     * @param model         the controller model
+     * @param settings      the settings model
+     * @param bindingResult the controller BindingResult
+     * @return the settings page
+     */
     @PreAuthorize("isAuthenticated() && hasRole('ROLE_ADMIN')")
     @PostMapping()
     public String setSettings(Model model, @Valid @ModelAttribute("settings") Settings settings,
