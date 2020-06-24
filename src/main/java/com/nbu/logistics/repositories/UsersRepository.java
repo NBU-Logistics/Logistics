@@ -1,7 +1,6 @@
 package com.nbu.logistics.repositories;
 
-import com.nbu.logistics.entities.User;
-import com.nbu.logistics.entities.UserRole;
+import com.nbu.logistics.entities.*;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

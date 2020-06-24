@@ -2,8 +2,7 @@ package com.nbu.logistics.services;
 
 import java.util.Set;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
+import javax.validation.*;
 
 import com.nbu.logistics.exceptions.InvalidDataException;
 
