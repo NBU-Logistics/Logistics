@@ -1,29 +1,24 @@
 package com.nbu.logistics.services;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import com.nbu.logistics.config.MyUserPrincipal;
 import com.nbu.logistics.controllers.models.UpdateUserViewModel;
-import com.nbu.logistics.entities.Client;
-import com.nbu.logistics.entities.User;
-import com.nbu.logistics.entities.UserRole;
+import com.nbu.logistics.entities.*;
 import com.nbu.logistics.exceptions.InvalidDataException;
-import com.nbu.logistics.repositories.ClientsRepository;
-import com.nbu.logistics.repositories.RolesRepository;
-import com.nbu.logistics.repositories.UsersRepository;
+import com.nbu.logistics.repositories.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * This is the authorization and authentication service.
+ */
 @Service
 @Transactional
 public class AuthService {
@@ -42,6 +37,14 @@ public class AuthService {
     @Autowired
     private ValidationService validator;
 
+    /**
+     * Registering a user and assigning one or more roles to the user.
+     * 
+     * @param user  the user model
+     * @param roles a collection with the requested roles
+     * @throws InvalidDataException throws if no user or no roles are provided. Also
+     *                              throws when user already exists
+     */
     public void registerUser(User user, Collection<String> roles) throws InvalidDataException {
         if (user == null || roles == null) {
             throw new InvalidDataException("Invalid input!");
@@ -69,6 +72,15 @@ public class AuthService {
         this.usersRepository.save(user);
     }
 
+    /**
+     * Changes a given user's profile.
+     * 
+     * @param email   the user's e-mail
+     * @param newUser the user viewmodel with the changed data
+     * @throws InvalidDataException throws when no e-mail or no user data is
+     *                              provided. Also throws when the user does not
+     *                              exist.
+     */
     public void modifyUser(String email, UpdateUserViewModel newUser) throws InvalidDataException {
         if (email == null || newUser == null) {
             throw new InvalidDataException("Invalid input!");
@@ -107,6 +119,13 @@ public class AuthService {
         this.usersRepository.save(existingUser);
     }
 
+    /**
+     * Deletes a user by given e-mail.
+     * 
+     * @param email the user's e-mail
+     * @throws InvalidDataException throws when no e-mail is provided. Also throws
+     *                              when the user does not exist.
+     */
     public void deleteUser(String email) throws InvalidDataException {
         if (email == null) {
             throw new InvalidDataException("Invalid data!");
@@ -121,6 +140,13 @@ public class AuthService {
         this.usersRepository.save(existingUser);
     }
 
+    /**
+     * Deletes a client by given e-mail.
+     * 
+     * @param email the client's e-mail
+     * @throws InvalidDataException throws when no e-mail is provided. Also throws
+     *                              when the user does not exist.
+     */
     public void deleteClient(String email) throws InvalidDataException {
         if (email == null) {
             throw new InvalidDataException("Invalid data!");
@@ -139,11 +165,22 @@ public class AuthService {
         this.deleteUser(email);
     }
 
+    /**
+     * Returns the currently logged in user.
+     * 
+     * @return the logged in user's information.
+     */
     public MyUserPrincipal getLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (MyUserPrincipal) authentication.getPrincipal();
     }
 
+    /**
+     * Checks if the currently logged in user is in the given role.
+     * 
+     * @param role the role to check
+     * @return true if the user is in this role and false if not
+     */
     public boolean isInRole(String role) {
         Collection<? extends GrantedAuthority> authorities = this.getLoggedInUser().getAuthorities();
         boolean authorized = authorities.contains(new SimpleGrantedAuthority(role));
@@ -151,6 +188,11 @@ public class AuthService {
         return authorized;
     }
 
+    /**
+     * Checks if the database has an administrator registered.
+     * 
+     * @return true if there is an administrator and false if not
+     */
     public boolean adminExists() {
         UserRole adminRole = this.rolesRepository.findFirstByName("ROLE_ADMIN");
         if (adminRole == null) {
@@ -160,6 +202,13 @@ public class AuthService {
         return this.usersRepository.existsByRoles(adminRole);
     }
 
+    /**
+     * Creates an administrator.
+     * 
+     * @param admin the admin entity
+     * @throws InvalidDataException throws if no entity is provided. Also throws
+     *                              when the administrator is already registered.
+     */
     public void createAdmin(User admin) throws InvalidDataException {
         if (admin == null) {
             throw new InvalidDataException("No user provided!");
