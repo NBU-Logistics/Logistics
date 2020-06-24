@@ -16,12 +16,12 @@ import lombok.*;
 @Where(clause = "is_deleted='false'")
 public class Office extends BaseEntity {
     @Column(nullable = false)
-    @Length(min = 3, max = 30, message = "Name must be between 3 and 30 characters long!")
-    @NotEmpty(message = "Name can not be empty!")
+    @Length(min = 3, max = 30)
+    @NotEmpty
     private String name;
 
     @Column(nullable = false)
-    @Length(min = 3, max = 30, message = "Address must be between 3 and 30 characters long!")
-    @NotEmpty(message = "Address can not be empty!")
+    @Length(min = 3, max = 30)
+    @NotEmpty
     private String address;
 }

@@ -1,19 +1,36 @@
 package com.nbu.logistics.services;
 
-import com.nbu.logistics.entities.Company;
+import com.nbu.logistics.entities.*;
 import com.nbu.logistics.exceptions.InvalidDataException;
-import com.nbu.logistics.repositories.CompanyRepository;
+import com.nbu.logistics.repositories.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
+/**
+ * This is the company service.
+ */
 @Service
 public class CompanyService {
     @Autowired
     private CompanyRepository companyRepository;
 
+    @Autowired
+    private DeliveriesRepository deliveriesRepository;
+
+    /**
+     * Creates the company.
+     * 
+     * @param companyData the company entity.
+     * @throws InvalidDataException when either company data fields are empty. Also
+     *                              throws when the company has already been
+     *                              created.
+     */
     public void createCompany(Company companyData) throws InvalidDataException {
         if (companyRepository.findAll().size() == 0) {
             if (companyData.getEmail().isBlank()) {
@@ -43,6 +60,12 @@ public class CompanyService {
         }
     }
 
+    /**
+     * Updates the company's data.
+     * 
+     * @param companyData the company entity
+     * @throws InvalidDataException when the company does not exist
+     */
     public void updateCompany(Company companyData) throws InvalidDataException {
         if (companyRepository.findAll().size() != 0) {
             Company company = companyRepository.findAll().get(0);
@@ -76,6 +99,11 @@ public class CompanyService {
         }
     }
 
+    /**
+     * Deletes the company.
+     * 
+     * @throws InvalidDataException when the company does not exist
+     */
     public void deleteCompany() throws InvalidDataException {
         if (companyRepository.findAll().size() != 0) {
             Company company = companyRepository.findAll().get(0);
@@ -86,14 +114,38 @@ public class CompanyService {
         }
     }
 
+    /**
+     * Returns the company data.
+     * 
+     * @return the company
+     * @throws InvalidDataException when the company does not exist
+     */
     public Company getCompany() throws InvalidDataException {
         List<Company> companies = companyRepository.findAll();
-        if (companies.size() == 1) {
-            return this.companyRepository.findAll().get(0);
-        } else if (companies.size() > 1) {
-            throw new InvalidDataException("More than one company!");
-        } else {
+        if (companies.size() == 0) {
             throw new InvalidDataException("Company does not exist!");
         }
+
+        return this.companyRepository.findAll().get(0);
+    }
+
+    /**
+     * Calculates the comapny's income for given period of time.
+     * 
+     * @param fromDate the date from which the period begins
+     * @param toDate   the date from which the period ends
+     * @return the calculated income
+     */
+    public BigDecimal calculateIncome(LocalDate fromDate, LocalDate toDate) {
+        List<Delivery> deliveries = this.deliveriesRepository.findByStatus(DeliveryStatus.DELIVERED).stream()
+                .filter((delivery) -> fromDate.compareTo(delivery.getCreatedOn()) < 1
+                        && toDate.compareTo(delivery.getCreatedOn()) > -1)
+                .collect(Collectors.toList());
+        BigDecimal income = new BigDecimal(0);
+        for (Delivery delivery : deliveries) {
+            income = income.add(new BigDecimal(delivery.getPrice()));
+        }
+
+        return income;
     }
 }

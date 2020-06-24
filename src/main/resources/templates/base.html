@@ -2,11 +2,19 @@
 <html
     lang="en"
     data-th-fragment="layout"
-    data-th-with="loggedIn=${#authorization.expression('isAuthenticated()')}"
+    data-th-with="
+        loggedIn=${#authorization.expression('isAuthenticated()')},
+        isAdmin=${#authorization.expression('isAuthenticated() && hasRole(''ROLE_ADMIN'')')},
+        isOfficeEmployee=${#authorization.expression('isAuthenticated() && hasRole(''ROLE_OFFICE_EMPLOYEE'')')},
+        isCourier=${#authorization.expression('isAuthenticated() && hasRole(''ROLE_COURIER'')')},
+        isClient=${#authorization.expression('isAuthenticated() && hasRole(''ROLE_CLIENT'')')}"
 >
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
         <link
             rel="stylesheet"
             href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -55,10 +63,18 @@
                     </a>
                     <div
                         class="dropdown-menu dropdown-menu-right menu-top"
-                        style="position: absolute; margin-right: -36px; text-align: right"
+                        style="
+                            position: absolute;
+                            margin-right: -36px;
+                            text-align: right;
+                        "
                     >
-                        <a class="dropdown-item" data-th-href="@{~/logout}">Log out</a>
-                        <a class="dropdown-item" data-th-href="@{~/profile}">User profile</a>
+                        <a class="dropdown-item" data-th-href="@{~/logout}"
+                            >Log out</a
+                        >
+                        <a class="dropdown-item" data-th-href="@{~/profile}"
+                            >User profile</a
+                        >
                     </div>
                 </li>
             </ul>
@@ -74,54 +90,92 @@
                     </a>
                     <div
                         class="dropdown-menu dropdown-menu-right"
-                        style="position: absolute; margin-right: -36px; text-align: right"
+                        style="
+                            position: absolute;
+                            margin-right: -36px;
+                            text-align: right;
+                        "
                     >
-                        <a class="dropdown-item" data-th-href="@{/clients/register}">Register</a>
-                        <a class="dropdown-item" data-th-href="@{/login}">Log in</a>
+                        <a
+                            class="dropdown-item"
+                            data-th-href="@{/clients/register}"
+                            >Register</a
+                        >
+                        <a class="dropdown-item" data-th-href="@{/login}"
+                            >Log in</a
+                        >
                     </div>
                 </li>
             </ul>
         </nav>
 
         <div class="navbar">
-            <div class="collapse navbar-collapse " id="navbar">
+            <div class="collapse navbar-collapse" id="navbar">
                 <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                    <li data-th-replace="base-elements::navLink(@{~/}, 'Home')"></li>
+                    <li
+                        data-th-replace="base-elements::navLink(@{~/}, 'Home')"
+                    ></li>
                     <li
                         data-th-replace="base-elements::navDropdown(
-                            urls=${ {'/deliveries/create', '/deliveries'} },
-                            names=${ {'Create a delivery', 'View deliveries'} },
-                            text='Deliveries',
-                            condition=${loggedIn})"
+                            urls=${ {'/company', '/company/create', '/company/update', '/company/income'} },
+                            names=${ {'Company info', 'Create company', 'Update company', 'View income'} },
+                            text='Company',
+                            condition=${isAdmin})"
                     ></li>
                     <li
                         data-th-replace="base-elements::navDropdown(
                             urls=${ {'/employees/couriers/register', '/employees/office/register', '/employees'} },
                             names=${ {'Create a courier', 'Create an office employee', 'View employees'} },
                             text='Employees',
-                            condition=${loggedIn})"
+                            condition=${isAdmin})"
+                    ></li>
+                    <li
+                        data-th-replace="base-elements::navDropdown(
+                            urls=${ {'/deliveries/create', '/deliveries'} },
+                            names=${ {'Create a delivery', 'View deliveries'} },
+                            text='Deliveries',
+                            condition=${isClient})"
                     ></li>
                     <li
                         data-th-replace="base-elements::navDropdown(
                             urls=${ {'/offices/create', '/offices'} },
                             names=${ {'Create an office', 'View offices'} },
                             text='Offices',
-                            condition=${loggedIn})"
+                            condition=${isAdmin})"
                     ></li>
                     <li
-                            data-th-replace="base-elements::navDropdown(
-                            urls=${ {'/company', '/company/create', '/company/update'} },
-                            names=${ {'Company info', 'Create company', 'Update company'} },
-                            text='Company',
-                            condition=${loggedIn})"
+                        data-th-replace="base-elements::navLink(
+                            url=@{~/deliveries}, 
+                            text='View deliveries',
+                            condition=${loggedIn && !isClient})"
+                    ></li>
+                    <li
+                        data-th-replace="base-elements::navLink(
+                            url=@{~/offices}, 
+                            text='View offices',
+                            condition=${loggedIn && !isAdmin})"
+                    ></li>
+                    <li
+                        data-th-replace="base-elements::navLink(
+                            url=@{~/company}, 
+                            text='Company info',
+                            condition=${loggedIn && !isAdmin})"
                     ></li>
                     <li
                         data-th-replace="base-elements::navLink(
                             url=@{~/clients},
                             text='Clients',
-                            condition=${loggedIn})"
+                            condition=${isAdmin || isOfficeEmployee})"
                     ></li>
-                    <li data-th-replace="base-elements::navLink(@{~/about}, 'About us')"></li>
+                    <li
+                        data-th-replace="base-elements::navLink(
+                            url=@{~/settings},
+                            text='Settings',
+                            condition=${isAdmin})"
+                    ></li>
+                    <li
+                        data-th-replace="base-elements::navLink(@{~/about}, 'About us')"
+                    ></li>
                 </ul>
             </div>
         </div>

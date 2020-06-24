@@ -8,4 +8,6 @@ public interface RolesRepository extends JpaRepository<UserRole, Long> {
     boolean existsByName(String name);
 
     UserRole findByName(String name);
+
+    UserRole findFirstByName(String name);
 }

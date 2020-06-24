@@ -2,17 +2,19 @@ package com.nbu.logistics.controllers;
 
 import com.nbu.logistics.entities.OfficeEmployee;
 import com.nbu.logistics.exceptions.InvalidDataException;
-import com.nbu.logistics.services.CouriersService;
-import com.nbu.logistics.services.OfficeEmployeesService;
+import com.nbu.logistics.services.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+/**
+ * This is the employees controller
+ */
 @Controller
+@RequestMapping("/employees")
 public class EmployeesController {
     @Autowired
     private CouriersService couriersService;
@@ -20,55 +22,75 @@ public class EmployeesController {
     @Autowired
     private OfficeEmployeesService officeEmployeesService;
 
-    private void getEmployeesPage(Model model) {
+    /**
+     * It returns the employees page.
+     * 
+     * @param model the controller model
+     * @return the employees page
+     */
+    private String getEmployeesPage(Model model) {
         model.addAttribute("allEmployees", officeEmployeesService.getAllOfficeEmployees());
         model.addAttribute("allCouriers", couriersService.getAllCouriers());
-    }
-
-    @RequestMapping("/employees")
-    public String showAllEmployees(Model model, OfficeEmployee employee) {
-        this.getEmployeesPage(model);
 
         return "employees";
     }
 
-    @PostMapping("/employees/delete-employee")
+    /**
+     * /employees get request handler
+     * 
+     * @param model    the controller model
+     * @param employee the employee model
+     * @return the employees page
+     */
+    @PreAuthorize("isAuthenticated() && hasRole('ROLE_ADMIN')")
+    @GetMapping()
+    public String showAllEmployees(Model model, OfficeEmployee employee) {
+        return this.getEmployeesPage(model);
+    }
+
+    /**
+     * /employees/delete-employee post request handler
+     * 
+     * @param employeeId the employee id
+     * @param model      the controller model
+     * @return the employees page
+     */
+    @PreAuthorize("isAuthenticated() && hasRole('ROLE_ADMIN')")
+    @PostMapping("/delete-employee")
     public String deleteEmployee(@RequestParam("id") long employeeId, Model model) {
         try {
             officeEmployeesService.deleteEmployee(employeeId);
         } catch (InvalidDataException e) {
             model.addAttribute("error", e.getMessage());
 
-            return "redirect:/employees";
+            return this.getEmployeesPage(model);
         }
-
-        this.getEmployeesPage(model);
 
         model.addAttribute("success", "Successfully deleted employee!");
 
-        return "employees";
+        return this.getEmployeesPage(model);
     }
 
-    @PostMapping("/employees/employee-deliveries")
-    public String getEmployeeDeliveries(@RequestParam("id") long employeeId, Model model) {
-
-        return "employees";
-    }
-
-    @PostMapping("/employees/delete-courier")
+    /**
+     * /employees/delete-courier post request handler
+     * 
+     * @param employeeId the employee id
+     * @param model      the controller model
+     * @return the employees page
+     */
+    @PreAuthorize("isAuthenticated() && hasRole('ROLE_ADMIN')")
+    @PostMapping("/delete-courier")
     public String deleteCourier(@RequestParam("id") long employeeId, Model model) {
         try {
             couriersService.deleteCourier(employeeId);
         } catch (InvalidDataException e) {
             model.addAttribute("error", e.getMessage());
 
-            return "redirect:/employees";
+            return this.getEmployeesPage(model);
         }
-
-        this.getEmployeesPage(model);
 
         model.addAttribute("success", "Successfully deleted employee!");
 
-        return "employees";
+        return this.getEmployeesPage(model);
     }
 }

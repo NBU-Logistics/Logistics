@@ -5,7 +5,11 @@
 >
     <body>
         <h2 class="pb-4 text-center" data-th-text="${title}"></h2>
-        <form data-th-action="${action}" data-th-object="${company}" method="POST">
+        <form
+            data-th-action="${action}"
+            data-th-object="${company}"
+            method="POST"
+        >
             <div
                 data-th-replace="~{form-elements::validatedInput(
                     type='text',
@@ -52,7 +56,9 @@
                     invalidMessage='Phone number is invalid!')}"
             ></div>
 
-            <button data-th-replace="~{form-elements::button('Complete')}"></button>
+            <button
+                data-th-replace="~{form-elements::button('Complete')}"
+            ></button>
         </form>
     </body>
 </html>

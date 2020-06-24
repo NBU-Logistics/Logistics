@@ -1,13 +1,10 @@
 package com.nbu.logistics.entities;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Where;
+import org.hibernate.validator.constraints.Length;
 
 @Getter
 @Setter
@@ -16,18 +13,18 @@ import org.hibernate.annotations.Where;
 @Entity
 @Where(clause = "is_deleted='false'")
 public class Company extends BaseEntity {
-    @Column
+    @Length(min = 3, max = 30)
     private String name;
 
-    @Column
+    @Length(min = 3, max = 30)
     private String address;
 
-    @Column
+    @Length(min = 3, max = 30)
     private String ownerName;
 
-    @Column
+    @Length(min = 3, max = 30)
     private String phoneNumber;
 
-    @Column
+    @Length(min = 3, max = 30)
     private String email;
 }
