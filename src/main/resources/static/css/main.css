@@ -439,7 +439,6 @@ select::-ms-expand {
     display: none;
 }
 
-
 .dropdown-menu-right .menu-top  {
     position: absolute;
     margin-right: -36px;
@@ -551,6 +550,12 @@ select::-ms-expand {
     .dropdown-item:last-child {
         padding-top: 25px;
         padding-bottom: 35px;
+    }
+
+    .dropdown-item:first-child,
+    .dropdown-item:not(first-child):not(last-child) {
+        padding-left: 20px;
+        padding-right: 20px;
     }
 
     .dropdown-item:focus,
