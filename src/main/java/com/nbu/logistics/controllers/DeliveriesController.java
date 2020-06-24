@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+/**
+ * The deliveries controller.
+ */
 @Controller
 @RequestMapping("/deliveries")
 public class DeliveriesController {
@@ -23,6 +26,12 @@ public class DeliveriesController {
     @Autowired
     private AuthService authService;
 
+    /**
+     * Returns the page with the deliveries.
+     * 
+     * @param model the controller model
+     * @return the deliveries page
+     */
     private String getDeliveriesPage(Model model) {
         model.addAttribute("allDeliveries", this.deliveriesService.getAll());
         model.addAttribute("registeredDeliveries", this.deliveriesService.getRegistered());
@@ -36,6 +45,12 @@ public class DeliveriesController {
         return "deliveries";
     }
 
+    /**
+     * /deliveries/create get request handler
+     * 
+     * @param model the controller model
+     * @return the create-delivery page
+     */
     @PreAuthorize("isAuthenticated() && hasRole('ROLE_CLIENT')")
     @GetMapping("/create")
     public String createDelivery(Model model) {
@@ -44,6 +59,14 @@ public class DeliveriesController {
         return "create-delivery";
     }
 
+    /**
+     * /deliveries/create post request handler
+     * 
+     * @param model         the controller model
+     * @param delivery      the delivery model
+     * @param bindingResult the controller BindingResult
+     * @return the create-delivery page
+     */
     @PreAuthorize("isAuthenticated() && hasRole('ROLE_CLIENT')")
     @PostMapping("/create")
     public String addDelivery(Model model, @Valid @ModelAttribute Delivery delivery, BindingResult bindingResult) {
@@ -64,6 +87,13 @@ public class DeliveriesController {
         return this.showAllDeliveries(model, delivery);
     }
 
+    /**
+     * /deliveries/delete post request handler
+     * 
+     * @param id    the delivery id
+     * @param model the controller model
+     * @return the deliveries page
+     */
     @PreAuthorize("isAuthenticated() && (hasRole('ROLE_ADMIN') || hasRole('ROLE_OFFICE_EMPLOYEE'))")
     @PostMapping("/delete")
     public String deleteDelivery(@RequestParam("id") String id, Model model) {
@@ -81,6 +111,13 @@ public class DeliveriesController {
 
     }
 
+    /**
+     * /deliveries/info post request handler
+     * 
+     * @param model the controller model
+     * @param name  the delivery name
+     * @return the edit-delivery page
+     */
     @PreAuthorize("isAuthenticated() && (hasRole('ROLE_ADMIN') || hasRole('ROLE_OFFICE_EMPLOYEE') || hasRole('ROLE_COURIER'))")
     @PostMapping("/info")
     public String infoDelivery(Model model, @RequestParam("name") String name) {
@@ -89,6 +126,14 @@ public class DeliveriesController {
         return "edit-delivery";
     }
 
+    /**
+     * /deliveries/edit post request handler
+     * 
+     * @param model         the controller model
+     * @param delivery      the delivery model
+     * @param bindingResult the controller BindingResult
+     * @return the edit-delivery-page
+     */
     @PreAuthorize("isAuthenticated() && (hasRole('ROLE_ADMIN') || hasRole('ROLE_OFFICE_EMPLOYEE') || hasRole('ROLE_COURIER'))")
     @PostMapping("/edit")
     public String editDelivery(Model model, @ModelAttribute("delivery") @Valid Delivery delivery,
@@ -108,6 +153,13 @@ public class DeliveriesController {
         return this.getDeliveriesPage(model);
     }
 
+    /**
+     * /deliveries get request handler
+     * 
+     * @param model    the controller model
+     * @param delivery the delivery model
+     * @return the deliveries page
+     */
     @PreAuthorize("isAuthenticated()")
     @GetMapping()
     public String showAllDeliveries(Model model, Delivery delivery) {

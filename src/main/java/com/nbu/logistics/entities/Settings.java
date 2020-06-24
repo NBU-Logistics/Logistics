@@ -1,16 +1,11 @@
 package com.nbu.logistics.entities;
 
 import javax.persistence.Entity;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.*;
 
 import org.hibernate.annotations.Where;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter

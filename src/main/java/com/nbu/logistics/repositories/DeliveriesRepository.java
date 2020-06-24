@@ -2,8 +2,7 @@ package com.nbu.logistics.repositories;
 
 import java.util.List;
 
-import com.nbu.logistics.entities.Delivery;
-import com.nbu.logistics.entities.DeliveryStatus;
+import com.nbu.logistics.entities.*;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
